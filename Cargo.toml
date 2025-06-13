@@ -1,14 +1,23 @@
-[package]
-name = "webassembly-component-model-repl"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-
 [workspace]
+resolver = "2"
 members = [
     "crates/api",
-    "crates/cli-host",
-    "crates/repl-guest",
-    "crates/plugin-hello"
+    # "crates/cli-host",
+    # "crates/repl-guest",
+    # "crates/plugin-hello"
 ]
+
+[workspace.package]
+publish = false
+edition = "2024"
+
+[workspace.dependencies]
+wasmtime = { version = "33", default-features = false, features = [
+    "async",
+    "demangle",
+    "runtime",
+    "cranelift",
+    "component-model",
+    "incremental-cache",
+    "parallel-compilation",
+] }

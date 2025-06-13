@@ -1,0 +1,11 @@
+[package]
+name = "api"
+version = "0.1.0"
+edition = { workspace = true }
+publish = false
+build = "build.rs"
+
+[dependencies]
+
+[build-dependencies]
+wasmtime = { workspace = true }

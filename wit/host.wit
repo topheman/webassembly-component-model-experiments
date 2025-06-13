@@ -4,23 +4,13 @@ interface http-client {
   get: func(url: string) -> string
 }
 
-interface plugin-runner {
-  dispatch: func(plugin: string, payload: string) -> repl-result
+/// Most likely an implementation detail of the host
+// interface plugin-runner {
+//   dispatch: func(plugin: string, payload: string) -> repl-result
+//
+//   use repl-transport.{repl-result, repl-status}
+// }
 
-  use repl-transport.{repl-result, repl-status}
+world host {
+  export http-client
 }
-
-interface repl-transport {
-  record repl-result {
-    color: option<string>,
-    status: repl-status,
-    output: option<string>,
-  }
-
-  enum repl-status {
-    success,
-    error,
-    warning,
-  }
-}
-

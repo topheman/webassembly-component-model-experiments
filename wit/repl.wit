@@ -1,13 +1,26 @@
 package myrepl:repl
 
-import myrepl:host/plugin-runner.{repl-transport.{repl-result, repl-status}}
-
 interface repl {
   /// Called by the host when a user submits a command line
   readline: func(line: string) -> repl-result
 }
 
+interface repl-transport {
+  record repl-result {
+    color: option<string>,
+    status: repl-status,
+    output: option<string>,
+  }
+
+  enum repl-status {
+    success,
+    error,
+    warning,
+  }
+}
+
 world repl {
   import plugin-runner
+  export repl-transport
   export repl
 }
