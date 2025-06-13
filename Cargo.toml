@@ -1,0 +1,14 @@
+[package]
+name = "webassembly-component-model-repl"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[workspace]
+members = [
+    "crates/api",
+    "crates/cli-host",
+    "crates/repl-guest",
+    "crates/plugin-hello"
+]

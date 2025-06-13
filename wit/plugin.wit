@@ -1,0 +1,14 @@
+package myrepl:plugin
+
+import myrepl:host/repl-transport.{repl-result, repl-status}
+
+interface plugin {
+  name: func() -> string
+  man: func() -> string
+  expected-args: func() -> option<s8>
+  run: func(payload: string) -> repl-result
+}
+
+world plugin {
+  export plugin
+}

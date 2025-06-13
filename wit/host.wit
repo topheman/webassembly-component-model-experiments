@@ -1,0 +1,26 @@
+package myrepl:host
+
+interface http-client {
+  get: func(url: string) -> string
+}
+
+interface plugin-runner {
+  dispatch: func(plugin: string, payload: string) -> repl-result
+
+  use repl-transport.{repl-result, repl-status}
+}
+
+interface repl-transport {
+  record repl-result {
+    color: option<string>,
+    status: repl-status,
+    output: option<string>,
+  }
+
+  enum repl-status {
+    success,
+    error,
+    warning,
+  }
+}
+
