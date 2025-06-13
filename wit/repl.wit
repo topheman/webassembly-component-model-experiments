@@ -1,8 +1,8 @@
-package myrepl:repl
+package myrepl:repl;
 
 interface repl {
   /// Called by the host when a user submits a command line
-  readline: func(line: string) -> repl-result
+  readline: func(line: string) -> repl-result;
 }
 
 interface repl-transport {
@@ -20,7 +20,7 @@ interface repl-transport {
 }
 
 world repl {
-  import plugin-runner
-  export repl-transport
-  export repl
+  import plugin-runner;
+  export repl-transport;
+  export repl;
 }

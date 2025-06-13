@@ -1,14 +1,23 @@
-package myrepl:plugin
-
-import myrepl:host/repl-transport.{repl-result, repl-status}
+package myrepl:plugin;
 
 interface plugin {
-  name: func() -> string
-  man: func() -> string
-  expected-args: func() -> option<s8>
-  run: func(payload: string) -> repl-result
+  name: func() -> string;
+  man: func() -> string;
+  expected-args: func() -> option<s8>;
+  run: func(payload: string) -> repl-result;
+  record repl-result {
+    color: option<string>,
+    status: repl-status,
+    output: option<string>,
+  }
+
+  enum repl-status {
+    success,
+    error,
+    warning,
+  }
 }
 
-world plugin {
-  export plugin
+world my {
+  export plugin;
 }
