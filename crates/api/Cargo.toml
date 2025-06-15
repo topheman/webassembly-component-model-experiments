@@ -6,6 +6,7 @@ publish = false
 build = "build.rs"
 
 [dependencies]
+wasmtime = { workspace = true }
 
 [build-dependencies]
 wasmtime = { workspace = true }

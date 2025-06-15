@@ -1,13 +1,14 @@
-use std::path::PathBuf;
 use wasmtime;
+use std::fs;
+use std::path::Path;
 
 fn main() {
-    // let wit_dir = PathBuf::from("../../wit");
-    let gen_dir = PathBuf::from("src/generated");
-    std::fs::create_dir_all(&gen_dir).unwrap();
-
-    wasmtime::component::bindgen!({
+    let code = wasmtime::component::bindgen!({
+        path: "./wit/world.wit",
+        world: "api",
         async: true,
-        path: "../../wit/plugin.wit"
+        stringify: true
     });
+    let bindings_path = Path::new("src").join("bindings.rs");
+    fs::write(&bindings_path, code).unwrap();
 }

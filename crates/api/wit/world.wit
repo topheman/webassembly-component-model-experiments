@@ -1,0 +1,86 @@
+package repl:api;
+
+interface transport {
+  record repl-result {
+    color: option<string>,
+    status: repl-status,
+    output: option<string>,
+  }
+
+  enum repl-status {
+    success,
+    error,
+    warning,
+  }
+}
+
+interface repl {
+  use transport.{repl-result};
+
+  record plugin-config {
+    command: string,
+    arg-count: option<s8>,
+    man: string,
+  }
+
+  record repl-env-var {
+    key: string,
+    value: string,
+  }
+
+  /// Register the list of available plugins from the host
+  set-plugins: func(plugins: list<plugin-config>);
+
+  set-env: func(env-var: repl-env-var);
+
+  list-env: func() -> list<repl-env-var>;
+
+  /// Called by the host when a user submits a command line
+  /// The repl is responsible for
+  /// - expanding environment variables in the line.
+  /// - running the appropriate plugin with the expanded payload.
+  /// Behind this readline function, there is a dispatcher that will call the `run` function of the appropriate plugin.
+  readline: func(line: string) -> repl-result;
+}
+
+interface plugin {
+  use transport.{repl-result};
+  name: func() -> string;
+  man: func() -> string;
+  arg-count: func() -> option<s8>;
+  run: func(payload: string) -> repl-result;
+  // todo add capabilities to the plugin
+}
+
+/// The host provides a plugin-runner interface for the plugins.
+/// The plugin-runner is responsible for dispatching the plugin execution to the appropriate plugin
+/// with the appropriate payload (already expanded environment variables by repl.readline)
+interface plugin-runner {
+  use transport.{repl-result};
+
+  /// The REPL calls this to dispatch a plugin execution.
+  exec: func(command: string, payload: string) -> repl-result;
+}
+
+/// The host provides a http-client interface for the plugins.
+interface http-client {
+  record http-header {
+    name: string,
+    value: string,
+  }
+  record http-response {
+    status: u16,
+    headers: list<http-header>,
+    body: string
+  }
+  get: func(url: string, headers: list<http-header>) -> http-response;
+  post: func(url: string, headers: list<http-header>, body: string) -> http-response;
+}
+
+world api {
+  export repl;
+  export http-client;
+  export transport;
+  export plugin;
+  export plugin-runner;
+}
