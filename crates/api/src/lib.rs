@@ -1,8 +1,5 @@
-#[allow(warnings)]
-mod bindings;
+mod host_api;
+mod plugin_api;
 
-pub use bindings::exports::repl::api::transport;
-pub use bindings::exports::repl::api::repl_logic;
-pub use bindings::exports::repl::api::plugin;
-pub use bindings::exports::repl::api::plugin_runner;
-pub use bindings::exports::repl::api::http_client;
+pub use host_api::wit::exports::repl::api::{repl_logic, plugin_runner};
+pub use plugin_api::wit::exports::repl::api::plugin;

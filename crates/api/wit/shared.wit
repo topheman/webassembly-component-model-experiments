@@ -1,5 +1,3 @@
-package repl:shared;
-
 interface transport {
   record repl-result {
     color: option<string>,

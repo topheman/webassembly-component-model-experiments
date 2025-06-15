@@ -1,6 +1,4 @@
-package repl:host;
-
-use repl:shared/transport;
+package repl:api;
 
 interface repl-logic {
   use transport.{repl-result};

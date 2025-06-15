@@ -1,7 +1,3 @@
-package repl:plugin;
-
-use repl:shared/transport;
-
 interface plugin {
   use transport.{repl-result};
 
