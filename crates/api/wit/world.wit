@@ -14,7 +14,19 @@ interface transport {
   }
 }
 
-interface repl {
+/// The host provides a repl-logic interface where it is responsible.
+/// That way, the same code for:
+/// - parsing the command line
+/// - expanding environment variables
+/// - running the appropriate plugin with the expanded payload
+/// is only written once in the language of our choice
+/// and can be executed in any host, since the repl-logic will be compiled into a wasm module.
+///
+/// The host will provide the repl-logic as singleton, that way:
+/// - the plugins can only register against this singleton
+/// - even if the guest manages to create multiple instances of the repl-logic,
+///   it will not be able use it and trying to `set-env` or `set-plugins` will have no effect.
+interface repl-logic {
   use transport.{repl-result};
 
   record plugin-config {
@@ -78,7 +90,7 @@ interface http-client {
 }
 
 world api {
-  export repl;
+  export repl-logic;
   export http-client;
   export transport;
   export plugin;

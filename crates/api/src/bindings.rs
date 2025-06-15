@@ -70,7 +70,7 @@ impl<_T> ApiPre<_T> {
 #[derive(Clone)]
 pub struct ApiIndices {
   interface0: exports::repl::api::transport::GuestIndices,
-  interface1: exports::repl::api::repl::GuestIndices,
+  interface1: exports::repl::api::repl_logic::GuestIndices,
   interface2: exports::repl::api::http_client::GuestIndices,
   interface3: exports::repl::api::plugin::GuestIndices,
   interface4: exports::repl::api::plugin_runner::GuestIndices,
@@ -103,7 +103,7 @@ pub struct ApiIndices {
 /// [`Linker`]: wasmtime::component::Linker
 pub struct Api {
   interface0: exports::repl::api::transport::Guest,
-  interface1: exports::repl::api::repl::Guest,
+  interface1: exports::repl::api::repl_logic::Guest,
   interface2: exports::repl::api::http_client::Guest,
   interface3: exports::repl::api::plugin::Guest,
   interface4: exports::repl::api::plugin_runner::Guest,
@@ -124,7 +124,7 @@ const _: () = {
       let _instance_type = _instance_pre.instance_type();
       
       let interface0 = exports::repl::api::transport::GuestIndices::new(_instance_pre)?;
-      let interface1 = exports::repl::api::repl::GuestIndices::new(_instance_pre)?;
+      let interface1 = exports::repl::api::repl_logic::GuestIndices::new(_instance_pre)?;
       let interface2 = exports::repl::api::http_client::GuestIndices::new(_instance_pre)?;
       let interface3 = exports::repl::api::plugin::GuestIndices::new(_instance_pre)?;
       let interface4 = exports::repl::api::plugin_runner::GuestIndices::new(_instance_pre)?;
@@ -193,7 +193,7 @@ const _: () = {
       &self.interface0
     }
     
-    pub fn repl_api_repl(&self) -> &exports::repl::api::repl::Guest {
+    pub fn repl_api_repl_logic(&self) -> &exports::repl::api::repl_logic::Guest {
       &self.interface1
     }
     
@@ -323,7 +323,7 @@ pub mod exports {
       
       
       #[allow(clippy::all)]
-      pub mod repl {
+      pub mod repl_logic {
         #[allow(unused_imports)]
         use wasmtime::component::__internal::{anyhow, Box};
         
@@ -398,12 +398,12 @@ pub mod exports {
           pub fn new<_T>(
           _instance_pre: &wasmtime::component::InstancePre<_T>,
           ) -> wasmtime::Result<GuestIndices> {
-            let instance = _instance_pre.component().get_export_index(None, "repl:api/repl")
-            .ok_or_else(|| anyhow::anyhow!("no exported instance named `repl:api/repl`"))?;
+            let instance = _instance_pre.component().get_export_index(None, "repl:api/repl-logic")
+            .ok_or_else(|| anyhow::anyhow!("no exported instance named `repl:api/repl-logic`"))?;
             let mut lookup = move |name| {
               _instance_pre.component().get_export_index(Some(&instance), name).ok_or_else(|| {
                 anyhow::anyhow!(
-                "instance export `repl:api/repl` does \
+                "instance export `repl:api/repl-logic` does \
                 not have export `{name}`"
                 )
               })
