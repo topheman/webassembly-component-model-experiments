@@ -1,0 +1,33 @@
+package repl:host;
+
+use repl:shared/transport;
+
+interface repl-logic {
+  use transport.{repl-result};
+
+  record plugin-config {
+    command: string,
+    arg-count: option<s8>,
+    man: string,
+  }
+
+  record repl-env-var {
+    key: string,
+    value: string,
+  }
+
+  set-plugins: func(plugins: list<plugin-config>);
+  set-env: func(env-var: repl-env-var);
+  list-env: func() -> list<repl-env-var>;
+  readline: func(line: string) -> repl-result;
+}
+
+interface plugin-runner {
+  use transport.{repl-result};
+  exec: func(command: string, payload: string) -> repl-result;
+}
+
+world host-api {
+  export repl-logic;
+  export plugin-runner;
+}

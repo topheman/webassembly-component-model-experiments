@@ -1,0 +1,15 @@
+package repl:shared;
+
+interface transport {
+  record repl-result {
+    color: option<string>,
+    status: repl-status,
+    output: option<string>,
+  }
+
+  enum repl-status {
+    success,
+    error,
+    warning,
+  }
+}

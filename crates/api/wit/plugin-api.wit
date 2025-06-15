@@ -1,0 +1,35 @@
+package repl:plugin;
+
+use repl:shared/transport;
+
+interface plugin {
+  use transport.{repl-result};
+
+  name: func() -> string;
+  man: func() -> string;
+  arg-count: func() -> option<s8>;
+  run: func(payload: string) -> repl-result;
+  // todo add capabilities to the plugin
+}
+
+/// Provided by the host, accessible by plugins
+interface http-client {
+  record http-header {
+    name: string,
+    value: string,
+  }
+
+  record http-response {
+    status: u16,
+    headers: list<http-header>,
+    body: string,
+  }
+
+  get: func(url: string, headers: list<http-header>) -> http-response;
+  post: func(url: string, headers: list<http-header>, body: string) -> http-response;
+}
+
+world plugin-api {
+  import http-client;
+  export plugin;
+}
