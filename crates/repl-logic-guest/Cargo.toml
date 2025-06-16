@@ -11,3 +11,4 @@ wasmtime = { workspace = true }
 api = { path = "../api" }
 
 [build-dependencies]
+cargo-component = "0.5.0"

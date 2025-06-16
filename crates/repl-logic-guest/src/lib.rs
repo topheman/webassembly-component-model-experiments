@@ -1,56 +1,39 @@
-use wasmtime::component::__internal::anyhow;
-use api::host_api::exports::repl::api::{repl_logic, plugin_runner};
-
-wasmtime::component::bindgen!({
-    path: "../api/wit",
-    world: "host-api",
-    async: true,
-    with: {
-        "repl:api/repl-logic": ReplLogic,
-        "repl:api/plugin-runner": ReplLogic,
-    },
-});
-
-pub struct ReplLogic {}
+use api::host_api::exports::repl::api::{repl_logic};
+pub struct ReplLogic;
 
 impl ReplLogic {
     pub fn new() -> Self {
-        Self {}
+        Self
     }
-}
 
-#[export_name = "set-plugins"]
-pub extern "C" fn set_plugins(plugins: Vec<repl_logic::PluginConfig>) {
-    for plugin in plugins {
-        println!("Plugin: {} (args: {:?})", plugin.command, plugin.arg_count);
+    pub fn set_plugins(&mut self, plugins: Vec<repl_logic::PluginConfig>) {
+        for plugin in plugins {
+            println!("Plugin: {} (args: {:?})", plugin.command, plugin.arg_count);
+        }
     }
-}
 
-#[export_name = "set-env"]
-pub extern "C" fn set_env(env_var: repl_logic::ReplEnvVar) {
-    println!("Setting env var: {} = {}", env_var.key, env_var.value);
-}
-
-#[export_name = "list-env"]
-pub extern "C" fn list_env() -> Vec<repl_logic::ReplEnvVar> {
-    Vec::new()
-}
-
-#[export_name = "readline"]
-pub extern "C" fn readline(line: String) -> repl::api::transport::ReplResult {
-    repl::api::transport::ReplResult {
-        color: None,
-        status: repl::api::transport::ReplStatus::Success,
-        output: Some(format!("Echo: {}", line)),
+    pub fn set_env(&mut self, env_var: repl_logic::ReplEnvVar) {
+        println!("Setting env var: {} = {}", env_var.key, env_var.value);
     }
-}
 
-#[export_name = "exec"]
-pub extern "C" fn exec(command: String, payload: String) -> repl::api::transport::ReplResult {
-    repl::api::transport::ReplResult {
-        color: None,
-        status: repl::api::transport::ReplStatus::Success,
-        output: Some(format!("Command: {}, Payload: {}", command, payload)),
+    pub fn list_env(&mut self) -> Vec<repl_logic::ReplEnvVar> {
+        Vec::new()
+    }
+
+    pub fn readline(&mut self, line: String) -> repl::api::transport::ReplResult {
+        repl::api::transport::ReplResult {
+            color: None,
+            status: repl::api::transport::ReplStatus::Success,
+            output: Some(format!("Echo: {}", line)),
+        }
+    }
+
+    pub fn exec(&mut self, command: String, payload: String) -> repl::api::transport::ReplResult {
+        repl::api::transport::ReplResult {
+            color: None,
+            status: repl::api::transport::ReplStatus::Success,
+            output: Some(format!("Command: {}, Payload: {}", command, payload)),
+        }
     }
 }
 
