@@ -1,50 +1,43 @@
 #[allow(warnings)]
 mod bindings;
 
-use bindings::Guest;
-use api::host_api::exports::repl::api::{repl_logic, repl};
+use crate::bindings::exports::repl::api::repl_logic::Guest as ReplLogicGuest;
+use crate::bindings::exports::repl::api::plugin_runner::Guest as PluginRunnerGuest;
+use crate::bindings::exports::repl::api::repl_logic;
+use crate::bindings::repl::api::transport;
 
 struct Component {
     plugins: Vec<repl_logic::PluginConfig>,
     env_vars: Vec<repl_logic::ReplEnvVar>,
 }
 
-impl Guest for Component {
-    fn new() -> Self {
-        Self {
-            plugins: Vec::new(),
-            env_vars: Vec::new(),
-        }
+impl ReplLogicGuest for Component {
+    fn set_plugins(plugins: Vec<repl_logic::PluginConfig>) {
+        println!("Setting plugins: {:?}", plugins);
     }
 
-    fn set_plugins(&mut self, plugins: Vec<repl_logic::PluginConfig>) {
-        self.plugins = plugins;
-        for plugin in &self.plugins {
-            println!("Plugin: {} (args: {:?})", plugin.command, plugin.arg_count);
-        }
-    }
-
-    fn set_env(&mut self, env_var: repl_logic::ReplEnvVar) {
+    fn set_env(env_var: repl_logic::ReplEnvVar) {
         println!("Setting env var: {} = {}", env_var.key, env_var.value);
-        self.env_vars.push(env_var);
     }
 
-    fn list_env(&mut self) -> Vec<repl_logic::ReplEnvVar> {
-        self.env_vars.clone()
+    fn list_env() -> Vec<repl_logic::ReplEnvVar> {
+        Vec::new()
     }
 
-    fn readline(&mut self, line: String) -> repl::api::transport::ReplResult {
-        repl::api::transport::ReplResult {
+    fn readline(line: String) -> transport::ReplResult {
+        transport::ReplResult {
             color: None,
-            status: repl::api::transport::ReplStatus::Success,
+            status: transport::ReplStatus::Success,
             output: Some(format!("Echo: {}", line)),
         }
     }
+}
 
-    fn exec(&mut self, command: String, payload: String) -> repl::api::transport::ReplResult {
-        repl::api::transport::ReplResult {
+impl PluginRunnerGuest for Component {
+    fn exec(command: String, payload: String) -> transport::ReplResult {
+        transport::ReplResult {
             color: None,
-            status: repl::api::transport::ReplStatus::Success,
+            status: transport::ReplStatus::Success,
             output: Some(format!("Command: {}, Payload: {}", command, payload)),
         }
     }
