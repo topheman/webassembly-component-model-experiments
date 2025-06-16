@@ -1,10 +1,8 @@
 [package]
 name = "repl-logic-guest"
 version = "0.1.0"
-edition = "2021"
-
-[lib]
-crate-type = ["cdylib"]
+edition = { workspace = true }
+publish = false
 
 [dependencies]
 wasmtime = { workspace = true }
@@ -12,3 +10,12 @@ api = { path = "../api" }
 
 [build-dependencies]
 cargo-component = "0.5.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[package.metadata.component]
+package = "repl:api"
+target = { path = "../api/wit", world = "host-api" }
+
+[package.metadata.component.dependencies]

@@ -1,26 +1,39 @@
-use api::host_api::exports::repl::api::{repl_logic};
-pub struct ReplLogic;
+#[allow(warnings)]
+mod bindings;
 
-impl ReplLogic {
-    pub fn new() -> Self {
-        Self
+use bindings::Guest;
+use api::host_api::exports::repl::api::{repl_logic, repl};
+
+struct Component {
+    plugins: Vec<repl_logic::PluginConfig>,
+    env_vars: Vec<repl_logic::ReplEnvVar>,
+}
+
+impl Guest for Component {
+    fn new() -> Self {
+        Self {
+            plugins: Vec::new(),
+            env_vars: Vec::new(),
+        }
     }
 
-    pub fn set_plugins(&mut self, plugins: Vec<repl_logic::PluginConfig>) {
-        for plugin in plugins {
+    fn set_plugins(&mut self, plugins: Vec<repl_logic::PluginConfig>) {
+        self.plugins = plugins;
+        for plugin in &self.plugins {
             println!("Plugin: {} (args: {:?})", plugin.command, plugin.arg_count);
         }
     }
 
-    pub fn set_env(&mut self, env_var: repl_logic::ReplEnvVar) {
+    fn set_env(&mut self, env_var: repl_logic::ReplEnvVar) {
         println!("Setting env var: {} = {}", env_var.key, env_var.value);
+        self.env_vars.push(env_var);
     }
 
-    pub fn list_env(&mut self) -> Vec<repl_logic::ReplEnvVar> {
-        Vec::new()
+    fn list_env(&mut self) -> Vec<repl_logic::ReplEnvVar> {
+        self.env_vars.clone()
     }
 
-    pub fn readline(&mut self, line: String) -> repl::api::transport::ReplResult {
+    fn readline(&mut self, line: String) -> repl::api::transport::ReplResult {
         repl::api::transport::ReplResult {
             color: None,
             status: repl::api::transport::ReplStatus::Success,
@@ -28,7 +41,7 @@ impl ReplLogic {
         }
     }
 
-    pub fn exec(&mut self, command: String, payload: String) -> repl::api::transport::ReplResult {
+    fn exec(&mut self, command: String, payload: String) -> repl::api::transport::ReplResult {
         repl::api::transport::ReplResult {
             color: None,
             status: repl::api::transport::ReplStatus::Success,
@@ -37,3 +50,4 @@ impl ReplLogic {
     }
 }
 
+bindings::export!(Component with_types_in bindings);
