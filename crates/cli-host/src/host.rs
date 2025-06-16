@@ -1,56 +1,52 @@
 use anyhow::Result;
 use std::path::PathBuf;
-use std::collections::HashMap;
 use wasmtime::Store;
+use api::{PluginApi, HostApi};
 use crate::engine::WasmEngine;
 
 /// Represents a loaded plugin
-pub struct Plugin {
-    name: String,
-    store: Store<()>,
+pub struct PluginInstance {
+    pub plugin: PluginApi,
 }
 
 /// The main host that manages plugins and the REPL logic
 pub struct Host {
-    engine: WasmEngine,
-    plugins: HashMap<String, Plugin>,
-    repl_logic: Option<Store<()>>,
+    pub store: Store<()>,
+    pub repl_logic: Option<HostApi>,
+    pub plugins: Vec<PluginInstance>,
 }
 
 impl Host {
-    pub fn new() -> Result<Self> {
-        Ok(Self {
-            engine: WasmEngine::new()?,
-            plugins: HashMap::new(),
+    pub fn new(engine: &WasmEngine) -> Self {
+        Self {
+            store: Store::new(engine.engine(), ()),
+            plugins: Vec::new(),
             repl_logic: None,
-        })
+        }
     }
 
-    pub async fn load_plugin(&mut self, path: PathBuf) -> Result<()> {
-        let name = path.file_stem()
-            .unwrap()
-            .to_string_lossy()
-            .to_string();
-
-        let component = self.engine.load_component(&path).await?;
-        let store = self.engine.instantiate_component(component).await?;
-
-        self.plugins.insert(name.clone(), Plugin {
-            name,
-            store,
-        });
-
+    pub async fn load_plugin(&mut self, engine: &WasmEngine, path: PathBuf) -> Result<()> {
+        let component = engine.load_component(&path).await?;
+        let plugin = engine.instantiate_plugin(&mut self.store, component).await?;
+        self.plugins.push(PluginInstance { plugin });
         Ok(())
     }
 
-    pub async fn load_repl_logic(&mut self, path: PathBuf) -> Result<()> {
-        let component = self.engine.load_component(&path).await?;
-        let store = self.engine.instantiate_component(component).await?;
-        self.repl_logic = Some(store);
+    pub async fn load_repl_logic(&mut self, engine: &WasmEngine, path: PathBuf) -> Result<()> {
+        let component = engine.load_component(&path).await?;
+        let repl_logic = engine.instantiate_repl_logic(&mut self.store, component).await?;
+        self.repl_logic = Some(repl_logic);
         Ok(())
     }
 
-    pub fn plugin_names(&self) -> Vec<String> {
-        self.plugins.keys().cloned().collect()
+    pub async fn plugin_names(&mut self) -> Vec<String> {
+        let mut names = Vec::new();
+        for plugin_instance in &self.plugins {
+            match plugin_instance.plugin.repl_api_plugin().call_name(&mut self.store).await {
+                Ok(name) => names.push(name.to_string()),
+                Err(_) => names.push("<error>".to_string()),
+            }
+        }
+        names
     }
 }

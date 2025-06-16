@@ -2,7 +2,7 @@ use anyhow::Result;
 use clap::Parser;
 use std::path::PathBuf;
 use tracing::info;
-use cli_host::Host;
+use cli_host::{Host, WasmEngine};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -21,19 +21,25 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
     info!("Starting REPL host...");
 
-    // Initialize host
-    let mut host = Host::new()?;
-    info!("WebAssembly engine initialized");
+    // Create the WebAssembly engine
+    let engine = WasmEngine::new()?;
+
+    // Create the host
+    let mut host = Host::new(&engine);
+
+    // Load the REPL logic component
+    let repl_logic_path = PathBuf::from("target/wasm32-unknown-unknown/debug/repl_logic.wasm");
+    host.load_repl_logic(&engine, repl_logic_path).await?;
 
     // Load plugins
     for plugin_path in &cli.plugins {
         info!("Loading plugin: {}", plugin_path.display());
-        host.load_plugin(plugin_path.clone()).await?;
+        host.load_plugin(&engine, plugin_path.clone()).await?;
     }
 
-    // Print welcome message
-    println!("Welcome to repl");
-    println!("Active plugins: {}", host.plugin_names().join(", "));
+    // Get plugin names
+    let names = host.plugin_names().await;
+    println!("Loaded plugins: {:?}", names);
 
     // TODO: Load REPL logic
     // TODO: Start REPL loop with command parsing and plugin dispatch
