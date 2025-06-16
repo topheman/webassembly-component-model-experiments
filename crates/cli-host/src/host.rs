@@ -1,7 +1,8 @@
 use anyhow::Result;
 use std::path::PathBuf;
 use wasmtime::Store;
-use api::{PluginApi, HostApi};
+use api::host_api::HostApi;
+use api::plugin_api::PluginApi;
 use crate::engine::WasmEngine;
 
 /// Represents a loaded plugin

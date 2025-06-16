@@ -4,7 +4,8 @@ use wasmtime::{Engine, Config, Store};
 use wasmtime::component::{Component, Linker as ComponentLinker};
 
 // Import the generated bindings
-use api::{PluginApi, HostApi};
+use api::plugin_api::PluginApi;
+use api::host_api::HostApi;
 
 /// A generic WebAssembly engine wrapper that handles component loading and instantiation
 pub struct WasmEngine {

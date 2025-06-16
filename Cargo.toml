@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "crates/api",
     "crates/cli-host",
+    "crates/repl-logic-guest",
     # "crates/repl-guest",
     # "crates/plugin-hello"
 ]
