@@ -5,6 +5,7 @@ use std::path::Path;
 
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
+    println!("cargo:rerun-if-changed=./wit");
 
     // Generate host-api bindings
     let bindings = wasmtime::component::bindgen!({
