@@ -1,7 +1,7 @@
 package repl:api;
 
 interface repl-logic {
-  use transport.{repl-result};
+  use transport.{readline-result};
 
   record plugin-config {
     command: string,
@@ -17,7 +17,7 @@ interface repl-logic {
   set-plugins: func(plugins: list<plugin-config>);
   set-env: func(env-var: repl-env-var);
   list-env: func() -> list<repl-env-var>;
-  readline: func(line: string) -> repl-result;
+  readline: func(line: string) -> readline-result;
 }
 
 interface plugin-runner {

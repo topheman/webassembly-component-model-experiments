@@ -10,4 +10,9 @@ interface transport {
     error,
     warning,
   }
+
+  record readline-result {
+    command: string,
+    payload: string,
+  }
 }

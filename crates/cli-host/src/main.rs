@@ -57,7 +57,6 @@ async fn main() -> Result<()> {
         std::io::stdout().flush()?;
         std::io::stdin().read_line(&mut line)?;
         let result = repl_logic.repl_api_repl_logic().call_readline(&mut host.store, &line).await?;
-        // println!("{}", result.output.unwrap_or_default());
         println!("{:?}", result);
     }
 

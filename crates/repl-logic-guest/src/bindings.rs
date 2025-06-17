@@ -66,6 +66,22 @@ pub mod repl {
                         .finish()
                 }
             }
+            #[derive(Clone)]
+            pub struct ReadlineResult {
+                pub command: _rt::String,
+                pub payload: _rt::String,
+            }
+            impl ::core::fmt::Debug for ReadlineResult {
+                fn fmt(
+                    &self,
+                    f: &mut ::core::fmt::Formatter<'_>,
+                ) -> ::core::fmt::Result {
+                    f.debug_struct("ReadlineResult")
+                        .field("command", &self.command)
+                        .field("payload", &self.payload)
+                        .finish()
+                }
+            }
         }
     }
 }
@@ -80,7 +96,7 @@ pub mod exports {
                 #[doc(hidden)]
                 static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
-                pub type ReplResult = super::super::super::super::repl::api::transport::ReplResult;
+                pub type ReadlineResult = super::super::super::super::repl::api::transport::ReadlineResult;
                 #[derive(Clone)]
                 pub struct PluginConfig {
                     pub command: _rt::String,
@@ -289,92 +305,47 @@ pub mod exports {
                     let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
                     let result1 = T::readline(_rt::string_lift(bytes0));
                     let ptr2 = (&raw mut _RET_AREA.0).cast::<u8>();
-                    let super::super::super::super::repl::api::transport::ReplResult {
-                        color: color3,
-                        status: status3,
-                        output: output3,
+                    let super::super::super::super::repl::api::transport::ReadlineResult {
+                        command: command3,
+                        payload: payload3,
                     } = result1;
-                    match color3 {
-                        Some(e) => {
-                            *ptr2.add(0).cast::<u8>() = (1i32) as u8;
-                            let vec4 = (e.into_bytes()).into_boxed_slice();
-                            let ptr4 = vec4.as_ptr().cast::<u8>();
-                            let len4 = vec4.len();
-                            ::core::mem::forget(vec4);
-                            *ptr2
-                                .add(2 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len4;
-                            *ptr2
-                                .add(::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = ptr4.cast_mut();
-                        }
-                        None => {
-                            *ptr2.add(0).cast::<u8>() = (0i32) as u8;
-                        }
-                    };
-                    *ptr2.add(3 * ::core::mem::size_of::<*const u8>()).cast::<u8>() = (status3
-                        .clone() as i32) as u8;
-                    match output3 {
-                        Some(e) => {
-                            *ptr2
-                                .add(4 * ::core::mem::size_of::<*const u8>())
-                                .cast::<u8>() = (1i32) as u8;
-                            let vec5 = (e.into_bytes()).into_boxed_slice();
-                            let ptr5 = vec5.as_ptr().cast::<u8>();
-                            let len5 = vec5.len();
-                            ::core::mem::forget(vec5);
-                            *ptr2
-                                .add(6 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len5;
-                            *ptr2
-                                .add(5 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = ptr5.cast_mut();
-                        }
-                        None => {
-                            *ptr2
-                                .add(4 * ::core::mem::size_of::<*const u8>())
-                                .cast::<u8>() = (0i32) as u8;
-                        }
-                    };
+                    let vec4 = (command3.into_bytes()).into_boxed_slice();
+                    let ptr4 = vec4.as_ptr().cast::<u8>();
+                    let len4 = vec4.len();
+                    ::core::mem::forget(vec4);
+                    *ptr2.add(::core::mem::size_of::<*const u8>()).cast::<usize>() = len4;
+                    *ptr2.add(0).cast::<*mut u8>() = ptr4.cast_mut();
+                    let vec5 = (payload3.into_bytes()).into_boxed_slice();
+                    let ptr5 = vec5.as_ptr().cast::<u8>();
+                    let len5 = vec5.len();
+                    ::core::mem::forget(vec5);
+                    *ptr2.add(3 * ::core::mem::size_of::<*const u8>()).cast::<usize>() = len5;
+                    *ptr2
+                        .add(2 * ::core::mem::size_of::<*const u8>())
+                        .cast::<*mut u8>() = ptr5.cast_mut();
                     ptr2
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn __post_return_readline<T: Guest>(arg0: *mut u8) {
-                    let l0 = i32::from(*arg0.add(0).cast::<u8>());
-                    match l0 {
-                        0 => {}
-                        _ => {
-                            let l1 = *arg0
-                                .add(::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>();
-                            let l2 = *arg0
-                                .add(2 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>();
-                            _rt::cabi_dealloc(l1, l2, 1);
-                        }
-                    }
-                    let l3 = i32::from(
-                        *arg0.add(4 * ::core::mem::size_of::<*const u8>()).cast::<u8>(),
-                    );
-                    match l3 {
-                        0 => {}
-                        _ => {
-                            let l4 = *arg0
-                                .add(5 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>();
-                            let l5 = *arg0
-                                .add(6 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>();
-                            _rt::cabi_dealloc(l4, l5, 1);
-                        }
-                    }
+                    let l0 = *arg0.add(0).cast::<*mut u8>();
+                    let l1 = *arg0
+                        .add(::core::mem::size_of::<*const u8>())
+                        .cast::<usize>();
+                    _rt::cabi_dealloc(l0, l1, 1);
+                    let l2 = *arg0
+                        .add(2 * ::core::mem::size_of::<*const u8>())
+                        .cast::<*mut u8>();
+                    let l3 = *arg0
+                        .add(3 * ::core::mem::size_of::<*const u8>())
+                        .cast::<usize>();
+                    _rt::cabi_dealloc(l2, l3, 1);
                 }
                 pub trait Guest {
                     fn set_plugins(plugins: _rt::Vec<PluginConfig>) -> ();
                     fn set_env(env_var: ReplEnvVar) -> ();
                     fn list_env() -> _rt::Vec<ReplEnvVar>;
-                    fn readline(line: _rt::String) -> ReplResult;
+                    fn readline(line: _rt::String) -> ReadlineResult;
                 }
                 #[doc(hidden)]
                 macro_rules! __export_repl_api_repl_logic_cabi {
@@ -410,10 +381,10 @@ pub mod exports {
                 struct _RetArea(
                     [::core::mem::MaybeUninit<
                         u8,
-                    >; 7 * ::core::mem::size_of::<*const u8>()],
+                    >; 4 * ::core::mem::size_of::<*const u8>()],
                 );
                 static mut _RET_AREA: _RetArea = _RetArea(
-                    [::core::mem::MaybeUninit::uninit(); 7
+                    [::core::mem::MaybeUninit::uninit(); 4
                         * ::core::mem::size_of::<*const u8>()],
                 );
             }
@@ -628,21 +599,22 @@ pub(crate) use __export_host_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 605] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xde\x03\x01A\x02\x01\
-A\x07\x01B\x05\x01m\x03\x07success\x05error\x07warning\x04\0\x0brepl-status\x03\0\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 671] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xa0\x04\x01A\x02\x01\
+A\x08\x01B\x07\x01m\x03\x07success\x05error\x07warning\x04\0\x0brepl-status\x03\0\
 \0\x01ks\x01r\x03\x05color\x02\x06status\x01\x06output\x02\x04\0\x0brepl-result\x03\
-\0\x03\x03\0\x12repl:api/transport\x05\0\x02\x03\0\0\x0brepl-result\x01B\x11\x02\
-\x03\x02\x01\x01\x04\0\x0brepl-result\x03\0\0\x01k~\x01r\x03\x07commands\x09arg-\
-count\x02\x03mans\x04\0\x0dplugin-config\x03\0\x03\x01r\x02\x03keys\x05values\x04\
-\0\x0crepl-env-var\x03\0\x05\x01p\x04\x01@\x01\x07plugins\x07\x01\0\x04\0\x0bset\
--plugins\x01\x08\x01@\x01\x07env-var\x06\x01\0\x04\0\x07set-env\x01\x09\x01p\x06\
-\x01@\0\0\x0a\x04\0\x08list-env\x01\x0b\x01@\x01\x04lines\0\x01\x04\0\x08readlin\
-e\x01\x0c\x04\0\x13repl:api/repl-logic\x05\x02\x01B\x04\x02\x03\x02\x01\x01\x04\0\
-\x0brepl-result\x03\0\0\x01@\x02\x07commands\x07payloads\0\x01\x04\0\x04exec\x01\
-\x02\x04\0\x16repl:api/plugin-runner\x05\x03\x04\0\x11repl:api/host-api\x04\0\x0b\
-\x0e\x01\0\x08host-api\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-co\
-mponent\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+\0\x03\x01r\x02\x07commands\x07payloads\x04\0\x0freadline-result\x03\0\x05\x03\0\
+\x12repl:api/transport\x05\0\x02\x03\0\0\x0freadline-result\x01B\x11\x02\x03\x02\
+\x01\x01\x04\0\x0freadline-result\x03\0\0\x01k~\x01r\x03\x07commands\x09arg-coun\
+t\x02\x03mans\x04\0\x0dplugin-config\x03\0\x03\x01r\x02\x03keys\x05values\x04\0\x0c\
+repl-env-var\x03\0\x05\x01p\x04\x01@\x01\x07plugins\x07\x01\0\x04\0\x0bset-plugi\
+ns\x01\x08\x01@\x01\x07env-var\x06\x01\0\x04\0\x07set-env\x01\x09\x01p\x06\x01@\0\
+\0\x0a\x04\0\x08list-env\x01\x0b\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x0c\
+\x04\0\x13repl:api/repl-logic\x05\x02\x02\x03\0\0\x0brepl-result\x01B\x04\x02\x03\
+\x02\x01\x03\x04\0\x0brepl-result\x03\0\0\x01@\x02\x07commands\x07payloads\0\x01\
+\x04\0\x04exec\x01\x02\x04\0\x16repl:api/plugin-runner\x05\x04\x04\0\x11repl:api\
+/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\0\0\0G\x09producers\x01\x0cprocess\
+ed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

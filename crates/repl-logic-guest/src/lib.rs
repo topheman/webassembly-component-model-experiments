@@ -24,11 +24,10 @@ impl ReplLogicGuest for Component {
         Vec::new()
     }
 
-    fn readline(line: String) -> transport::ReplResult {
-        transport::ReplResult {
-            color: None,
-            status: transport::ReplStatus::Success,
-            output: Some(format!("[ReplLogicGuest.readline]Echo: {}", line)),
+    fn readline(line: String) -> transport::ReadlineResult {
+        transport::ReadlineResult {
+            command: format!("[command] {}", line),
+            payload: format!("[payload] {}", line),
         }
     }
 }
