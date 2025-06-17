@@ -5,11 +5,7 @@ edition = { workspace = true }
 publish = false
 
 [dependencies]
-api = { path = "../api" }
 wit-bindgen-rt = { workspace = true }
-
-[build-dependencies]
-cargo-component = "0.5.0"
 
 [lib]
 crate-type = ["cdylib"]
