@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use wasmtime::Store;
 use api::host_api::HostApi;
 use api::plugin_api::PluginApi;
-use crate::engine::WasmEngine;
+use crate::engine::{WasmEngine, WasiState};
 
 /// Represents a loaded plugin
 pub struct PluginInstance {
@@ -12,7 +12,7 @@ pub struct PluginInstance {
 
 /// The main host that manages plugins and the REPL logic
 pub struct Host {
-    pub store: Store<()>,
+    pub store: Store<WasiState>,
     pub repl_logic: Option<HostApi>,
     pub plugins: Vec<PluginInstance>,
 }
@@ -20,7 +20,7 @@ pub struct Host {
 impl Host {
     pub fn new(engine: &WasmEngine) -> Self {
         Self {
-            store: Store::new(engine.engine(), ()),
+            store: engine.create_store(),
             plugins: Vec::new(),
             repl_logic: None,
         }

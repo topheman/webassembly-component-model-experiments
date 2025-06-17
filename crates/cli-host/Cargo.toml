@@ -6,6 +6,7 @@ publish = false
 
 [dependencies]
 wasmtime = { workspace = true }
+wasmtime-wasi = { workspace = true }
 clap = { workspace = true }
 tokio = { workspace = true }
 anyhow = { workspace = true }
