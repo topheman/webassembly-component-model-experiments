@@ -10,36 +10,18 @@ use crate::bindings::repl::api::transport;
 
 use crate::env::EnvVars;
 
-struct Component {
-    plugins: Vec<repl_logic::PluginConfig>,
-    env_vars: EnvVars,
-}
-
-impl Component {
-    fn new() -> Self {
-        Self {
-            plugins: Vec::new(),
-            env_vars: EnvVars::new(),
-        }
-    }
-}
+struct Component {}
 
 impl ReplLogicGuest for Component {
-    fn set_plugins(plugins: Vec<repl_logic::PluginConfig>) {
-        println!("Setting plugins: {:?}", plugins);
-        // TODO: Store plugins in the component
-    }
+    fn set_plugins(_plugins: Vec<repl_logic::PluginConfig>) {}
 
-    fn set_env(env_var: repl_logic::ReplEnvVar) {
-        println!("Setting env var: {} = {}", env_var.key, env_var.value);
-        // TODO: Get component instance and update env_vars
-        // For now, we'll need to implement this differently since we don't have access to self
-    }
+    fn set_env(_env_var: repl_logic::ReplEnvVar) {}
 
     fn list_env() -> Vec<repl_logic::ReplEnvVar> {
-        // TODO: Get component instance and return env_vars
-        // For now, return empty vector
-        Vec::new()
+        let mut env_vars = EnvVars::new();
+        env_vars.set("HOME".to_string(), "/home/user".to_string());
+        env_vars.set("USER".to_string(), "john".to_string());
+        env_vars.into()
     }
 
     fn readline(line: String) -> transport::ReadlineResult {
@@ -48,7 +30,16 @@ impl ReplLogicGuest for Component {
         let mut env_vars = EnvVars::new();
         env_vars.set("HOME".to_string(), "/home/user".to_string());
         env_vars.set("USER".to_string(), "john".to_string());
-        parser::parse_line(&line, &env_vars)
+        match parser::parse_line(&line, &env_vars) {
+            parser::ParseResult::Plugin(result) => result,
+            parser::ParseResult::Export((key, value)) => {
+                Component::set_env(repl_logic::ReplEnvVar { key: key.clone(), value: value.clone() });
+                transport::ReadlineResult {
+                    command: "export".to_string(),
+                    payload: format!("{}={}", key.clone(), value.clone())
+                }
+            }
+        }
     }
 }
 
