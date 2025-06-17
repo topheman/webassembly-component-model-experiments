@@ -28,7 +28,7 @@ impl ReplLogicGuest for Component {
         transport::ReplResult {
             color: None,
             status: transport::ReplStatus::Success,
-            output: Some(format!("Echo: {}", line)),
+            output: Some(format!("[ReplLogicGuest.readline]Echo: {}", line)),
         }
     }
 }
@@ -38,7 +38,7 @@ impl PluginRunnerGuest for Component {
         transport::ReplResult {
             color: None,
             status: transport::ReplStatus::Success,
-            output: Some(format!("Command: {}, Payload: {}", command, payload)),
+            output: Some(format!("[PluginRunnerGuest.exec]Command: {}, Payload: {}", command, payload)),
         }
     }
 }

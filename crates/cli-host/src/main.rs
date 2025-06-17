@@ -41,6 +41,12 @@ async fn main() -> Result<()> {
     let names = host.plugin_names().await;
     println!("Loaded plugins: {:?}", names);
 
+    let Some(repl_logic) = host.repl_logic else {
+        return Err(anyhow::anyhow!("No REPL logic loaded"));
+    };
+    let result = repl_logic.repl_api_repl_logic().call_readline(host.store, "Hello, world!").await?;
+    println!("[Host] REPL logic result: {:?}", result);
+
     // TODO: Load REPL logic
     // TODO: Start REPL loop with command parsing and plugin dispatch
 
