@@ -8,7 +8,7 @@ use cli_host::{Host, WasmEngine};
 #[command(author, version, about, long_about = None)]
 struct Cli {
     /// Paths to WebAssembly plugin files
-    #[arg(required = true)]
+    #[arg(long)]
     plugins: Vec<PathBuf>,
 }
 
@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
     let mut host = Host::new(&engine);
 
     // Load the REPL logic component
-    let repl_logic_path = PathBuf::from("target/wasm32-unknown-unknown/debug/repl_logic.wasm");
+    let repl_logic_path = PathBuf::from("target/wasm32-wasip1/debug/repl_logic_guest.wasm"); // todo use a config file ?
     host.load_repl_logic(&engine, repl_logic_path).await?;
 
     // Load plugins
