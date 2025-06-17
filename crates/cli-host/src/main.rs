@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use std::io::Write;
 use tracing::info;
 use cli_host::{Host, WasmEngine};
+use api::host_api::exports::repl::api::repl_logic::ReplEnvVar;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -50,6 +51,18 @@ async fn main() -> Result<()> {
 
     // TODO: Load REPL logic
     // TODO: Start REPL loop with command parsing and plugin dispatch
+
+    // it will be will be handled by the repl-logic component
+    let env_vars = vec![
+        ReplEnvVar {
+            key: "HOME".to_string(),
+            value: "/home/user".to_string(),
+        },
+        ReplEnvVar {
+            key: "USER".to_string(),
+            value: "john".to_string(),
+        },
+    ];
 
     loop {
         let mut line = String::new();
