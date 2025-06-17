@@ -1,6 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
 use std::path::PathBuf;
+use std::io::Write;
 use tracing::info;
 use cli_host::{Host, WasmEngine};
 
@@ -44,11 +45,21 @@ async fn main() -> Result<()> {
     let Some(repl_logic) = host.repl_logic else {
         return Err(anyhow::anyhow!("No REPL logic loaded"));
     };
-    let result = repl_logic.repl_api_repl_logic().call_readline(host.store, "Hello, world!").await?;
+    let result = repl_logic.repl_api_repl_logic().call_readline(&mut host.store, "Hello, world!").await?;
     println!("[Host] REPL logic result: {:?}", result);
 
     // TODO: Load REPL logic
     // TODO: Start REPL loop with command parsing and plugin dispatch
+
+    loop {
+        let mut line = String::new();
+        print!("repl> ");
+        std::io::stdout().flush()?;
+        std::io::stdin().read_line(&mut line)?;
+        let result = repl_logic.repl_api_repl_logic().call_readline(&mut host.store, &line).await?;
+        // println!("{}", result.output.unwrap_or_default());
+        println!("{:?}", result);
+    }
 
     Ok(())
 }
