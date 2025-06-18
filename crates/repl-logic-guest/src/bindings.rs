@@ -195,27 +195,153 @@ pub mod exports {
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn _export_set_env_cabi<T: Guest>(
-                    arg0: *mut u8,
-                    arg1: usize,
-                    arg2: *mut u8,
-                    arg3: usize,
-                ) {
+                pub unsafe fn _export_get_plugins_cabi<T: Guest>() -> *mut u8 {
                     #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
-                    let len0 = arg1;
-                    let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
-                    let len1 = arg3;
-                    let bytes1 = _rt::Vec::from_raw_parts(arg2.cast(), len1, len1);
-                    T::set_env(ReplEnvVar {
-                        key: _rt::string_lift(bytes0),
-                        value: _rt::string_lift(bytes1),
-                    });
+                    let result0 = T::get_plugins();
+                    let ptr1 = (&raw mut _RET_AREA.0).cast::<u8>();
+                    let vec5 = result0;
+                    let len5 = vec5.len();
+                    let layout5 = _rt::alloc::Layout::from_size_align_unchecked(
+                        vec5.len() * (5 * ::core::mem::size_of::<*const u8>()),
+                        ::core::mem::size_of::<*const u8>(),
+                    );
+                    let result5 = if layout5.size() != 0 {
+                        let ptr = _rt::alloc::alloc(layout5).cast::<u8>();
+                        if ptr.is_null() {
+                            _rt::alloc::handle_alloc_error(layout5);
+                        }
+                        ptr
+                    } else {
+                        ::core::ptr::null_mut()
+                    };
+                    for (i, e) in vec5.into_iter().enumerate() {
+                        let base = result5
+                            .add(i * (5 * ::core::mem::size_of::<*const u8>()));
+                        {
+                            let PluginConfig {
+                                command: command2,
+                                arg_count: arg_count2,
+                                man: man2,
+                            } = e;
+                            let vec3 = (command2.into_bytes()).into_boxed_slice();
+                            let ptr3 = vec3.as_ptr().cast::<u8>();
+                            let len3 = vec3.len();
+                            ::core::mem::forget(vec3);
+                            *base
+                                .add(::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len3;
+                            *base.add(0).cast::<*mut u8>() = ptr3.cast_mut();
+                            match arg_count2 {
+                                Some(e) => {
+                                    *base
+                                        .add(2 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    *base
+                                        .add(1 + 2 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (_rt::as_i32(e)) as u8;
+                                }
+                                None => {
+                                    *base
+                                        .add(2 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
+                            let vec4 = (man2.into_bytes()).into_boxed_slice();
+                            let ptr4 = vec4.as_ptr().cast::<u8>();
+                            let len4 = vec4.len();
+                            ::core::mem::forget(vec4);
+                            *base
+                                .add(4 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len4;
+                            *base
+                                .add(3 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>() = ptr4.cast_mut();
+                        }
+                    }
+                    *ptr1.add(::core::mem::size_of::<*const u8>()).cast::<usize>() = len5;
+                    *ptr1.add(0).cast::<*mut u8>() = result5;
+                    ptr1
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn _export_list_env_cabi<T: Guest>() -> *mut u8 {
+                pub unsafe fn __post_return_get_plugins<T: Guest>(arg0: *mut u8) {
+                    let l0 = *arg0.add(0).cast::<*mut u8>();
+                    let l1 = *arg0
+                        .add(::core::mem::size_of::<*const u8>())
+                        .cast::<usize>();
+                    let base6 = l0;
+                    let len6 = l1;
+                    for i in 0..len6 {
+                        let base = base6
+                            .add(i * (5 * ::core::mem::size_of::<*const u8>()));
+                        {
+                            let l2 = *base.add(0).cast::<*mut u8>();
+                            let l3 = *base
+                                .add(::core::mem::size_of::<*const u8>())
+                                .cast::<usize>();
+                            _rt::cabi_dealloc(l2, l3, 1);
+                            let l4 = *base
+                                .add(3 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>();
+                            let l5 = *base
+                                .add(4 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>();
+                            _rt::cabi_dealloc(l4, l5, 1);
+                        }
+                    }
+                    _rt::cabi_dealloc(
+                        base6,
+                        len6 * (5 * ::core::mem::size_of::<*const u8>()),
+                        ::core::mem::size_of::<*const u8>(),
+                    );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_set_env_vars_cabi<T: Guest>(
+                    arg0: *mut u8,
+                    arg1: usize,
+                ) {
                     #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
-                    let result0 = T::list_env();
+                    let base6 = arg0;
+                    let len6 = arg1;
+                    let mut result6 = _rt::Vec::with_capacity(len6);
+                    for i in 0..len6 {
+                        let base = base6
+                            .add(i * (4 * ::core::mem::size_of::<*const u8>()));
+                        let e6 = {
+                            let l0 = *base.add(0).cast::<*mut u8>();
+                            let l1 = *base
+                                .add(::core::mem::size_of::<*const u8>())
+                                .cast::<usize>();
+                            let len2 = l1;
+                            let bytes2 = _rt::Vec::from_raw_parts(l0.cast(), len2, len2);
+                            let l3 = *base
+                                .add(2 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>();
+                            let l4 = *base
+                                .add(3 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>();
+                            let len5 = l4;
+                            let bytes5 = _rt::Vec::from_raw_parts(l3.cast(), len5, len5);
+                            ReplEnvVar {
+                                key: _rt::string_lift(bytes2),
+                                value: _rt::string_lift(bytes5),
+                            }
+                        };
+                        result6.push(e6);
+                    }
+                    _rt::cabi_dealloc(
+                        base6,
+                        len6 * (4 * ::core::mem::size_of::<*const u8>()),
+                        ::core::mem::size_of::<*const u8>(),
+                    );
+                    T::set_env_vars(result6);
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_get_env_vars_cabi<T: Guest>() -> *mut u8 {
+                    #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
+                    let result0 = T::get_env_vars();
                     let ptr1 = (&raw mut _RET_AREA.0).cast::<u8>();
                     let vec5 = result0;
                     let len5 = vec5.len();
@@ -263,7 +389,7 @@ pub mod exports {
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn __post_return_list_env<T: Guest>(arg0: *mut u8) {
+                pub unsafe fn __post_return_get_env_vars<T: Guest>(arg0: *mut u8) {
                     let l0 = *arg0.add(0).cast::<*mut u8>();
                     let l1 = *arg0
                         .add(::core::mem::size_of::<*const u8>())
@@ -293,6 +419,24 @@ pub mod exports {
                         len6 * (4 * ::core::mem::size_of::<*const u8>()),
                         ::core::mem::size_of::<*const u8>(),
                     );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_set_env_var_cabi<T: Guest>(
+                    arg0: *mut u8,
+                    arg1: usize,
+                    arg2: *mut u8,
+                    arg3: usize,
+                ) {
+                    #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
+                    let len0 = arg1;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
+                    let len1 = arg3;
+                    let bytes1 = _rt::Vec::from_raw_parts(arg2.cast(), len1, len1);
+                    T::set_env_var(ReplEnvVar {
+                        key: _rt::string_lift(bytes0),
+                        value: _rt::string_lift(bytes1),
+                    });
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
@@ -343,8 +487,10 @@ pub mod exports {
                 }
                 pub trait Guest {
                     fn set_plugins(plugins: _rt::Vec<PluginConfig>) -> ();
-                    fn set_env(env_var: ReplEnvVar) -> ();
-                    fn list_env() -> _rt::Vec<ReplEnvVar>;
+                    fn get_plugins() -> _rt::Vec<PluginConfig>;
+                    fn set_env_vars(env_vars: _rt::Vec<ReplEnvVar>) -> ();
+                    fn get_env_vars() -> _rt::Vec<ReplEnvVar>;
+                    fn set_env_var(env_var: ReplEnvVar) -> ();
                     fn readline(line: _rt::String) -> ReadlineResult;
                 }
                 #[doc(hidden)]
@@ -354,23 +500,35 @@ pub mod exports {
                         "repl:api/repl-logic#set-plugins")] unsafe extern "C" fn
                         export_set_plugins(arg0 : * mut u8, arg1 : usize,) { unsafe {
                         $($path_to_types)*:: _export_set_plugins_cabi::<$ty > (arg0,
-                        arg1) } } #[unsafe (export_name = "repl:api/repl-logic#set-env")]
-                        unsafe extern "C" fn export_set_env(arg0 : * mut u8, arg1 :
+                        arg1) } } #[unsafe (export_name =
+                        "repl:api/repl-logic#get-plugins")] unsafe extern "C" fn
+                        export_get_plugins() -> * mut u8 { unsafe { $($path_to_types)*::
+                        _export_get_plugins_cabi::<$ty > () } } #[unsafe (export_name =
+                        "cabi_post_repl:api/repl-logic#get-plugins")] unsafe extern "C"
+                        fn _post_return_get_plugins(arg0 : * mut u8,) { unsafe {
+                        $($path_to_types)*:: __post_return_get_plugins::<$ty > (arg0) } }
+                        #[unsafe (export_name = "repl:api/repl-logic#set-env-vars")]
+                        unsafe extern "C" fn export_set_env_vars(arg0 : * mut u8, arg1 :
+                        usize,) { unsafe { $($path_to_types)*::
+                        _export_set_env_vars_cabi::<$ty > (arg0, arg1) } } #[unsafe
+                        (export_name = "repl:api/repl-logic#get-env-vars")] unsafe extern
+                        "C" fn export_get_env_vars() -> * mut u8 { unsafe {
+                        $($path_to_types)*:: _export_get_env_vars_cabi::<$ty > () } }
+                        #[unsafe (export_name =
+                        "cabi_post_repl:api/repl-logic#get-env-vars")] unsafe extern "C"
+                        fn _post_return_get_env_vars(arg0 : * mut u8,) { unsafe {
+                        $($path_to_types)*:: __post_return_get_env_vars::<$ty > (arg0) }
+                        } #[unsafe (export_name = "repl:api/repl-logic#set-env-var")]
+                        unsafe extern "C" fn export_set_env_var(arg0 : * mut u8, arg1 :
                         usize, arg2 : * mut u8, arg3 : usize,) { unsafe {
-                        $($path_to_types)*:: _export_set_env_cabi::<$ty > (arg0, arg1,
-                        arg2, arg3) } } #[unsafe (export_name =
-                        "repl:api/repl-logic#list-env")] unsafe extern "C" fn
-                        export_list_env() -> * mut u8 { unsafe { $($path_to_types)*::
-                        _export_list_env_cabi::<$ty > () } } #[unsafe (export_name =
-                        "cabi_post_repl:api/repl-logic#list-env")] unsafe extern "C" fn
-                        _post_return_list_env(arg0 : * mut u8,) { unsafe {
-                        $($path_to_types)*:: __post_return_list_env::<$ty > (arg0) } }
-                        #[unsafe (export_name = "repl:api/repl-logic#readline")] unsafe
-                        extern "C" fn export_readline(arg0 : * mut u8, arg1 : usize,) ->
-                        * mut u8 { unsafe { $($path_to_types)*::
-                        _export_readline_cabi::<$ty > (arg0, arg1) } } #[unsafe
-                        (export_name = "cabi_post_repl:api/repl-logic#readline")] unsafe
-                        extern "C" fn _post_return_readline(arg0 : * mut u8,) { unsafe {
+                        $($path_to_types)*:: _export_set_env_var_cabi::<$ty > (arg0,
+                        arg1, arg2, arg3) } } #[unsafe (export_name =
+                        "repl:api/repl-logic#readline")] unsafe extern "C" fn
+                        export_readline(arg0 : * mut u8, arg1 : usize,) -> * mut u8 {
+                        unsafe { $($path_to_types)*:: _export_readline_cabi::<$ty >
+                        (arg0, arg1) } } #[unsafe (export_name =
+                        "cabi_post_repl:api/repl-logic#readline")] unsafe extern "C" fn
+                        _post_return_readline(arg0 : * mut u8,) { unsafe {
                         $($path_to_types)*:: __post_return_readline::<$ty > (arg0) } } };
                     };
                 }
@@ -557,6 +715,65 @@ mod _rt {
         let layout = alloc::Layout::from_size_align_unchecked(size, align);
         alloc::dealloc(ptr, layout);
     }
+    pub fn as_i32<T: AsI32>(t: T) -> i32 {
+        t.as_i32()
+    }
+    pub trait AsI32 {
+        fn as_i32(self) -> i32;
+    }
+    impl<'a, T: Copy + AsI32> AsI32 for &'a T {
+        fn as_i32(self) -> i32 {
+            (*self).as_i32()
+        }
+    }
+    impl AsI32 for i32 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+    impl AsI32 for u32 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+    impl AsI32 for i16 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+    impl AsI32 for u16 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+    impl AsI32 for i8 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+    impl AsI32 for u8 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+    impl AsI32 for char {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+    impl AsI32 for usize {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
     pub use alloc_crate::alloc;
     extern crate alloc as alloc_crate;
 }
@@ -599,22 +816,24 @@ pub(crate) use __export_host_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 671] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xa0\x04\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 732] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xdd\x04\x01A\x02\x01\
 A\x08\x01B\x07\x01m\x03\x07success\x05error\x07warning\x04\0\x0brepl-status\x03\0\
 \0\x01ks\x01r\x03\x05color\x02\x06status\x01\x06output\x02\x04\0\x0brepl-result\x03\
 \0\x03\x01r\x02\x07commands\x07payloads\x04\0\x0freadline-result\x03\0\x05\x03\0\
-\x12repl:api/transport\x05\0\x02\x03\0\0\x0freadline-result\x01B\x11\x02\x03\x02\
+\x12repl:api/transport\x05\0\x02\x03\0\0\x0freadline-result\x01B\x15\x02\x03\x02\
 \x01\x01\x04\0\x0freadline-result\x03\0\0\x01k~\x01r\x03\x07commands\x09arg-coun\
 t\x02\x03mans\x04\0\x0dplugin-config\x03\0\x03\x01r\x02\x03keys\x05values\x04\0\x0c\
 repl-env-var\x03\0\x05\x01p\x04\x01@\x01\x07plugins\x07\x01\0\x04\0\x0bset-plugi\
-ns\x01\x08\x01@\x01\x07env-var\x06\x01\0\x04\0\x07set-env\x01\x09\x01p\x06\x01@\0\
-\0\x0a\x04\0\x08list-env\x01\x0b\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x0c\
-\x04\0\x13repl:api/repl-logic\x05\x02\x02\x03\0\0\x0brepl-result\x01B\x04\x02\x03\
-\x02\x01\x03\x04\0\x0brepl-result\x03\0\0\x01@\x02\x07commands\x07payloads\0\x01\
-\x04\0\x04exec\x01\x02\x04\0\x16repl:api/plugin-runner\x05\x04\x04\0\x11repl:api\
-/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\0\0\0G\x09producers\x01\x0cprocess\
-ed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+ns\x01\x08\x01@\0\0\x07\x04\0\x0bget-plugins\x01\x09\x01p\x06\x01@\x01\x08env-va\
+rs\x0a\x01\0\x04\0\x0cset-env-vars\x01\x0b\x01@\0\0\x0a\x04\0\x0cget-env-vars\x01\
+\x0c\x01@\x01\x07env-var\x06\x01\0\x04\0\x0bset-env-var\x01\x0d\x01@\x01\x04line\
+s\0\x01\x04\0\x08readline\x01\x0e\x04\0\x13repl:api/repl-logic\x05\x02\x02\x03\0\
+\0\x0brepl-result\x01B\x04\x02\x03\x02\x01\x03\x04\0\x0brepl-result\x03\0\0\x01@\
+\x02\x07commands\x07payloads\0\x01\x04\0\x04exec\x01\x02\x04\0\x16repl:api/plugi\
+n-runner\x05\x04\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\0\
+\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-bi\
+ndgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

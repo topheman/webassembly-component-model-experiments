@@ -15,8 +15,10 @@ interface repl-logic {
   }
 
   set-plugins: func(plugins: list<plugin-config>);
-  set-env: func(env-var: repl-env-var);
-  list-env: func() -> list<repl-env-var>;
+  get-plugins: func() -> list<plugin-config>;
+  set-env-vars: func(env-vars: list<repl-env-var>);
+  get-env-vars: func() -> list<repl-env-var>;
+  set-env-var: func(env-var: repl-env-var);
   readline: func(line: string) -> readline-result;
 }
 

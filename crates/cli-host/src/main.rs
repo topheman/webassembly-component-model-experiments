@@ -64,6 +64,8 @@ async fn main() -> Result<()> {
         },
     ];
 
+    // let repl_state = repl_logic.repl_api_repl_logic().
+
     loop {
         let mut line = String::new();
         print!("repl> ");

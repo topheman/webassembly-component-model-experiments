@@ -6,7 +6,7 @@ pub enum ParseResult {
     Export((String, String)),
 }
 
-pub fn parse_line(line: &str, env_vars: &EnvVars) -> ParseResult {
+pub fn parse_line(line: &str, env_vars: &mut EnvVars) -> ParseResult {
     // Split the line into command and arguments
     let parts: Vec<&str> = line.split_whitespace().collect();
 
