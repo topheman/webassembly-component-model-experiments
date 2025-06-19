@@ -1,5 +1,6 @@
 use anyhow::Result;
 use std::path::Path;
+use std::collections::HashMap;
 use wasmtime::{Engine, Config, Store};
 use wasmtime::component::{Component, Linker as ComponentLinker, ResourceTable};
 use wasmtime_wasi::p2::{IoView, WasiCtx, WasiCtxBuilder, WasiView};
@@ -46,24 +47,6 @@ impl api::host_api::repl::api::transport::Host for HostApiHost {
     // This trait has no methods, so no implementation needed
 }
 
-impl api::host_api::repl::api::host_state::Host for HostApiHost {
-    async fn get_plugins(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig> {
-        vec![]
-    }
-
-    async fn set_env_vars(&mut self, _env_vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplEnvVar>) {
-        // TODO: Implement environment variable storage
-    }
-
-    async fn get_env_vars(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplEnvVar> {
-        vec![]
-    }
-
-    async fn set_env_var(&mut self, _env_var: api::host_api::repl::api::transport::ReplEnvVar) {
-        // TODO: Implement single environment variable storage
-    }
-}
-
 /// State that implements both WasiView and IoView for WASI support
 ///
 /// This struct combines all the necessary state for running WebAssembly components
@@ -89,6 +72,12 @@ pub struct WasiState {
     /// Host implementation for REPL logic API interfaces
     /// This provides the functionality that the REPL logic component can call
     pub host_api_host: HostApiHost,
+
+    /// Custom environment variables stored by the REPL
+    pub repl_env_vars: HashMap<String, String>,
+
+    /// Plugin configurations
+    pub plugin_configs: Vec<api::host_api::repl::api::transport::PluginConfig>,
 }
 
 /// Implementation of IoView trait for resource management
@@ -153,6 +142,8 @@ impl WasmEngine {
             table: ResourceTable::new(),
             plugin_host: PluginHost {},
             host_api_host: HostApiHost {},
+            repl_env_vars: HashMap::new(),
+            plugin_configs: Vec::new(),
         })
     }
 
@@ -175,9 +166,53 @@ impl WasmEngine {
         wasmtime_wasi::p2::add_to_linker_sync(&mut linker)?;
 
         // Add the host API interface with host implementation
-        HostApi::add_to_linker(&mut linker, |state: &mut WasiState| &mut state.host_api_host)?;
+        HostApi::add_to_linker(&mut linker, |state: &mut WasiState| state)?;
 
         let repl_logic = HostApi::instantiate_async(store, &component, &linker).await?;
         Ok(repl_logic)
+    }
+}
+
+impl api::host_api::repl::api::transport::Host for WasiState {
+    // This trait has no methods, so no implementation needed
+}
+
+impl api::host_api::repl::api::host_state::Host for WasiState {
+    async fn get_plugins(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig> {
+        // Now you have access to the full WasiState, which includes:
+        // - self.ctx (WasiCtx for WASI operations)
+        // - self.table (ResourceTable for resource management)
+        // - self.plugin_host (PluginHost instance)
+        // - self.host_api_host (HostApiHost instance)
+        // - self.repl_env_vars (custom environment variables)
+        // - self.plugin_configs (stored plugin configurations)
+
+        // Return the stored plugin configurations
+        self.plugin_configs.clone()
+    }
+
+    async fn set_env_vars(&mut self, env_vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplEnvVar>) {
+        // Store environment variables in the WasiState
+        for env_var in env_vars {
+            self.repl_env_vars.insert(env_var.key.clone(), env_var.value.clone());
+            println!("Setting env var: {} = {}", env_var.key, env_var.value);
+        }
+    }
+
+    async fn get_env_vars(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplEnvVar> {
+        // Return the stored environment variables
+        self.repl_env_vars
+            .iter()
+            .map(|(key, value)| api::host_api::repl::api::transport::ReplEnvVar {
+                key: key.clone(),
+                value: value.clone(),
+            })
+            .collect()
+    }
+
+    async fn set_env_var(&mut self, env_var: api::host_api::repl::api::transport::ReplEnvVar) {
+        // Set a single environment variable
+        self.repl_env_vars.insert(env_var.key.clone(), env_var.value.clone());
+        println!("Setting single env var: {} = {}", env_var.key, env_var.value);
     }
 }

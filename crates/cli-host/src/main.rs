@@ -41,28 +41,27 @@ async fn main() -> Result<()> {
 
     // Get plugin names
     let names = host.plugin_names().await;
-    println!("Loaded plugins: {:?}", names);
+    println!("[Host] Loaded plugins: {:?}", names);
+
+    // Example: Set some environment variables in the store from the host level
+    host.set_store_env_var("ROOT".to_string(), "/Users".to_string());
+    host.set_store_env_var("USER".to_string(), "Tophe".to_string());
+
+    // Example: Add a plugin configuration to the store
+    let plugin_config = api::host_api::repl::api::transport::PluginConfig {
+        command: "example".to_string(),
+        arg_count: Some(1),
+        man: "Example plugin for demonstration".to_string(),
+    };
+    host.add_plugin_config(plugin_config);
+
+    // Example: Access store data from host level
+    println!("[Host] Stored env vars: {:?}", host.get_all_store_env_vars());
+    println!("[Host] Stored plugin configs: {:?}", host.get_plugin_configs());
 
     let Some(repl_logic) = host.repl_logic else {
         return Err(anyhow::anyhow!("No REPL logic loaded"));
     };
-    let result = repl_logic.repl_api_repl_logic().call_readline(&mut host.store, "Hello, world!").await?;
-    println!("[Host] REPL logic result: {:?}", result);
-
-    // TODO: Load REPL logic
-    // TODO: Start REPL loop with command parsing and plugin dispatch
-
-    // it will be will be handled by the repl-logic component
-    let env_vars = vec![
-        ReplEnvVar {
-            key: "HOME".to_string(),
-            value: "/home/user".to_string(),
-        },
-        ReplEnvVar {
-            key: "USER".to_string(),
-            value: "john".to_string(),
-        },
-    ];
 
     // let repl_state = repl_logic.repl_api_repl_logic().
 

@@ -12,25 +12,6 @@ use crate::bindings::repl::api::transport;
 
 use crate::env::EnvVars;
 
-static mut STORED_PLUGINS: Vec<transport::PluginConfig> = Vec::new();
-static STORED_ENV_VARS: LazyLock<RwLock<EnvVars>> = LazyLock::new(|| RwLock::new({
-    let mut env_vars = EnvVars::new();
-    env_vars.set("HOME".to_string(), "/home/user".to_string());
-    env_vars.set("USER".to_string(), "john".to_string());
-    env_vars
-}));
-
-struct EncapsulatedImplementation {}
-
-impl EncapsulatedImplementation {
-
-    fn set_env_var(env_var: transport::ReplEnvVar) -> () {
-        let mut env_vars = STORED_ENV_VARS.write().unwrap();
-        // env_vars.set(env_var.key, env_var.value);
-    }
-
-}
-
 struct Component {}
 
 impl ReplLogicGuest for Component {
@@ -40,8 +21,9 @@ impl ReplLogicGuest for Component {
         // let mut env_vars = EnvVars::new();
         // env_vars.set("HOME".to_string(), "/home/user".to_string());
         // env_vars.set("USER".to_string(), "john".to_string());
-        let mut env_vars = STORED_ENV_VARS.write().unwrap();
-        match parser::parse_line(&line, &mut env_vars) {
+        // let mut env_vars = STORED_ENV_VARS.write().unwrap();
+        let env_vars = host_state::get_env_vars();
+        match parser::parse_line(&line, &env_vars.into()) {
             parser::ParseResult::Plugin(result) => result,
             parser::ParseResult::Export((key, value)) => {
                 host_state::set_env_var(&transport::ReplEnvVar {
