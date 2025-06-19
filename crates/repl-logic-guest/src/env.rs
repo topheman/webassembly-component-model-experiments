@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::bindings::exports::repl::api::repl_logic::ReplEnvVar;
+use crate::bindings::repl::api::transport::ReplEnvVar;
 
 /// A more efficient representation of environment variables using a HashMap
 #[derive(Debug, Clone)]

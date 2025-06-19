@@ -4,7 +4,7 @@ use std::path::PathBuf;
 use std::io::Write;
 use tracing::info;
 use cli_host::{Host, WasmEngine};
-use api::host_api::exports::repl::api::repl_logic::ReplEnvVar;
+use api::host_api::repl::api::transport::ReplEnvVar;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]

@@ -46,6 +46,24 @@ impl api::host_api::repl::api::transport::Host for HostApiHost {
     // This trait has no methods, so no implementation needed
 }
 
+impl api::host_api::repl::api::host_state::Host for HostApiHost {
+    async fn get_plugins(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig> {
+        vec![]
+    }
+
+    async fn set_env_vars(&mut self, _env_vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplEnvVar>) {
+        // TODO: Implement environment variable storage
+    }
+
+    async fn get_env_vars(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplEnvVar> {
+        vec![]
+    }
+
+    async fn set_env_var(&mut self, _env_var: api::host_api::repl::api::transport::ReplEnvVar) {
+        // TODO: Implement single environment variable storage
+    }
+}
+
 /// State that implements both WasiView and IoView for WASI support
 ///
 /// This struct combines all the necessary state for running WebAssembly components

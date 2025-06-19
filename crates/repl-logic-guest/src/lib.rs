@@ -7,12 +7,12 @@ use std::sync::{LazyLock, RwLock};
 
 use crate::bindings::exports::repl::api::repl_logic::Guest as ReplLogicGuest;
 use crate::bindings::exports::repl::api::plugin_runner::Guest as PluginRunnerGuest;
-use crate::bindings::exports::repl::api::repl_logic;
+use crate::bindings::repl::api::host_state;
 use crate::bindings::repl::api::transport;
 
 use crate::env::EnvVars;
 
-static mut STORED_PLUGINS: Vec<repl_logic::PluginConfig> = Vec::new();
+static mut STORED_PLUGINS: Vec<transport::PluginConfig> = Vec::new();
 static STORED_ENV_VARS: LazyLock<RwLock<EnvVars>> = LazyLock::new(|| RwLock::new({
     let mut env_vars = EnvVars::new();
     env_vars.set("HOME".to_string(), "/home/user".to_string());
@@ -24,7 +24,7 @@ struct EncapsulatedImplementation {}
 
 impl EncapsulatedImplementation {
 
-    fn set_env_var(env_var: repl_logic::ReplEnvVar) -> () {
+    fn set_env_var(env_var: transport::ReplEnvVar) -> () {
         let mut env_vars = STORED_ENV_VARS.write().unwrap();
         // env_vars.set(env_var.key, env_var.value);
     }
@@ -44,33 +44,16 @@ impl ReplLogicGuest for Component {
         match parser::parse_line(&line, &mut env_vars) {
             parser::ParseResult::Plugin(result) => result,
             parser::ParseResult::Export((key, value)) => {
-                EncapsulatedImplementation::set_env_var(repl_logic::ReplEnvVar { key: key.clone(), value: value.clone() });
+                host_state::set_env_var(&transport::ReplEnvVar {
+                    key: key.clone(),
+                    value: value.clone()
+                });
                 transport::ReadlineResult {
                     command: "export".to_string(),
                     payload: format!("{}={}", key.clone(), value.clone())
                 }
             }
         }
-    }
-
-    fn set_plugins(plugins: Vec<repl_logic::PluginConfig>) -> () {
-        todo!()
-    }
-
-    fn get_plugins() -> Vec<repl_logic::PluginConfig> {
-        todo!()
-    }
-
-    fn set_env_vars(env_vars: Vec<repl_logic::ReplEnvVar>) -> () {
-        todo!()
-    }
-
-    fn get_env_vars() -> Vec<repl_logic::ReplEnvVar> {
-        todo!()
-    }
-
-    fn set_env_var(env_var: repl_logic::ReplEnvVar) -> () {
-        EncapsulatedImplementation::set_env_var(env_var);
     }
 }
 
