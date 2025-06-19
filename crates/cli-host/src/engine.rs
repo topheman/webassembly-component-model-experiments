@@ -10,9 +10,7 @@ use api::plugin_api::PluginApi;
 use api::host_api::HostApi;
 
 /// Host implementation for plugin API
-pub struct PluginHost {
-    // Add any plugin-specific state here
-}
+pub struct PluginHost {}
 
 impl api::plugin_api::repl::api::http_client::Host for PluginHost {
     async fn get(&mut self, _url: String, _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>) -> api::plugin_api::repl::api::http_client::HttpResponse {
@@ -34,16 +32,9 @@ impl api::plugin_api::repl::api::http_client::Host for PluginHost {
     }
 }
 
+/// It is necessary to implement this trait on PluginHost because other parts
+/// rely on it.
 impl api::plugin_api::repl::api::transport::Host for PluginHost {
-    // This trait has no methods, so no implementation needed
-}
-
-/// Host implementation for host API
-pub struct HostApiHost {
-    // Add any host API-specific state here
-}
-
-impl api::host_api::repl::api::transport::Host for HostApiHost {
     // This trait has no methods, so no implementation needed
 }
 
@@ -69,9 +60,9 @@ pub struct WasiState {
     /// This provides the functionality that plugins can call from WebAssembly
     pub plugin_host: PluginHost,
 
-    /// Host implementation for REPL logic API interfaces
-    /// This provides the functionality that the REPL logic component can call
-    pub host_api_host: HostApiHost,
+    /// Bellow is the state maintained by the host itself and shared with the guest
+    /// implementing Host traits on the host side (here, the cli)
+    /// and shared with the guest via the Guest bindings
 
     /// Custom environment variables stored by the REPL
     pub repl_env_vars: HashMap<String, String>,
@@ -141,7 +132,6 @@ impl WasmEngine {
             ctx: wasi_ctx,
             table: ResourceTable::new(),
             plugin_host: PluginHost {},
-            host_api_host: HostApiHost {},
             repl_env_vars: HashMap::new(),
             plugin_configs: Vec::new(),
         })
@@ -183,7 +173,6 @@ impl api::host_api::repl::api::host_state::Host for WasiState {
         // - self.ctx (WasiCtx for WASI operations)
         // - self.table (ResourceTable for resource management)
         // - self.plugin_host (PluginHost instance)
-        // - self.host_api_host (HostApiHost instance)
         // - self.repl_env_vars (custom environment variables)
         // - self.plugin_configs (stored plugin configurations)
 

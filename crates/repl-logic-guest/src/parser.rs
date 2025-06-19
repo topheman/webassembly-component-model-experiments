@@ -34,6 +34,7 @@ pub fn parse_line(line: &str, env_vars: &EnvVars) -> ParseResult {
     ParseResult::Plugin(transport::ReadlineResult { command, payload })
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 

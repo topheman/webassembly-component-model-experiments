@@ -3,25 +3,15 @@ mod bindings;
 mod parser;
 mod env;
 
-use std::sync::{LazyLock, RwLock};
-
 use crate::bindings::exports::repl::api::repl_logic::Guest as ReplLogicGuest;
 use crate::bindings::exports::repl::api::plugin_runner::Guest as PluginRunnerGuest;
 use crate::bindings::repl::api::host_state;
 use crate::bindings::repl::api::transport;
 
-use crate::env::EnvVars;
-
 struct Component {}
 
 impl ReplLogicGuest for Component {
     fn readline(line: String) -> transport::ReadlineResult {
-        // TODO: Get component instance and use its env_vars
-        // Temporary envVars for testing
-        // let mut env_vars = EnvVars::new();
-        // env_vars.set("HOME".to_string(), "/home/user".to_string());
-        // env_vars.set("USER".to_string(), "john".to_string());
-        // let mut env_vars = STORED_ENV_VARS.write().unwrap();
         let env_vars = host_state::get_env_vars();
         match parser::parse_line(&line, &env_vars.into()) {
             parser::ParseResult::Plugin(result) => result,

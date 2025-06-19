@@ -4,7 +4,6 @@ use std::path::PathBuf;
 use std::io::Write;
 use tracing::info;
 use cli_host::{Host, WasmEngine};
-use api::host_api::repl::api::transport::ReplEnvVar;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -73,6 +72,4 @@ async fn main() -> Result<()> {
         let result = repl_logic.repl_api_repl_logic().call_readline(&mut host.store, &line).await?;
         println!("{:?}", result);
     }
-
-    Ok(())
 }
