@@ -1,24 +1,18 @@
 package repl:api;
 
-interface repl-logic {
+interface host-state {
   use transport.{readline-result};
+  use transport.{plugin-config};
+  use transport.{repl-env-var};
 
-  record plugin-config {
-    command: string,
-    arg-count: option<s8>,
-    man: string,
-  }
-
-  record repl-env-var {
-    key: string,
-    value: string,
-  }
-
-  set-plugins: func(plugins: list<plugin-config>);
   get-plugins: func() -> list<plugin-config>;
   set-env-vars: func(env-vars: list<repl-env-var>);
   get-env-vars: func() -> list<repl-env-var>;
   set-env-var: func(env-var: repl-env-var);
+}
+
+interface repl-logic {
+  use transport.{readline-result};
   readline: func(line: string) -> readline-result;
 }
 
@@ -28,6 +22,7 @@ interface plugin-runner {
 }
 
 world host-api {
-  export repl-logic;
+  import host-state;
   export plugin-runner;
+  export repl-logic;
 }

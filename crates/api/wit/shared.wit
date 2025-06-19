@@ -15,4 +15,15 @@ interface transport {
     command: string,
     payload: string,
   }
+
+  record plugin-config {
+    command: string,
+    arg-count: option<s8>,
+    man: string,
+  }
+
+  record repl-env-var {
+    key: string,
+    value: string,
+  }
 }
