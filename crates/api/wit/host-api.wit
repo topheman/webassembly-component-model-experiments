@@ -18,11 +18,13 @@ interface repl-logic {
 
 interface plugin-runner {
   use transport.{repl-result};
-  exec: func(command: string, payload: string) -> repl-result;
+  run: func(plugin-name: string, payload: string) -> repl-result;
+  man: func(plugin-name: string) -> string;
+  arg-count: func(plugin-name: string) -> option<s8>;
 }
 
 world host-api {
   import host-state;
-  export plugin-runner;
+  import plugin-runner;
   export repl-logic;
 }

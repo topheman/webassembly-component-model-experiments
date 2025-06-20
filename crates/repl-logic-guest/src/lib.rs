@@ -4,7 +4,6 @@ mod parser;
 mod vars;
 
 use crate::bindings::exports::repl::api::repl_logic::Guest as ReplLogicGuest;
-use crate::bindings::exports::repl::api::plugin_runner::Guest as PluginRunnerGuest;
 use crate::bindings::repl::api::host_state;
 use crate::bindings::repl::api::transport;
 
@@ -25,16 +24,6 @@ impl ReplLogicGuest for Component {
                     payload: format!("{}={}", key.clone(), value.clone())
                 }
             }
-        }
-    }
-}
-
-impl PluginRunnerGuest for Component {
-    fn exec(command: String, payload: String) -> transport::ReplResult {
-        transport::ReplResult {
-            color: None,
-            status: transport::ReplStatus::Success,
-            output: Some(format!("[PluginRunnerGuest.exec]Command: {}, Payload: {}", command, payload)),
         }
     }
 }

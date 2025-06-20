@@ -163,6 +163,20 @@ impl WasmEngine {
     }
 }
 
+impl api::host_api::repl::api::plugin_runner::Host for WasiState {
+    async fn run(&mut self, plugin_name: wasmtime::component::__internal::String, payload:wasmtime::component::__internal::String) -> api::host_api::repl::api::transport::ReplResult {
+        todo!()
+    }
+
+    async fn man(&mut self, plugin_name: wasmtime::component::__internal::String) -> wasmtime::component::__internal::String {
+        todo!()
+    }
+
+    async fn arg_count(&mut self, plugin_name: wasmtime::component::__internal::String) -> Option<i8> {
+        todo!()
+    }
+}
+
 impl api::host_api::repl::api::transport::Host for WasiState {
     // This trait has no methods, so no implementation needed
 }
