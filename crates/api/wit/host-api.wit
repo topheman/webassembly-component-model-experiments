@@ -3,12 +3,12 @@ package repl:api;
 interface host-state {
   use transport.{readline-result};
   use transport.{plugin-config};
-  use transport.{repl-env-var};
+  use transport.{repl-var};
 
   get-plugins: func() -> list<plugin-config>;
-  set-env-vars: func(env-vars: list<repl-env-var>);
-  get-env-vars: func() -> list<repl-env-var>;
-  set-env-var: func(env-var: repl-env-var);
+  set-repl-vars: func(vars: list<repl-var>);
+  get-repl-vars: func() -> list<repl-var>;
+  set-repl-var: func(var: repl-var);
 }
 
 interface repl-logic {

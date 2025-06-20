@@ -22,7 +22,7 @@ interface transport {
     man: string,
   }
 
-  record repl-env-var {
+  record repl-var {
     key: string,
     value: string,
   }
