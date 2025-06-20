@@ -1,12 +1,12 @@
 use crate::bindings::repl::api::transport;
-use crate::env::EnvVars;
+use crate::vars::ReplLogicVar;
 
 pub enum ParseResult {
     Plugin(transport::ReadlineResult),
     Export((String, String)),
 }
 
-pub fn parse_line(line: &str, env_vars: &EnvVars) -> ParseResult {
+pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> ParseResult {
     // Split the line into command and arguments
     let parts: Vec<&str> = line.split_whitespace().collect();
 
@@ -38,8 +38,8 @@ pub fn parse_line(line: &str, env_vars: &EnvVars) -> ParseResult {
 mod tests {
     use super::*;
 
-    fn make_env_vars() -> EnvVars {
-        let mut env_vars = EnvVars::new();
+    fn make_env_vars() -> ReplLogicVar {
+        let mut env_vars = ReplLogicVar::new();
         env_vars.set("HOME".to_string(), "/home/user".to_string());
         env_vars.set("USER".to_string(), "john".to_string());
         env_vars

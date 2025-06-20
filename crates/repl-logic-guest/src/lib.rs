@@ -1,7 +1,7 @@
 #[allow(warnings)]
 mod bindings;
 mod parser;
-mod env;
+mod vars;
 
 use crate::bindings::exports::repl::api::repl_logic::Guest as ReplLogicGuest;
 use crate::bindings::exports::repl::api::plugin_runner::Guest as PluginRunnerGuest;
@@ -12,8 +12,8 @@ struct Component {}
 
 impl ReplLogicGuest for Component {
     fn readline(line: String) -> transport::ReadlineResult {
-        let env_vars = host_state::get_repl_vars();
-        match parser::parse_line(&line, &env_vars.into()) {
+        let vars = host_state::get_repl_vars();
+        match parser::parse_line(&line, &vars.into()) {
             parser::ParseResult::Plugin(result) => result,
             parser::ParseResult::Export((key, value)) => {
                 host_state::set_repl_var(&transport::ReplVar {

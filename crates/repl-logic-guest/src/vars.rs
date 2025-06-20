@@ -3,11 +3,11 @@ use crate::bindings::repl::api::transport::ReplVar;
 
 /// A more efficient representation of environment variables using a HashMap
 #[derive(Debug, Clone)]
-pub struct EnvVars {
+pub struct ReplLogicVar {
     inner: HashMap<String, String>,
 }
 
-impl EnvVars {
+impl ReplLogicVar {
     /// Create a new empty EnvVars instance
     pub fn new() -> Self {
         Self {
@@ -74,14 +74,14 @@ impl EnvVars {
     }
 }
 
-impl Default for EnvVars {
+impl Default for ReplLogicVar {
     fn default() -> Self {
         Self::new()
     }
 }
 
 // Convert from Vec<ReplVar> to EnvVars
-impl From<Vec<ReplVar>> for EnvVars {
+impl From<Vec<ReplVar>> for ReplLogicVar {
     fn from(env_vars: Vec<ReplVar>) -> Self {
         let mut map = HashMap::new();
         for env_var in env_vars {
@@ -92,8 +92,8 @@ impl From<Vec<ReplVar>> for EnvVars {
 }
 
 // Convert from EnvVars to Vec<ReplVar>
-impl From<EnvVars> for Vec<ReplVar> {
-    fn from(env_vars: EnvVars) -> Self {
+impl From<ReplLogicVar> for Vec<ReplVar> {
+    fn from(env_vars: ReplLogicVar) -> Self {
         env_vars.inner
             .into_iter()
             .map(|(key, value)| ReplVar { key, value })
@@ -102,7 +102,7 @@ impl From<EnvVars> for Vec<ReplVar> {
 }
 
 // Convert from &[ReplVar] to EnvVars
-impl From<&[ReplVar]> for EnvVars {
+impl From<&[ReplVar]> for ReplLogicVar {
     fn from(env_vars: &[ReplVar]) -> Self {
         let mut map = HashMap::new();
         for env_var in env_vars {
@@ -118,13 +118,13 @@ mod tests {
 
     #[test]
     fn test_env_vars_creation() {
-        let env_vars = EnvVars::new();
+        let env_vars = ReplLogicVar::new();
         assert!(env_vars.inner.is_empty());
     }
 
     #[test]
     fn test_env_vars_set_and_get() {
-        let mut env_vars = EnvVars::new();
+        let mut env_vars = ReplLogicVar::new();
         env_vars.set("HOME".to_string(), "/home/user".to_string());
         assert_eq!(env_vars.get("HOME"), Some(&"/home/user".to_string()));
         assert_eq!(env_vars.get("PATH"), None);
@@ -143,14 +143,14 @@ mod tests {
             },
         ];
 
-        let env_vars: EnvVars = vec_env_vars.into();
+        let env_vars: ReplLogicVar = vec_env_vars.into();
         assert_eq!(env_vars.get("HOME"), Some(&"/home/user".to_string()));
         assert_eq!(env_vars.get("PATH"), Some(&"/usr/bin".to_string()));
     }
 
     #[test]
     fn test_to_vec() {
-        let mut env_vars = EnvVars::new();
+        let mut env_vars = ReplLogicVar::new();
         env_vars.set("HOME".to_string(), "/home/user".to_string());
         env_vars.set("PATH".to_string(), "/usr/bin".to_string());
 
@@ -166,7 +166,7 @@ mod tests {
 
     #[test]
     fn test_expand_variables() {
-        let mut env_vars = EnvVars::new();
+        let mut env_vars = ReplLogicVar::new();
         env_vars.set("HOME".to_string(), "/home/user".to_string());
         env_vars.set("USER".to_string(), "john".to_string());
 
