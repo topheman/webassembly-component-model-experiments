@@ -101,16 +101,16 @@ pub mod repl {
                 }
             }
             #[derive(Clone)]
-            pub struct ReplEnvVar {
+            pub struct ReplVar {
                 pub key: _rt::String,
                 pub value: _rt::String,
             }
-            impl ::core::fmt::Debug for ReplEnvVar {
+            impl ::core::fmt::Debug for ReplVar {
                 fn fmt(
                     &self,
                     f: &mut ::core::fmt::Formatter<'_>,
                 ) -> ::core::fmt::Result {
-                    f.debug_struct("ReplEnvVar")
+                    f.debug_struct("ReplVar")
                         .field("key", &self.key)
                         .field("value", &self.value)
                         .finish()
@@ -124,7 +124,7 @@ pub mod repl {
             static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
             pub type PluginConfig = super::super::super::repl::api::transport::PluginConfig;
-            pub type ReplEnvVar = super::super::super::repl::api::transport::ReplEnvVar;
+            pub type ReplVar = super::super::super::repl::api::transport::ReplVar;
             #[allow(unused_unsafe, clippy::all)]
             pub fn get_plugins() -> _rt::Vec<PluginConfig> {
                 unsafe {
@@ -217,9 +217,9 @@ pub mod repl {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn set_env_vars(env_vars: &[ReplEnvVar]) -> () {
+            pub fn set_repl_vars(vars: &[ReplVar]) -> () {
                 unsafe {
-                    let vec3 = env_vars;
+                    let vec3 = vars;
                     let len3 = vec3.len();
                     let layout3 = _rt::alloc::Layout::from_size_align_unchecked(
                         vec3.len() * (4 * ::core::mem::size_of::<*const u8>()),
@@ -238,7 +238,7 @@ pub mod repl {
                         let base = result3
                             .add(i * (4 * ::core::mem::size_of::<*const u8>()));
                         {
-                            let super::super::super::repl::api::transport::ReplEnvVar {
+                            let super::super::super::repl::api::transport::ReplVar {
                                 key: key0,
                                 value: value0,
                             } = e;
@@ -263,7 +263,7 @@ pub mod repl {
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "repl:api/host-state")]
                     unsafe extern "C" {
-                        #[link_name = "set-env-vars"]
+                        #[link_name = "set-repl-vars"]
                         fn wit_import4(_: *mut u8, _: usize);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
@@ -277,7 +277,7 @@ pub mod repl {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn get_env_vars() -> _rt::Vec<ReplEnvVar> {
+            pub fn get_repl_vars() -> _rt::Vec<ReplVar> {
                 unsafe {
                     #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
                     #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
@@ -294,7 +294,7 @@ pub mod repl {
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "repl:api/host-state")]
                     unsafe extern "C" {
-                        #[link_name = "get-env-vars"]
+                        #[link_name = "get-repl-vars"]
                         fn wit_import1(_: *mut u8);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
@@ -327,7 +327,7 @@ pub mod repl {
                                 .cast::<usize>();
                             let len9 = l8;
                             let bytes9 = _rt::Vec::from_raw_parts(l7.cast(), len9, len9);
-                            super::super::super::repl::api::transport::ReplEnvVar {
+                            super::super::super::repl::api::transport::ReplVar {
                                 key: _rt::string_lift(bytes6),
                                 value: _rt::string_lift(bytes9),
                             }
@@ -344,12 +344,12 @@ pub mod repl {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn set_env_var(env_var: &ReplEnvVar) -> () {
+            pub fn set_repl_var(var: &ReplVar) -> () {
                 unsafe {
-                    let super::super::super::repl::api::transport::ReplEnvVar {
+                    let super::super::super::repl::api::transport::ReplVar {
                         key: key0,
                         value: value0,
-                    } = env_var;
+                    } = var;
                     let vec1 = key0;
                     let ptr1 = vec1.as_ptr().cast::<u8>();
                     let len1 = vec1.len();
@@ -359,7 +359,7 @@ pub mod repl {
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "repl:api/host-state")]
                     unsafe extern "C" {
-                        #[link_name = "set-env-var"]
+                        #[link_name = "set-repl-var"]
                         fn wit_import3(_: *mut u8, _: usize, _: *mut u8, _: usize);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
@@ -677,26 +677,26 @@ pub(crate) use __export_host_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 837] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xc6\x05\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 820] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xb5\x05\x01A\x02\x01\
 A\x0c\x01B\x0c\x01m\x03\x07success\x05error\x07warning\x04\0\x0brepl-status\x03\0\
 \0\x01ks\x01r\x03\x05color\x02\x06status\x01\x06output\x02\x04\0\x0brepl-result\x03\
 \0\x03\x01r\x02\x07commands\x07payloads\x04\0\x0freadline-result\x03\0\x05\x01k~\
 \x01r\x03\x07commands\x09arg-count\x07\x03mans\x04\0\x0dplugin-config\x03\0\x08\x01\
-r\x02\x03keys\x05values\x04\0\x0crepl-env-var\x03\0\x0a\x03\0\x12repl:api/transp\
-ort\x05\0\x02\x03\0\0\x0freadline-result\x02\x03\0\0\x0dplugin-config\x02\x03\0\0\
-\x0crepl-env-var\x01B\x10\x02\x03\x02\x01\x01\x04\0\x0freadline-result\x03\0\0\x02\
-\x03\x02\x01\x02\x04\0\x0dplugin-config\x03\0\x02\x02\x03\x02\x01\x03\x04\0\x0cr\
-epl-env-var\x03\0\x04\x01p\x03\x01@\0\0\x06\x04\0\x0bget-plugins\x01\x07\x01p\x05\
-\x01@\x01\x08env-vars\x08\x01\0\x04\0\x0cset-env-vars\x01\x09\x01@\0\0\x08\x04\0\
-\x0cget-env-vars\x01\x0a\x01@\x01\x07env-var\x05\x01\0\x04\0\x0bset-env-var\x01\x0b\
-\x03\0\x13repl:api/host-state\x05\x04\x02\x03\0\0\x0brepl-result\x01B\x04\x02\x03\
-\x02\x01\x05\x04\0\x0brepl-result\x03\0\0\x01@\x02\x07commands\x07payloads\0\x01\
-\x04\0\x04exec\x01\x02\x04\0\x16repl:api/plugin-runner\x05\x06\x01B\x04\x02\x03\x02\
-\x01\x01\x04\0\x0freadline-result\x03\0\0\x01@\x01\x04lines\0\x01\x04\0\x08readl\
-ine\x01\x02\x04\0\x13repl:api/repl-logic\x05\x07\x04\0\x11repl:api/host-api\x04\0\
-\x0b\x0e\x01\0\x08host-api\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwi\
-t-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+r\x02\x03keys\x05values\x04\0\x08repl-var\x03\0\x0a\x03\0\x12repl:api/transport\x05\
+\0\x02\x03\0\0\x0freadline-result\x02\x03\0\0\x0dplugin-config\x02\x03\0\0\x08re\
+pl-var\x01B\x10\x02\x03\x02\x01\x01\x04\0\x0freadline-result\x03\0\0\x02\x03\x02\
+\x01\x02\x04\0\x0dplugin-config\x03\0\x02\x02\x03\x02\x01\x03\x04\0\x08repl-var\x03\
+\0\x04\x01p\x03\x01@\0\0\x06\x04\0\x0bget-plugins\x01\x07\x01p\x05\x01@\x01\x04v\
+ars\x08\x01\0\x04\0\x0dset-repl-vars\x01\x09\x01@\0\0\x08\x04\0\x0dget-repl-vars\
+\x01\x0a\x01@\x01\x03var\x05\x01\0\x04\0\x0cset-repl-var\x01\x0b\x03\0\x13repl:a\
+pi/host-state\x05\x04\x02\x03\0\0\x0brepl-result\x01B\x04\x02\x03\x02\x01\x05\x04\
+\0\x0brepl-result\x03\0\0\x01@\x02\x07commands\x07payloads\0\x01\x04\0\x04exec\x01\
+\x02\x04\0\x16repl:api/plugin-runner\x05\x06\x01B\x04\x02\x03\x02\x01\x01\x04\0\x0f\
+readline-result\x03\0\0\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x02\x04\0\x13\
+repl:api/repl-logic\x05\x07\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08ho\
+st-api\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227\
+.1\x10wit-bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

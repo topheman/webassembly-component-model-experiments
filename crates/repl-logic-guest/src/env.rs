@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::bindings::repl::api::transport::ReplEnvVar;
+use crate::bindings::repl::api::transport::ReplVar;
 
 /// A more efficient representation of environment variables using a HashMap
 #[derive(Debug, Clone)]
@@ -80,9 +80,9 @@ impl Default for EnvVars {
     }
 }
 
-// Convert from Vec<ReplEnvVar> to EnvVars
-impl From<Vec<ReplEnvVar>> for EnvVars {
-    fn from(env_vars: Vec<ReplEnvVar>) -> Self {
+// Convert from Vec<ReplVar> to EnvVars
+impl From<Vec<ReplVar>> for EnvVars {
+    fn from(env_vars: Vec<ReplVar>) -> Self {
         let mut map = HashMap::new();
         for env_var in env_vars {
             map.insert(env_var.key, env_var.value);
@@ -91,19 +91,19 @@ impl From<Vec<ReplEnvVar>> for EnvVars {
     }
 }
 
-// Convert from EnvVars to Vec<ReplEnvVar>
-impl From<EnvVars> for Vec<ReplEnvVar> {
+// Convert from EnvVars to Vec<ReplVar>
+impl From<EnvVars> for Vec<ReplVar> {
     fn from(env_vars: EnvVars) -> Self {
         env_vars.inner
             .into_iter()
-            .map(|(key, value)| ReplEnvVar { key, value })
+            .map(|(key, value)| ReplVar { key, value })
             .collect()
     }
 }
 
-// Convert from &[ReplEnvVar] to EnvVars
-impl From<&[ReplEnvVar]> for EnvVars {
-    fn from(env_vars: &[ReplEnvVar]) -> Self {
+// Convert from &[ReplVar] to EnvVars
+impl From<&[ReplVar]> for EnvVars {
+    fn from(env_vars: &[ReplVar]) -> Self {
         let mut map = HashMap::new();
         for env_var in env_vars {
             map.insert(env_var.key.clone(), env_var.value.clone());
@@ -133,11 +133,11 @@ mod tests {
     #[test]
     fn test_from_vec() {
         let vec_env_vars = vec![
-            ReplEnvVar {
+            ReplVar {
                 key: "HOME".to_string(),
                 value: "/home/user".to_string(),
             },
-            ReplEnvVar {
+            ReplVar {
                 key: "PATH".to_string(),
                 value: "/usr/bin".to_string(),
             },
@@ -154,7 +154,7 @@ mod tests {
         env_vars.set("HOME".to_string(), "/home/user".to_string());
         env_vars.set("PATH".to_string(), "/usr/bin".to_string());
 
-        let vec_env_vars: Vec<ReplEnvVar> = env_vars.into();
+        let vec_env_vars: Vec<ReplVar> = env_vars.into();
         assert_eq!(vec_env_vars.len(), 2);
 
         let home_var = vec_env_vars.iter().find(|v| v.key == "HOME").unwrap();

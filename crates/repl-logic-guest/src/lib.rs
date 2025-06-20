@@ -12,11 +12,11 @@ struct Component {}
 
 impl ReplLogicGuest for Component {
     fn readline(line: String) -> transport::ReadlineResult {
-        let env_vars = host_state::get_env_vars();
+        let env_vars = host_state::get_repl_vars();
         match parser::parse_line(&line, &env_vars.into()) {
             parser::ParseResult::Plugin(result) => result,
             parser::ParseResult::Export((key, value)) => {
-                host_state::set_env_var(&transport::ReplEnvVar {
+                host_state::set_repl_var(&transport::ReplVar {
                     key: key.clone(),
                     value: value.clone()
                 });

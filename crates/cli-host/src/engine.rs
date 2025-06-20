@@ -180,28 +180,28 @@ impl api::host_api::repl::api::host_state::Host for WasiState {
         self.plugin_configs.clone()
     }
 
-    async fn set_env_vars(&mut self, env_vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplEnvVar>) {
+    async fn set_repl_vars(&mut self, vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar>) {
         // Store environment variables in the WasiState
-        for env_var in env_vars {
-            self.repl_env_vars.insert(env_var.key.clone(), env_var.value.clone());
-            println!("Setting env var: {} = {}", env_var.key, env_var.value);
+        for var in vars {
+            self.repl_env_vars.insert(var.key.clone(), var.value.clone());
+            println!("Setting repl var: {} = {}", var.key, var.value);
         }
     }
 
-    async fn get_env_vars(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplEnvVar> {
+    async fn get_repl_vars(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar> {
         // Return the stored environment variables
         self.repl_env_vars
             .iter()
-            .map(|(key, value)| api::host_api::repl::api::transport::ReplEnvVar {
+            .map(|(key, value)| api::host_api::repl::api::transport::ReplVar {
                 key: key.clone(),
                 value: value.clone(),
             })
             .collect()
     }
 
-    async fn set_env_var(&mut self, env_var: api::host_api::repl::api::transport::ReplEnvVar) {
+    async fn set_repl_var(&mut self, var: api::host_api::repl::api::transport::ReplVar) {
         // Set a single environment variable
-        self.repl_env_vars.insert(env_var.key.clone(), env_var.value.clone());
-        println!("Setting single env var: {} = {}", env_var.key, env_var.value);
+        self.repl_env_vars.insert(var.key.clone(), var.value.clone());
+        println!("Setting single repl var: {} = {}", var.key, var.value);
     }
 }
