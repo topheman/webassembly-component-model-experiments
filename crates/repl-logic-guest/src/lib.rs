@@ -10,7 +10,7 @@ use crate::bindings::repl::api::transport;
 struct Component {}
 
 impl ReplLogicGuest for Component {
-    fn readline(line: String) -> transport::ReadlineResult {
+    fn readline(line: String) -> transport::ReadlineResponse {
         let vars = host_state::get_repl_vars();
         match parser::parse_line(&line, &vars.into()) {
             parser::ParseResult::Plugin(result) => result,
@@ -19,7 +19,7 @@ impl ReplLogicGuest for Component {
                     key: key.clone(),
                     value: value.clone()
                 });
-                transport::ReadlineResult {
+                transport::ReadlineResponse {
                     command: "export".to_string(),
                     payload: format!("{}={}", key.clone(), value.clone())
                 }

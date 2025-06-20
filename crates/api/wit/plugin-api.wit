@@ -1,10 +1,10 @@
 interface plugin {
-  use transport.{repl-result};
+  use transport.{plugin-response};
 
   name: func() -> string;
   man: func() -> string;
   arg-count: func() -> option<s8>;
-  run: func(payload: string) -> repl-result;
+  run: func(payload: string) -> plugin-response;
   // todo add capabilities to the plugin
 }
 

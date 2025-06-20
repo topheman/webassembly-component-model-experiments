@@ -1,5 +1,5 @@
 interface transport {
-  record repl-result {
+  record plugin-response {
     color: option<string>,
     status: repl-status,
     output: option<string>,
@@ -11,7 +11,7 @@ interface transport {
     warning,
   }
 
-  record readline-result {
+  record readline-response {
     command: string,
     payload: string,
   }

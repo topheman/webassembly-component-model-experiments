@@ -2,7 +2,7 @@ use crate::bindings::repl::api::transport;
 use crate::vars::ReplLogicVar;
 
 pub enum ParseResult {
-    Plugin(transport::ReadlineResult),
+    Plugin(transport::ReadlineResponse),
     Export((String, String)),
 }
 
@@ -11,7 +11,7 @@ pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> ParseResult {
     let parts: Vec<&str> = line.split_whitespace().collect();
 
     if parts.is_empty() {
-        return ParseResult::Plugin(transport::ReadlineResult {
+        return ParseResult::Plugin(transport::ReadlineResponse {
             command: String::new(),
             payload: String::new(),
         });
@@ -31,7 +31,7 @@ pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> ParseResult {
         return ParseResult::Export((key.to_string(), value.to_string()));
     }
 
-    ParseResult::Plugin(transport::ReadlineResult { command, payload })
+    ParseResult::Plugin(transport::ReadlineResponse { command, payload })
 }
 
 #[cfg(test)]
