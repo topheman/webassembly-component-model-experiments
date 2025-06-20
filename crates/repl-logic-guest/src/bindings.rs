@@ -383,17 +383,17 @@ pub mod repl {
             use super::super::super::_rt;
             pub type PluginResponse = super::super::super::repl::api::transport::PluginResponse;
             #[allow(unused_unsafe, clippy::all)]
-            pub fn run(plugin_name: &str, payload: &str) -> PluginResponse {
+            pub fn run(plugin_name: &str, payload: &str) -> Result<PluginResponse, ()> {
                 unsafe {
                     #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
                     #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
                     struct RetArea(
                         [::core::mem::MaybeUninit<
                             u8,
-                        >; 7 * ::core::mem::size_of::<*const u8>()],
+                        >; 8 * ::core::mem::size_of::<*const u8>()],
                     );
                     let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 7
+                        [::core::mem::MaybeUninit::uninit(); 8
                             * ::core::mem::size_of::<*const u8>()],
                     );
                     let vec0 = plugin_name;
@@ -429,62 +429,81 @@ pub mod repl {
                         wit_import3(ptr0.cast_mut(), len0, ptr1.cast_mut(), len1, ptr2)
                     };
                     let l4 = i32::from(*ptr2.add(0).cast::<u8>());
-                    let l8 = i32::from(
-                        *ptr2.add(3 * ::core::mem::size_of::<*const u8>()).cast::<u8>(),
-                    );
-                    let l9 = i32::from(
-                        *ptr2.add(4 * ::core::mem::size_of::<*const u8>()).cast::<u8>(),
-                    );
-                    let result13 = super::super::super::repl::api::transport::PluginResponse {
-                        color: match l4 {
-                            0 => None,
-                            1 => {
-                                let e = {
-                                    let l5 = *ptr2
-                                        .add(::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>();
-                                    let l6 = *ptr2
-                                        .add(2 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>();
-                                    let len7 = l6;
-                                    let bytes7 = _rt::Vec::from_raw_parts(
-                                        l5.cast(),
-                                        len7,
-                                        len7,
-                                    );
-                                    _rt::string_lift(bytes7)
-                                };
-                                Some(e)
-                            }
-                            _ => _rt::invalid_enum_discriminant(),
-                        },
-                        status: super::super::super::repl::api::transport::ReplStatus::_lift(
-                            l8 as u8,
-                        ),
-                        output: match l9 {
-                            0 => None,
-                            1 => {
-                                let e = {
-                                    let l10 = *ptr2
+                    let result14 = match l4 {
+                        0 => {
+                            let e = {
+                                let l5 = i32::from(
+                                    *ptr2.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                                );
+                                let l9 = i32::from(
+                                    *ptr2
+                                        .add(4 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>(),
+                                );
+                                let l10 = i32::from(
+                                    *ptr2
                                         .add(5 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>();
-                                    let l11 = *ptr2
-                                        .add(6 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>();
-                                    let len12 = l11;
-                                    let bytes12 = _rt::Vec::from_raw_parts(
-                                        l10.cast(),
-                                        len12,
-                                        len12,
-                                    );
-                                    _rt::string_lift(bytes12)
-                                };
-                                Some(e)
-                            }
-                            _ => _rt::invalid_enum_discriminant(),
-                        },
+                                        .cast::<u8>(),
+                                );
+                                super::super::super::repl::api::transport::PluginResponse {
+                                    color: match l5 {
+                                        0 => None,
+                                        1 => {
+                                            let e = {
+                                                let l6 = *ptr2
+                                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                                    .cast::<*mut u8>();
+                                                let l7 = *ptr2
+                                                    .add(3 * ::core::mem::size_of::<*const u8>())
+                                                    .cast::<usize>();
+                                                let len8 = l7;
+                                                let bytes8 = _rt::Vec::from_raw_parts(
+                                                    l6.cast(),
+                                                    len8,
+                                                    len8,
+                                                );
+                                                _rt::string_lift(bytes8)
+                                            };
+                                            Some(e)
+                                        }
+                                        _ => _rt::invalid_enum_discriminant(),
+                                    },
+                                    status: super::super::super::repl::api::transport::ReplStatus::_lift(
+                                        l9 as u8,
+                                    ),
+                                    output: match l10 {
+                                        0 => None,
+                                        1 => {
+                                            let e = {
+                                                let l11 = *ptr2
+                                                    .add(6 * ::core::mem::size_of::<*const u8>())
+                                                    .cast::<*mut u8>();
+                                                let l12 = *ptr2
+                                                    .add(7 * ::core::mem::size_of::<*const u8>())
+                                                    .cast::<usize>();
+                                                let len13 = l12;
+                                                let bytes13 = _rt::Vec::from_raw_parts(
+                                                    l11.cast(),
+                                                    len13,
+                                                    len13,
+                                                );
+                                                _rt::string_lift(bytes13)
+                                            };
+                                            Some(e)
+                                        }
+                                        _ => _rt::invalid_enum_discriminant(),
+                                    },
+                                }
+                            };
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = ();
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
                     };
-                    result13
+                    result14
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
@@ -726,8 +745,8 @@ pub(crate) use __export_host_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 904] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x89\x06\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 909] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x8e\x06\x01A\x02\x01\
 A\x0c\x01B\x0c\x01m\x03\x07success\x05error\x07warning\x04\0\x0brepl-status\x03\0\
 \0\x01ks\x01r\x03\x05color\x02\x06status\x01\x06output\x02\x04\0\x0fplugin-respo\
 nse\x03\0\x03\x01r\x02\x07commands\x07payloads\x04\0\x11readline-response\x03\0\x05\
@@ -739,15 +758,15 @@ ansport\x05\0\x02\x03\0\0\x11readline-response\x02\x03\0\0\x0dplugin-config\x02\
 repl-var\x03\0\x04\x01p\x03\x01@\0\0\x06\x04\0\x0bget-plugins\x01\x07\x01p\x05\x01\
 @\x01\x04vars\x08\x01\0\x04\0\x0dset-repl-vars\x01\x09\x01@\0\0\x08\x04\0\x0dget\
 -repl-vars\x01\x0a\x01@\x01\x03var\x05\x01\0\x04\0\x0cset-repl-var\x01\x0b\x03\0\
-\x13repl:api/host-state\x05\x04\x02\x03\0\0\x0fplugin-response\x01B\x09\x02\x03\x02\
-\x01\x05\x04\0\x0fplugin-response\x03\0\0\x01@\x02\x0bplugin-names\x07payloads\0\
-\x01\x04\0\x03run\x01\x02\x01@\x01\x0bplugin-names\0s\x04\0\x03man\x01\x03\x01k~\
-\x01@\x01\x0bplugin-names\0\x04\x04\0\x09arg-count\x01\x05\x03\0\x16repl:api/plu\
-gin-runner\x05\x06\x01B\x04\x02\x03\x02\x01\x01\x04\0\x11readline-response\x03\0\
-\0\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x02\x04\0\x13repl:api/repl-logi\
-c\x05\x07\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\0\0\0G\x09\
-producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rus\
-t\x060.41.0";
+\x13repl:api/host-state\x05\x04\x02\x03\0\0\x0fplugin-response\x01B\x0a\x02\x03\x02\
+\x01\x05\x04\0\x0fplugin-response\x03\0\0\x01j\x01\x01\0\x01@\x02\x0bplugin-name\
+s\x07payloads\0\x02\x04\0\x03run\x01\x03\x01@\x01\x0bplugin-names\0s\x04\0\x03ma\
+n\x01\x04\x01k~\x01@\x01\x0bplugin-names\0\x05\x04\0\x09arg-count\x01\x06\x03\0\x16\
+repl:api/plugin-runner\x05\x06\x01B\x04\x02\x03\x02\x01\x01\x04\0\x11readline-re\
+sponse\x03\0\0\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x02\x04\0\x13repl:a\
+pi/repl-logic\x05\x07\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\
+\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10\
+wit-bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

@@ -4,7 +4,7 @@ interface plugin {
   name: func() -> string;
   man: func() -> string;
   arg-count: func() -> option<s8>;
-  run: func(payload: string) -> plugin-response;
+  run: func(payload: string) -> result<plugin-response>;
   // todo add capabilities to the plugin
 }
 

@@ -18,7 +18,7 @@ interface repl-logic {
 
 interface plugin-runner {
   use transport.{plugin-response};
-  run: func(plugin-name: string, payload: string) -> plugin-response;
+  run: func(plugin-name: string, payload: string) -> result<plugin-response>;
   man: func(plugin-name: string) -> string;
   arg-count: func(plugin-name: string) -> option<s8>;
 }

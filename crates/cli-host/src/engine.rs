@@ -164,7 +164,7 @@ impl WasmEngine {
 }
 
 impl api::host_api::repl::api::plugin_runner::Host for WasiState {
-    async fn run(&mut self, plugin_name: wasmtime::component::__internal::String, payload:wasmtime::component::__internal::String) -> api::host_api::repl::api::transport::ReplResult {
+    async fn run(&mut self, plugin_name: wasmtime::component::__internal::String, payload:wasmtime::component::__internal::String) -> Result<api::host_api::repl::api::transport::PluginResponse, ()>    {
         todo!()
     }
 
