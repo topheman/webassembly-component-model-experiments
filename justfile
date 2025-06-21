@@ -73,6 +73,9 @@ clean:
 default:
     @just --list
 
+test:
+    cargo test
+
 # Run the e2e tests for the CLI host
 test-e2e-cli-host:
     cargo test -p cli-host
