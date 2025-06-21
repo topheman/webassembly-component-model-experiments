@@ -3,12 +3,14 @@ build:
     just build-api
     just build-cli-host
     just build-repl-logic-guest
+    just build-plugin-greet
 
 # Build all crates in release mode
 build-release:
     just build-api-release
     just build-cli-host-release
     just build-repl-logic-guest-release
+    just build-plugin-greet-release
 
 # Build the API crate (normal Rust build)
 build-api:
@@ -26,6 +28,14 @@ build-cli-host:
 build-cli-host-release:
     cargo build --release -p cli-host
 
+# Build the plugin-greet component
+build-plugin-greet:
+    cargo component build -p plugin-greet
+
+# Build the plugin-greet component in release mode
+build-plugin-greet-release:
+    cargo component build --release -p plugin-greet
+
 # Build the REPL logic guest as a component
 build-repl-logic-guest:
     cargo component build -p repl-logic-guest
@@ -38,11 +48,13 @@ build-repl-logic-guest-release:
 build-rust:
     just build-api
     just build-cli-host
+    just build-plugin-greet
 
 # Build just the Rust crates in release mode (no components)
 build-rust-release:
     just build-api-release
     just build-cli-host-release
+    just build-plugin-greet-release
 
 # Build just the component
 build-component:

@@ -1,0 +1,17 @@
+[package]
+name = "plugin-greet"
+version = "0.1.0"
+edition = { workspace = true }
+publish = false
+
+[dependencies]
+wit-bindgen-rt = { workspace = true, features = ["bitflags"] }
+
+[lib]
+crate-type = ["cdylib"]
+
+[package.metadata.component]
+package = "repl:api"
+target = { path = "../../wit", world = "plugin-api" }
+
+[package.metadata.component.dependencies]
