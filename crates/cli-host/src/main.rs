@@ -3,7 +3,6 @@ use clap::Parser;
 use cli_host::{Host, WasmEngine};
 use std::io::Write;
 use std::path::PathBuf;
-use tracing::info;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -15,12 +14,9 @@ struct Cli {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // Initialize tracing
-    tracing_subscriber::fmt::init();
-
     // Parse command line arguments
     let cli = Cli::parse();
-    info!("Starting REPL host...");
+    println!("[Host] Starting REPL host...");
 
     // Create the WebAssembly engine
     let engine = WasmEngine::new()?;
@@ -34,7 +30,7 @@ async fn main() -> Result<()> {
 
     // // Load plugins
     for plugin_path in &cli.plugins {
-        info!("Loading plugin: {}", plugin_path.display());
+        println!("[Host] Loading plugin: {}", plugin_path.display());
         host.load_plugin(&engine, plugin_path.clone()).await?;
     }
 
