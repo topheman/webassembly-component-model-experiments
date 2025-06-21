@@ -32,31 +32,34 @@ async fn main() -> Result<()> {
     let repl_logic_path = PathBuf::from("target/wasm32-wasip1/debug/repl_logic_guest.wasm"); // todo use a config file ?
     host.load_repl_logic(&engine, repl_logic_path).await?;
 
-    // Load plugins
-    for plugin_path in &cli.plugins {
-        info!("Loading plugin: {}", plugin_path.display());
-        host.load_plugin(&engine, plugin_path.clone()).await?;
-    }
+    // // Load plugins
+    // for plugin_path in &cli.plugins {
+    //     info!("Loading plugin: {}", plugin_path.display());
+    //     host.load_plugin(&engine, plugin_path.clone()).await?;
+    // }
 
-    // Get plugin names
-    let names = host.plugin_names().await;
-    println!("[Host] Loaded plugins: {:?}", names);
+    // // Get plugin names
+    // let names = host.plugin_names().await;
+    // println!("[Host] Loaded plugins: {:?}", names);
 
-    // Example: Set some environment variables in the store from the host level
-    host.set_store_env_var("ROOT".to_string(), "/Users".to_string());
-    host.set_store_env_var("USER".to_string(), "Tophe".to_string());
+    // // Example: Set some environment variables in the store from the host level
+    // host.set_store_env_var("ROOT".to_string(), "/Users".to_string());
+    // host.set_store_env_var("USER".to_string(), "Tophe".to_string());
 
-    // Example: Add a plugin configuration to the store
-    let plugin_config = api::host_api::repl::api::transport::PluginConfig {
-        command: "example".to_string(),
-        arg_count: Some(1),
-        man: "Example plugin for demonstration".to_string(),
-    };
-    host.add_plugin_config(plugin_config);
+    // // Example: Add a plugin configuration to the store
+    // let plugin_config = api::host_api::repl::api::transport::PluginConfig {
+    //     command: "example".to_string(),
+    //     arg_count: Some(1),
+    //     man: "Example plugin for demonstration".to_string(),
+    // };
+    // host.add_plugin_config(plugin_config);
 
-    // Example: Access store data from host level
-    println!("[Host] Stored env vars: {:?}", host.get_all_store_env_vars());
-    println!("[Host] Stored plugin configs: {:?}", host.get_plugin_configs());
+    // // Example: Access store data from host level
+    // println!("[Host] Stored env vars: {:?}", host.get_all_store_env_vars());
+    // println!("[Host] Stored plugin configs: {:?}", host.get_plugin_configs());
+
+    host.store.data_mut().repl_env_vars.insert("ROOT".to_string(), "/Users".to_string());
+    host.store.data_mut().repl_env_vars.insert("USER".to_string(), "Tophe".to_string());
 
     let Some(repl_logic) = host.repl_logic else {
         return Err(anyhow::anyhow!("No REPL logic loaded"));

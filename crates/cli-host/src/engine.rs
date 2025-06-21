@@ -3,99 +3,12 @@ use std::path::Path;
 use std::collections::HashMap;
 use wasmtime::{Engine, Config, Store};
 use wasmtime::component::{Component, Linker as ComponentLinker, ResourceTable};
-use wasmtime_wasi::p2::{IoView, WasiCtx, WasiCtxBuilder, WasiView};
+use wasmtime_wasi::p2::{WasiCtxBuilder};
 
 // Import the generated bindings
 use api::plugin_api::PluginApi;
 use api::host_api::HostApi;
-
-/// Host implementation for plugin API
-pub struct PluginHost {}
-
-impl api::plugin_api::repl::api::http_client::Host for PluginHost {
-    async fn get(&mut self, _url: String, _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>) -> api::plugin_api::repl::api::http_client::HttpResponse {
-        // TODO: Implement HTTP client functionality
-        api::plugin_api::repl::api::http_client::HttpResponse {
-            status: 501,
-            headers: vec![],
-            body: "HTTP client not implemented yet".to_string(),
-        }
-    }
-
-    async fn post(&mut self, _url: String, _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>, _body: String) -> api::plugin_api::repl::api::http_client::HttpResponse {
-        // TODO: Implement HTTP client functionality
-        api::plugin_api::repl::api::http_client::HttpResponse {
-            status: 501,
-            headers: vec![],
-            body: "HTTP client not implemented yet".to_string(),
-        }
-    }
-}
-
-/// It is necessary to implement this trait on PluginHost because other parts
-/// rely on it.
-impl api::plugin_api::repl::api::transport::Host for PluginHost {
-    // This trait has no methods, so no implementation needed
-}
-
-/// State that implements both WasiView and IoView for WASI support
-///
-/// This struct combines all the necessary state for running WebAssembly components
-/// with WASI (WebAssembly System Interface) support. It serves as the single
-/// state object for the Wasmtime store, providing access to:
-/// - WASI system context (files, network, environment, etc.)
-/// - Resource management table (handles for files, sockets, etc.)
-/// - Host API implementations for plugin and REPL logic components
-pub struct WasiState {
-    /// WASI system context containing file descriptors, environment variables,
-    /// command line arguments, and other system-level state
-    pub ctx: WasiCtx,
-
-    /// Resource table that manages handles to host resources (files, sockets, etc.)
-    /// This allows the WebAssembly guest to reference host resources through
-    /// opaque handles while the host maintains the actual resource objects
-    pub table: ResourceTable,
-
-    /// Host implementation for plugin API interfaces (HTTP client, transport, etc.)
-    /// This provides the functionality that plugins can call from WebAssembly
-    pub plugin_host: PluginHost,
-
-    /// Bellow is the state maintained by the host itself and shared with the guest
-    /// implementing Host traits on the host side (here, the cli)
-    /// and shared with the guest via the Guest bindings
-
-    /// Custom environment variables stored by the REPL
-    pub repl_env_vars: HashMap<String, String>,
-
-    /// Plugin configurations
-    pub plugin_configs: Vec<api::host_api::repl::api::transport::PluginConfig>,
-}
-
-/// Implementation of IoView trait for resource management
-///
-/// This trait provides access to the ResourceTable, which is responsible for:
-/// - Creating and tracking resource handles (files, sockets, etc.)
-/// - Managing resource lifecycle (creation, sharing, cleanup)
-/// - Allowing WebAssembly components to reference host resources safely
-impl IoView for WasiState {
-    fn table(&mut self) -> &mut ResourceTable {
-        &mut self.table
-    }
-}
-
-/// Implementation of WasiView trait for system-level WASI operations
-///
-/// This trait provides access to the WasiCtx, which contains:
-/// - File system state (file descriptors, pre-opened directories)
-/// - Process state (environment variables, command line arguments)
-/// - Network capabilities and socket state
-/// - Time and random number generation state
-/// - Terminal I/O state (stdin, stdout, stderr)
-impl WasiView for WasiState {
-    fn ctx(&mut self) -> &mut WasiCtx {
-        &mut self.ctx
-    }
-}
+use crate::store::{WasiState, PluginHost};
 
 /// A generic WebAssembly engine wrapper that handles component loading and instantiation
 pub struct WasmEngine {
@@ -160,62 +73,5 @@ impl WasmEngine {
 
         let repl_logic = HostApi::instantiate_async(store, &component, &linker).await?;
         Ok(repl_logic)
-    }
-}
-
-impl api::host_api::repl::api::plugin_runner::Host for WasiState {
-    async fn run(&mut self, plugin_name: wasmtime::component::__internal::String, payload:wasmtime::component::__internal::String) -> Result<api::host_api::repl::api::transport::PluginResponse, ()>    {
-        todo!()
-    }
-
-    async fn man(&mut self, plugin_name: wasmtime::component::__internal::String) -> wasmtime::component::__internal::String {
-        todo!()
-    }
-
-    async fn arg_count(&mut self, plugin_name: wasmtime::component::__internal::String) -> Option<i8> {
-        todo!()
-    }
-}
-
-impl api::host_api::repl::api::transport::Host for WasiState {
-    // This trait has no methods, so no implementation needed
-}
-
-impl api::host_api::repl::api::host_state::Host for WasiState {
-    async fn get_plugins(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig> {
-        // Now you have access to the full WasiState, which includes:
-        // - self.ctx (WasiCtx for WASI operations)
-        // - self.table (ResourceTable for resource management)
-        // - self.plugin_host (PluginHost instance)
-        // - self.repl_env_vars (custom environment variables)
-        // - self.plugin_configs (stored plugin configurations)
-
-        // Return the stored plugin configurations
-        self.plugin_configs.clone()
-    }
-
-    async fn set_repl_vars(&mut self, vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar>) {
-        // Store environment variables in the WasiState
-        for var in vars {
-            self.repl_env_vars.insert(var.key.clone(), var.value.clone());
-            println!("Setting repl var: {} = {}", var.key, var.value);
-        }
-    }
-
-    async fn get_repl_vars(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar> {
-        // Return the stored environment variables
-        self.repl_env_vars
-            .iter()
-            .map(|(key, value)| api::host_api::repl::api::transport::ReplVar {
-                key: key.clone(),
-                value: value.clone(),
-            })
-            .collect()
-    }
-
-    async fn set_repl_var(&mut self, var: api::host_api::repl::api::transport::ReplVar) {
-        // Set a single environment variable
-        self.repl_env_vars.insert(var.key.clone(), var.value.clone());
-        println!("Setting single repl var: {} = {}", var.key, var.value);
     }
 }
