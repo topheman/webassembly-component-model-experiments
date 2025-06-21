@@ -1,84 +1,130 @@
-use rexpect::spawn;
+#[cfg(test)]
+mod e2e_test {
 
-#[test]
-fn test_load() {
-    let mut session = spawn(
-        "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
-        Some(5000),
-    )
-    .expect("Can't launch cli-host with plugin greet");
+    use rexpect::spawn;
+    use std::path::PathBuf;
 
-    session
-        .exp_string("[Host] Starting REPL host...")
-        .expect("Didn't see startup message");
-    session
-        .exp_string("[Host] Loading plugin:")
-        .expect("Didn't see plugin loading message");
-    session
-        .exp_string("[Host] Loaded plugin configs:")
-        .expect("Didn't see plugin configs");
-    session
-        .exp_string("[Host] Loaded env vars:")
-        .expect("Didn't see env vars");
-    session.exp_string("repl>").expect("Didn't see REPL prompt");
-}
+    const TEST_TIMEOUT: u64 = 2000;
 
-#[test]
-fn test_basic_repl() {
-    let mut session = spawn(
-        "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
-        Some(5000),
-    )
-    .expect("Can't launch cli-host with plugin greet");
+    fn find_project_root() -> PathBuf {
+        let mut current = std::env::current_dir().unwrap();
+        println!("Starting search from: {:?}", current);
 
-    session
-        .exp_string("[Host] Starting REPL host...")
-        .expect("Didn't see startup message");
-    session
-        .exp_string("[Host] Loading plugin:")
-        .expect("Didn't see plugin loading message");
-    session
-        .exp_string("[Host] Loaded plugin configs:")
-        .expect("Didn't see plugin configs");
-    session
-        .exp_string("[Host] Loaded env vars:")
-        .expect("Didn't see env vars");
-    session.exp_string("repl>").expect("Didn't see REPL prompt");
+        // Walk up the directory tree looking for the workspace root Cargo.toml
+        loop {
+            let cargo_toml = current.join("Cargo.toml");
+            if cargo_toml.exists() {
+                // Check if this is the workspace root by looking for [workspace] section
+                if let Ok(content) = std::fs::read_to_string(&cargo_toml) {
+                    if content.contains("[workspace]") {
+                        println!("Found workspace root at: {:?}", current);
+                        return current;
+                    }
+                }
+            }
 
-    session
-        .send_line("greet Tophe")
-        .expect("Failed to send command");
-    session
-        .exp_string("Hello, Tophe!")
-        .expect("Didn't get expected greeting");
-}
+            if !current.pop() {
+                // current.pop() moves up one directory in the path. If we're already at the root, it returns false.
+                panic!("Could not find workspace root (Cargo.toml with [workspace])");
+            }
+        }
+    }
 
-#[test]
-fn test_vars_repl() {
-    let mut session = spawn(
-        "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
-        Some(5000),
-    )
-    .expect("Can't launch cli-host with plugin greet");
+    #[test]
+    fn test_load() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch cli-host with plugin greet");
 
-    session
-        .exp_string("[Host] Starting REPL host...")
-        .expect("Didn't see startup message");
-    session
-        .exp_string("[Host] Loading plugin:")
-        .expect("Didn't see plugin loading message");
-    session
-        .exp_string("[Host] Loaded plugin configs:")
-        .expect("Didn't see plugin configs");
-    session
-        .exp_string("[Host] Loaded env vars:")
-        .expect("Didn't see env vars");
-    session.exp_string("repl>").expect("Didn't see REPL prompt");
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("[Host] Loaded plugin configs:")
+            .expect("Didn't see plugin configs");
+        session
+            .exp_string("[Host] Loaded env vars:")
+            .expect("Didn't see env vars");
+        session.exp_string("repl>").expect("Didn't see REPL prompt");
+    }
 
-    session
-        .send_line("greet $USER")
-        .expect("Failed to send command");
-    session
-        .exp_string("Hello, Tophe!")
-        .expect("Didn't get expected greeting with variable substitution");
+    #[test]
+    fn test_basic_repl() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch cli-host with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("[Host] Loaded plugin configs:")
+            .expect("Didn't see plugin configs");
+        session
+            .exp_string("[Host] Loaded env vars:")
+            .expect("Didn't see env vars");
+        session.exp_string("repl>").expect("Didn't see REPL prompt");
+
+        session
+            .send_line("greet Tophe")
+            .expect("Failed to send command");
+        session
+            .exp_string("ReadlineResponse { command: \"greet\", payload: \"Tophe\" }")
+            .expect("Didn't get expected ReadlineResponse");
+        session
+            .exp_string("repl>")
+            .expect("Didn't see next REPL prompt");
+    }
+
+    #[test]
+    fn test_vars_repl() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch cli-host with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("[Host] Loaded plugin configs:")
+            .expect("Didn't see plugin configs");
+        session
+            .exp_string("[Host] Loaded env vars:")
+            .expect("Didn't see env vars");
+        session.exp_string("repl>").expect("Didn't see REPL prompt");
+
+        session
+            .send_line("greet $USER")
+            .expect("Failed to send command");
+        session
+            .exp_string("ReadlineResponse { command: \"greet\", payload: \"Tophe\" }")
+            .expect("Didn't get expected ReadlineResponse with variable substitution");
+        session
+            .exp_string("repl>")
+            .expect("Didn't see next REPL prompt");
+    }
 }

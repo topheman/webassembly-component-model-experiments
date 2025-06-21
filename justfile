@@ -72,3 +72,10 @@ clean:
 # Show help
 default:
     @just --list
+
+# Run the e2e tests for the CLI host
+test-e2e-cli-host:
+    cargo test -p cli-host
+
+test-e2e-cli-host-nocapture:
+    cargo test -p cli-host -- --nocapture
