@@ -35,25 +35,20 @@ async fn main() -> Result<()> {
     }
 
     let mut plugins_config: Vec<(String, Option<i8>, String)> = Vec::new();
-    for plugin in &host.plugins {
-        let name = plugin
-            .plugin
-            .repl_api_plugin()
-            .call_name(&mut host.store)
-            .await?;
-        let arg_count = plugin
+    for (name, plugin_instance) in &host.plugins {
+        let arg_count = plugin_instance
             .plugin
             .repl_api_plugin()
             .call_arg_count(&mut host.store)
             .await?;
-        let man = plugin
+        let man = plugin_instance
             .plugin
             .repl_api_plugin()
             .call_man(&mut host.store)
             .await?;
-        plugins_config.push((name, arg_count, man));
+        plugins_config.push((name.clone(), arg_count, man));
     }
-    println!("[Host] Loaded plugin configs: {:?}", plugins_config);
+    println!("[Host] Loaded plugins config: {:?}", plugins_config);
 
     host.store
         .data_mut()

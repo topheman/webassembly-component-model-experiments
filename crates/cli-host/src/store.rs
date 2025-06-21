@@ -109,21 +109,34 @@ impl api::host_api::repl::api::plugin_runner::Host for WasiState {
         plugin_name: wasmtime::component::__internal::String,
         payload: wasmtime::component::__internal::String,
     ) -> Result<api::host_api::repl::api::transport::PluginResponse, ()> {
-        todo!()
+        // todo - For now, return a placeholder response
+        Ok(api::host_api::repl::api::transport::PluginResponse {
+            status: api::host_api::repl::api::transport::ReplStatus::Success,
+            stdout: Some(format!(
+                "Plugin '{}' executed with payload: {}",
+                plugin_name, payload
+            )),
+            stderr: None,
+        })
     }
 
     async fn man(
         &mut self,
         plugin_name: wasmtime::component::__internal::String,
     ) -> wasmtime::component::__internal::String {
-        todo!()
+        // todo - For now, return a placeholder response
+        format!(
+            "Manual for plugin '{}' - TODO: implement actual manual",
+            plugin_name
+        )
     }
 
     async fn arg_count(
         &mut self,
         plugin_name: wasmtime::component::__internal::String,
     ) -> Option<i8> {
-        todo!()
+        // todo - For now, return a placeholder response
+        Some(0)
     }
 }
 
@@ -132,7 +145,8 @@ impl api::host_api::repl::api::host_state::Host for WasiState {
         &mut self,
     ) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig>
     {
-        Vec::new() // todo return actual plugins from host.plugins
+        // todo - For now, return a placeholder response
+        Vec::new()
     }
 
     async fn set_repl_vars(
