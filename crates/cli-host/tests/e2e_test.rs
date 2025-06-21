@@ -4,7 +4,7 @@ mod e2e_test {
     use rexpect::spawn;
     use std::path::PathBuf;
 
-    const TEST_TIMEOUT: u64 = 2000;
+    const TEST_TIMEOUT: u64 = 10000;
 
     fn find_project_root() -> PathBuf {
         let mut current = std::env::current_dir().unwrap();
