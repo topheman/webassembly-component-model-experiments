@@ -45,10 +45,7 @@ mod e2e_test {
             .exp_string("[Host] Starting REPL host...")
             .expect("Didn't see startup message");
         session
-            .exp_string("[Host] Loading plugin:")
-            .expect("Didn't see plugin loading message");
-        session
-            .exp_string("[Host] Loaded plugin configs:")
+            .exp_string("[Host] Loaded plugins config:")
             .expect("Didn't see plugin configs");
         session
             .exp_string("[Host] Loaded env vars:")
@@ -71,10 +68,7 @@ mod e2e_test {
             .exp_string("[Host] Starting REPL host...")
             .expect("Didn't see startup message");
         session
-            .exp_string("[Host] Loading plugin:")
-            .expect("Didn't see plugin loading message");
-        session
-            .exp_string("[Host] Loaded plugin configs:")
+            .exp_string("[Host] Loaded plugins config:")
             .expect("Didn't see plugin configs");
         session
             .exp_string("[Host] Loaded env vars:")
@@ -85,8 +79,8 @@ mod e2e_test {
             .send_line("greet Tophe")
             .expect("Failed to send command");
         session
-            .exp_string("ReadlineResponse { command: \"greet\", payload: \"Tophe\" }")
-            .expect("Didn't get expected ReadlineResponse");
+            .exp_string("PluginResponse { status: ReplStatus::Success, stdout: Some(\"Plugin 'greet' executed with payload: Tophe\"), stderr: None }")
+            .expect("Didn't get expected PluginResponse");
         session
             .exp_string("repl>")
             .expect("Didn't see next REPL prompt");
@@ -107,10 +101,7 @@ mod e2e_test {
             .exp_string("[Host] Starting REPL host...")
             .expect("Didn't see startup message");
         session
-            .exp_string("[Host] Loading plugin:")
-            .expect("Didn't see plugin loading message");
-        session
-            .exp_string("[Host] Loaded plugin configs:")
+            .exp_string("[Host] Loaded plugins config:")
             .expect("Didn't see plugin configs");
         session
             .exp_string("[Host] Loaded env vars:")
@@ -121,8 +112,8 @@ mod e2e_test {
             .send_line("greet $USER")
             .expect("Failed to send command");
         session
-            .exp_string("ReadlineResponse { command: \"greet\", payload: \"Tophe\" }")
-            .expect("Didn't get expected ReadlineResponse with variable substitution");
+            .exp_string("PluginResponse { status: ReplStatus::Success, stdout: Some(\"Plugin 'greet' executed with payload: Tophe\"), stderr: None }")
+            .expect("Didn't get expected PluginResponse with variable substitution");
         session
             .exp_string("repl>")
             .expect("Didn't see next REPL prompt");
