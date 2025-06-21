@@ -45,8 +45,7 @@ impl WasmEngine {
             ctx: wasi_ctx,
             table: ResourceTable::new(),
             plugin_host: PluginHost {},
-            repl_env_vars: HashMap::new(),
-            plugin_configs: Vec::new(),
+            repl_vars: HashMap::new(),
         })
     }
 

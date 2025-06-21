@@ -30,10 +30,7 @@ pub struct WasiState {
   /// and shared with the guest via the Guest bindings
 
   /// Custom environment variables stored by the REPL
-  pub repl_env_vars: HashMap<String, String>,
-
-  /// Plugin configurations
-  pub plugin_configs: Vec<api::host_api::repl::api::transport::PluginConfig>,
+  pub repl_vars: HashMap<String, String>,
 }
 
 /// --- Host implementation for plugin API ---
@@ -113,28 +110,20 @@ impl api::host_api::repl::api::plugin_runner::Host for WasiState {
 
 impl api::host_api::repl::api::host_state::Host for WasiState {
     async fn get_plugins(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig> {
-        // Now you have access to the full WasiState, which includes:
-        // - self.ctx (WasiCtx for WASI operations)
-        // - self.table (ResourceTable for resource management)
-        // - self.plugin_host (PluginHost instance)
-        // - self.repl_env_vars (custom environment variables)
-        // - self.plugin_configs (stored plugin configurations)
-
-        // Return the stored plugin configurations
-        self.plugin_configs.clone()
+        Vec::new() // todo return actual plugins from host.plugins
     }
 
     async fn set_repl_vars(&mut self, vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar>) {
         // Store environment variables in the WasiState
         for var in vars {
-            self.repl_env_vars.insert(var.key.clone(), var.value.clone());
+            self.repl_vars.insert(var.key.clone(), var.value.clone());
             println!("Setting repl var: {} = {}", var.key, var.value);
         }
     }
 
     async fn get_repl_vars(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar> {
         // Return the stored environment variables
-        self.repl_env_vars
+        self.repl_vars
             .iter()
             .map(|(key, value)| api::host_api::repl::api::transport::ReplVar {
                 key: key.clone(),
@@ -145,7 +134,7 @@ impl api::host_api::repl::api::host_state::Host for WasiState {
 
     async fn set_repl_var(&mut self, var: api::host_api::repl::api::transport::ReplVar) {
         // Set a single environment variable
-        self.repl_env_vars.insert(var.key.clone(), var.value.clone());
+        self.repl_vars.insert(var.key.clone(), var.value.clone());
         println!("Setting single repl var: {} = {}", var.key, var.value);
     }
 }

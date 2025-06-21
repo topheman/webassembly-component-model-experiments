@@ -33,39 +33,27 @@ async fn main() -> Result<()> {
     host.load_repl_logic(&engine, repl_logic_path).await?;
 
     // // Load plugins
-    // for plugin_path in &cli.plugins {
-    //     info!("Loading plugin: {}", plugin_path.display());
-    //     host.load_plugin(&engine, plugin_path.clone()).await?;
-    // }
+    for plugin_path in &cli.plugins {
+        info!("Loading plugin: {}", plugin_path.display());
+        host.load_plugin(&engine, plugin_path.clone()).await?;
+    }
 
-    // // Get plugin names
-    // let names = host.plugin_names().await;
-    // println!("[Host] Loaded plugins: {:?}", names);
+    let mut plugins_config: Vec<(String, Option<i8>, String)> = Vec::new();
+    for plugin in &host.plugins {
+        let name = plugin.plugin.repl_api_plugin().call_name(&mut host.store).await?;
+        let arg_count = plugin.plugin.repl_api_plugin().call_arg_count(&mut host.store).await?;
+        let man = plugin.plugin.repl_api_plugin().call_man(&mut host.store).await?;
+        plugins_config.push((name, arg_count, man));
+    }
+    println!("[Host] Loaded plugin configs: {:?}", plugins_config);
 
-    // // Example: Set some environment variables in the store from the host level
-    // host.set_store_env_var("ROOT".to_string(), "/Users".to_string());
-    // host.set_store_env_var("USER".to_string(), "Tophe".to_string());
-
-    // // Example: Add a plugin configuration to the store
-    // let plugin_config = api::host_api::repl::api::transport::PluginConfig {
-    //     command: "example".to_string(),
-    //     arg_count: Some(1),
-    //     man: "Example plugin for demonstration".to_string(),
-    // };
-    // host.add_plugin_config(plugin_config);
-
-    // // Example: Access store data from host level
-    // println!("[Host] Stored env vars: {:?}", host.get_all_store_env_vars());
-    // println!("[Host] Stored plugin configs: {:?}", host.get_plugin_configs());
-
-    host.store.data_mut().repl_env_vars.insert("ROOT".to_string(), "/Users".to_string());
-    host.store.data_mut().repl_env_vars.insert("USER".to_string(), "Tophe".to_string());
+    host.store.data_mut().repl_vars.insert("ROOT".to_string(), "/Users".to_string());
+    host.store.data_mut().repl_vars.insert("USER".to_string(), "Tophe".to_string());
+    println!("[Host] Loaded env vars: {:?}", host.store.data().repl_vars);
 
     let Some(repl_logic) = host.repl_logic else {
         return Err(anyhow::anyhow!("No REPL logic loaded"));
     };
-
-    // let repl_state = repl_logic.repl_api_repl_logic().
 
     loop {
         let mut line = String::new();
