@@ -1,8 +1,12 @@
-use crate::bindings::repl::api::transport;
 use crate::vars::ReplLogicVar;
 
+pub struct ParsedPluginLine {
+    pub command: String,
+    pub payload: String,
+}
+
 pub enum ParseResult {
-    Plugin(transport::ReadlineResponse),
+    Plugin(ParsedPluginLine),
     Export((String, String)),
 }
 
@@ -11,7 +15,7 @@ pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> ParseResult {
     let parts: Vec<&str> = line.split_whitespace().collect();
 
     if parts.is_empty() {
-        return ParseResult::Plugin(transport::ReadlineResponse {
+        return ParseResult::Plugin(ParsedPluginLine {
             command: String::new(),
             payload: String::new(),
         });
@@ -31,7 +35,7 @@ pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> ParseResult {
         return ParseResult::Export((key.to_string(), value.to_string()));
     }
 
-    ParseResult::Plugin(transport::ReadlineResponse { command, payload })
+    ParseResult::Plugin(ParsedPluginLine { command, payload })
 }
 
 #[cfg(test)]

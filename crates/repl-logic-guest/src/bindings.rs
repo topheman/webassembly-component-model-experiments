@@ -62,22 +62,6 @@ pub mod repl {
                 }
             }
             #[derive(Clone)]
-            pub struct ReadlineResponse {
-                pub command: _rt::String,
-                pub payload: _rt::String,
-            }
-            impl ::core::fmt::Debug for ReadlineResponse {
-                fn fmt(
-                    &self,
-                    f: &mut ::core::fmt::Formatter<'_>,
-                ) -> ::core::fmt::Result {
-                    f.debug_struct("ReadlineResponse")
-                        .field("command", &self.command)
-                        .field("payload", &self.payload)
-                        .finish()
-                }
-            }
-            #[derive(Clone)]
             pub struct PluginConfig {
                 pub command: _rt::String,
                 pub arg_count: Option<i8>,
@@ -590,7 +574,7 @@ pub mod exports {
                 #[doc(hidden)]
                 static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
-                pub type ReadlineResponse = super::super::super::super::repl::api::transport::ReadlineResponse;
+                pub type PluginResponse = super::super::super::super::repl::api::transport::PluginResponse;
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_readline_cabi<T: Guest>(
@@ -602,44 +586,94 @@ pub mod exports {
                     let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
                     let result1 = T::readline(_rt::string_lift(bytes0));
                     let ptr2 = (&raw mut _RET_AREA.0).cast::<u8>();
-                    let super::super::super::super::repl::api::transport::ReadlineResponse {
-                        command: command3,
-                        payload: payload3,
+                    let super::super::super::super::repl::api::transport::PluginResponse {
+                        status: status3,
+                        stdout: stdout3,
+                        stderr: stderr3,
                     } = result1;
-                    let vec4 = (command3.into_bytes()).into_boxed_slice();
-                    let ptr4 = vec4.as_ptr().cast::<u8>();
-                    let len4 = vec4.len();
-                    ::core::mem::forget(vec4);
-                    *ptr2.add(::core::mem::size_of::<*const u8>()).cast::<usize>() = len4;
-                    *ptr2.add(0).cast::<*mut u8>() = ptr4.cast_mut();
-                    let vec5 = (payload3.into_bytes()).into_boxed_slice();
-                    let ptr5 = vec5.as_ptr().cast::<u8>();
-                    let len5 = vec5.len();
-                    ::core::mem::forget(vec5);
-                    *ptr2.add(3 * ::core::mem::size_of::<*const u8>()).cast::<usize>() = len5;
-                    *ptr2
-                        .add(2 * ::core::mem::size_of::<*const u8>())
-                        .cast::<*mut u8>() = ptr5.cast_mut();
+                    *ptr2.add(0).cast::<u8>() = (status3.clone() as i32) as u8;
+                    match stdout3 {
+                        Some(e) => {
+                            *ptr2
+                                .add(::core::mem::size_of::<*const u8>())
+                                .cast::<u8>() = (1i32) as u8;
+                            let vec4 = (e.into_bytes()).into_boxed_slice();
+                            let ptr4 = vec4.as_ptr().cast::<u8>();
+                            let len4 = vec4.len();
+                            ::core::mem::forget(vec4);
+                            *ptr2
+                                .add(3 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len4;
+                            *ptr2
+                                .add(2 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>() = ptr4.cast_mut();
+                        }
+                        None => {
+                            *ptr2
+                                .add(::core::mem::size_of::<*const u8>())
+                                .cast::<u8>() = (0i32) as u8;
+                        }
+                    };
+                    match stderr3 {
+                        Some(e) => {
+                            *ptr2
+                                .add(4 * ::core::mem::size_of::<*const u8>())
+                                .cast::<u8>() = (1i32) as u8;
+                            let vec5 = (e.into_bytes()).into_boxed_slice();
+                            let ptr5 = vec5.as_ptr().cast::<u8>();
+                            let len5 = vec5.len();
+                            ::core::mem::forget(vec5);
+                            *ptr2
+                                .add(6 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len5;
+                            *ptr2
+                                .add(5 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>() = ptr5.cast_mut();
+                        }
+                        None => {
+                            *ptr2
+                                .add(4 * ::core::mem::size_of::<*const u8>())
+                                .cast::<u8>() = (0i32) as u8;
+                        }
+                    };
                     ptr2
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn __post_return_readline<T: Guest>(arg0: *mut u8) {
-                    let l0 = *arg0.add(0).cast::<*mut u8>();
-                    let l1 = *arg0
-                        .add(::core::mem::size_of::<*const u8>())
-                        .cast::<usize>();
-                    _rt::cabi_dealloc(l0, l1, 1);
-                    let l2 = *arg0
-                        .add(2 * ::core::mem::size_of::<*const u8>())
-                        .cast::<*mut u8>();
-                    let l3 = *arg0
-                        .add(3 * ::core::mem::size_of::<*const u8>())
-                        .cast::<usize>();
-                    _rt::cabi_dealloc(l2, l3, 1);
+                    let l0 = i32::from(
+                        *arg0.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                    );
+                    match l0 {
+                        0 => {}
+                        _ => {
+                            let l1 = *arg0
+                                .add(2 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>();
+                            let l2 = *arg0
+                                .add(3 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>();
+                            _rt::cabi_dealloc(l1, l2, 1);
+                        }
+                    }
+                    let l3 = i32::from(
+                        *arg0.add(4 * ::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                    );
+                    match l3 {
+                        0 => {}
+                        _ => {
+                            let l4 = *arg0
+                                .add(5 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>();
+                            let l5 = *arg0
+                                .add(6 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>();
+                            _rt::cabi_dealloc(l4, l5, 1);
+                        }
+                    }
                 }
                 pub trait Guest {
-                    fn readline(line: _rt::String) -> ReadlineResponse;
+                    fn readline(line: _rt::String) -> PluginResponse;
                 }
                 #[doc(hidden)]
                 macro_rules! __export_repl_api_repl_logic_cabi {
@@ -661,10 +695,10 @@ pub mod exports {
                 struct _RetArea(
                     [::core::mem::MaybeUninit<
                         u8,
-                    >; 4 * ::core::mem::size_of::<*const u8>()],
+                    >; 7 * ::core::mem::size_of::<*const u8>()],
                 );
                 static mut _RET_AREA: _RetArea = _RetArea(
-                    [::core::mem::MaybeUninit::uninit(); 4
+                    [::core::mem::MaybeUninit::uninit(); 7
                         * ::core::mem::size_of::<*const u8>()],
                 );
             }
@@ -740,8 +774,8 @@ pub(crate) use __export_host_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 902] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x87\x06\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 900] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x85\x06\x01A\x02\x01\
 A\x0c\x01B\x0c\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\0\x01ks\x01\
 r\x03\x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0fplugin-response\x03\0\x03\
 \x01r\x02\x07commands\x07payloads\x04\0\x11readline-response\x03\0\x05\x01k~\x01\
@@ -757,9 +791,9 @@ epl:api/host-state\x05\x04\x02\x03\0\0\x0fplugin-response\x01B\x0a\x02\x03\x02\x
 \x05\x04\0\x0fplugin-response\x03\0\0\x01j\x01\x01\0\x01@\x02\x0bplugin-names\x07\
 payloads\0\x02\x04\0\x03run\x01\x03\x01@\x01\x0bplugin-names\0s\x04\0\x03man\x01\
 \x04\x01k~\x01@\x01\x0bplugin-names\0\x05\x04\0\x09arg-count\x01\x06\x03\0\x16re\
-pl:api/plugin-runner\x05\x06\x01B\x04\x02\x03\x02\x01\x01\x04\0\x11readline-resp\
-onse\x03\0\0\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x02\x04\0\x13repl:api\
-/repl-logic\x05\x07\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\
+pl:api/plugin-runner\x05\x06\x01B\x04\x02\x03\x02\x01\x05\x04\0\x0fplugin-respon\
+se\x03\0\0\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x02\x04\0\x13repl:api/r\
+epl-logic\x05\x07\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\
 \0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-\
 bindgen-rust\x060.41.0";
 #[inline(never)]

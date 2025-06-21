@@ -413,22 +413,6 @@ pub mod repl {
                 }
             }
             #[derive(Clone)]
-            pub struct ReadlineResponse {
-                pub command: _rt::String,
-                pub payload: _rt::String,
-            }
-            impl ::core::fmt::Debug for ReadlineResponse {
-                fn fmt(
-                    &self,
-                    f: &mut ::core::fmt::Formatter<'_>,
-                ) -> ::core::fmt::Result {
-                    f.debug_struct("ReadlineResponse")
-                        .field("command", &self.command)
-                        .field("payload", &self.payload)
-                        .finish()
-                }
-            }
-            #[derive(Clone)]
             pub struct PluginConfig {
                 pub command: _rt::String,
                 pub arg_count: Option<i8>,

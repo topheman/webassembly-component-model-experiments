@@ -12,8 +12,8 @@ interface host-state {
 }
 
 interface repl-logic {
-  use transport.{readline-response};
-  readline: func(line: string) -> readline-response;
+  use transport.{plugin-response};
+  readline: func(line: string) -> plugin-response;
 }
 
 interface plugin-runner {
