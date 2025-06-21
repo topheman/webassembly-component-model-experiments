@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use crate::bindings::repl::api::transport::ReplVar;
+use std::collections::HashMap;
 
 /// A more efficient representation of environment variables using a HashMap
 #[derive(Debug, Clone)]
@@ -94,7 +94,8 @@ impl From<Vec<ReplVar>> for ReplLogicVar {
 // Convert from EnvVars to Vec<ReplVar>
 impl From<ReplLogicVar> for Vec<ReplVar> {
     fn from(env_vars: ReplLogicVar) -> Self {
-        env_vars.inner
+        env_vars
+            .inner
             .into_iter()
             .map(|(key, value)| ReplVar { key, value })
             .collect()
@@ -171,7 +172,10 @@ mod tests {
         env_vars.set("USER".to_string(), "john".to_string());
 
         assert_eq!(env_vars.expand_variables("echo $HOME"), "echo /home/user");
-        assert_eq!(env_vars.expand_variables("echo $HOME/$USER"), "echo /home/user/john");
+        assert_eq!(
+            env_vars.expand_variables("echo $HOME/$USER"),
+            "echo /home/user/john"
+        );
         assert_eq!(env_vars.expand_variables("echo $UNKNOWN"), "echo ");
         assert_eq!(env_vars.expand_variables("echo $"), "echo $");
     }

@@ -17,11 +17,11 @@ impl ReplLogicGuest for Component {
             parser::ParseResult::Export((key, value)) => {
                 host_state::set_repl_var(&transport::ReplVar {
                     key: key.clone(),
-                    value: value.clone()
+                    value: value.clone(),
                 });
                 transport::ReadlineResponse {
                     command: "export".to_string(),
-                    payload: format!("{}={}", key.clone(), value.clone())
+                    payload: format!("{}={}", key.clone(), value.clone()),
                 }
             }
         }

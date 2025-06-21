@@ -12,32 +12,36 @@ use wasmtime_wasi::p2::{IoView, WasiCtx, WasiView};
 /// - Resource management table (handles for files, sockets, etc.)
 /// - Host API implementations for plugin and REPL logic components
 pub struct WasiState {
-  /// WASI system context containing file descriptors, environment variables,
-  /// command line arguments, and other system-level state
-  pub ctx: WasiCtx,
+    /// WASI system context containing file descriptors, environment variables,
+    /// command line arguments, and other system-level state
+    pub ctx: WasiCtx,
 
-  /// Resource table that manages handles to host resources (files, sockets, etc.)
-  /// This allows the WebAssembly guest to reference host resources through
-  /// opaque handles while the host maintains the actual resource objects
-  pub table: ResourceTable,
+    /// Resource table that manages handles to host resources (files, sockets, etc.)
+    /// This allows the WebAssembly guest to reference host resources through
+    /// opaque handles while the host maintains the actual resource objects
+    pub table: ResourceTable,
 
-  /// Host implementation for plugin API interfaces (HTTP client, transport, etc.)
-  /// This provides the functionality that plugins can call from WebAssembly
-  pub plugin_host: PluginHost,
+    /// Host implementation for plugin API interfaces (HTTP client, transport, etc.)
+    /// This provides the functionality that plugins can call from WebAssembly
+    pub plugin_host: PluginHost,
 
-  /// Bellow is the state maintained by the host itself and shared with the guest
-  /// implementing Host traits on the host side (here, the cli)
-  /// and shared with the guest via the Guest bindings
+    /// Bellow is the state maintained by the host itself and shared with the guest
+    /// implementing Host traits on the host side (here, the cli)
+    /// and shared with the guest via the Guest bindings
 
-  /// Custom environment variables stored by the REPL
-  pub repl_vars: HashMap<String, String>,
+    /// Custom environment variables stored by the REPL
+    pub repl_vars: HashMap<String, String>,
 }
 
 /// --- Host implementation for plugin API ---
 pub struct PluginHost {}
 
 impl api::plugin_api::repl::api::http_client::Host for PluginHost {
-    async fn get(&mut self, _url: String, _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>) -> api::plugin_api::repl::api::http_client::HttpResponse {
+    async fn get(
+        &mut self,
+        _url: String,
+        _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>,
+    ) -> api::plugin_api::repl::api::http_client::HttpResponse {
         // TODO: Implement HTTP client functionality
         api::plugin_api::repl::api::http_client::HttpResponse {
             status: 501,
@@ -46,7 +50,12 @@ impl api::plugin_api::repl::api::http_client::Host for PluginHost {
         }
     }
 
-    async fn post(&mut self, _url: String, _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>, _body: String) -> api::plugin_api::repl::api::http_client::HttpResponse {
+    async fn post(
+        &mut self,
+        _url: String,
+        _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>,
+        _body: String,
+    ) -> api::plugin_api::repl::api::http_client::HttpResponse {
         // TODO: Implement HTTP client functionality
         api::plugin_api::repl::api::http_client::HttpResponse {
             status: 501,
@@ -74,9 +83,9 @@ impl api::host_api::repl::api::transport::Host for WasiState {
 /// - Managing resource lifecycle (creation, sharing, cleanup)
 /// - Allowing WebAssembly components to reference host resources safely
 impl IoView for WasiState {
-  fn table(&mut self) -> &mut ResourceTable {
-      &mut self.table
-  }
+    fn table(&mut self) -> &mut ResourceTable {
+        &mut self.table
+    }
 }
 
 /// Implementation of WasiView trait for system-level WASI operations
@@ -88,32 +97,48 @@ impl IoView for WasiState {
 /// - Time and random number generation state
 /// - Terminal I/O state (stdin, stdout, stderr)
 impl WasiView for WasiState {
-  fn ctx(&mut self) -> &mut WasiCtx {
-      &mut self.ctx
-  }
+    fn ctx(&mut self) -> &mut WasiCtx {
+        &mut self.ctx
+    }
 }
 
 /// Implementation of PluginRunnerHost trait for plugin runner
 impl api::host_api::repl::api::plugin_runner::Host for WasiState {
-  async fn run(&mut self, plugin_name: wasmtime::component::__internal::String, payload:wasmtime::component::__internal::String) -> Result<api::host_api::repl::api::transport::PluginResponse, ()>    {
-      todo!()
-  }
+    async fn run(
+        &mut self,
+        plugin_name: wasmtime::component::__internal::String,
+        payload: wasmtime::component::__internal::String,
+    ) -> Result<api::host_api::repl::api::transport::PluginResponse, ()> {
+        todo!()
+    }
 
-  async fn man(&mut self, plugin_name: wasmtime::component::__internal::String) -> wasmtime::component::__internal::String {
-      todo!()
-  }
+    async fn man(
+        &mut self,
+        plugin_name: wasmtime::component::__internal::String,
+    ) -> wasmtime::component::__internal::String {
+        todo!()
+    }
 
-  async fn arg_count(&mut self, plugin_name: wasmtime::component::__internal::String) -> Option<i8> {
-      todo!()
-  }
+    async fn arg_count(
+        &mut self,
+        plugin_name: wasmtime::component::__internal::String,
+    ) -> Option<i8> {
+        todo!()
+    }
 }
 
 impl api::host_api::repl::api::host_state::Host for WasiState {
-    async fn get_plugins(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig> {
+    async fn get_plugins(
+        &mut self,
+    ) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig>
+    {
         Vec::new() // todo return actual plugins from host.plugins
     }
 
-    async fn set_repl_vars(&mut self, vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar>) {
+    async fn set_repl_vars(
+        &mut self,
+        vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar>,
+    ) {
         // Store environment variables in the WasiState
         for var in vars {
             self.repl_vars.insert(var.key.clone(), var.value.clone());
@@ -121,14 +146,18 @@ impl api::host_api::repl::api::host_state::Host for WasiState {
         }
     }
 
-    async fn get_repl_vars(&mut self) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar> {
+    async fn get_repl_vars(
+        &mut self,
+    ) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar> {
         // Return the stored environment variables
         self.repl_vars
             .iter()
-            .map(|(key, value)| api::host_api::repl::api::transport::ReplVar {
-                key: key.clone(),
-                value: value.clone(),
-            })
+            .map(
+                |(key, value)| api::host_api::repl::api::transport::ReplVar {
+                    key: key.clone(),
+                    value: value.clone(),
+                },
+            )
             .collect()
     }
 

@@ -1,10 +1,10 @@
+use crate::engine::WasmEngine;
+use crate::store::WasiState;
 use anyhow::Result;
-use std::path::PathBuf;
-use wasmtime::Store;
 use api::host_api::HostApi;
 use api::plugin_api::PluginApi;
-use crate::store::WasiState;
-use crate::engine::WasmEngine;
+use std::path::PathBuf;
+use wasmtime::Store;
 
 /// Represents a loaded plugin
 pub struct PluginInstance {
@@ -29,14 +29,18 @@ impl Host {
 
     pub async fn load_plugin(&mut self, engine: &WasmEngine, path: PathBuf) -> Result<()> {
         let component = engine.load_component(&path).await?;
-        let plugin = engine.instantiate_plugin(&mut self.store, component).await?;
+        let plugin = engine
+            .instantiate_plugin(&mut self.store, component)
+            .await?;
         self.plugins.push(PluginInstance { plugin });
         Ok(())
     }
 
     pub async fn load_repl_logic(&mut self, engine: &WasmEngine, path: PathBuf) -> Result<()> {
         let component = engine.load_component(&path).await?;
-        let repl_logic = engine.instantiate_repl_logic(&mut self.store, component).await?;
+        let repl_logic = engine
+            .instantiate_repl_logic(&mut self.store, component)
+            .await?;
         self.repl_logic = Some(repl_logic);
         Ok(())
     }
