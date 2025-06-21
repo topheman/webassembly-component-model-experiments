@@ -1,14 +1,13 @@
 interface transport {
   record plugin-response {
-    color: option<string>,
     status: repl-status,
-    output: option<string>,
+    stdout: option<string>,
+    stderr: option<string>,
   }
 
   enum repl-status {
     success,
     error,
-    warning,
   }
 
   record readline-response {

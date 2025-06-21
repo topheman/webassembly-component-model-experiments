@@ -36,9 +36,9 @@ Hello, Tophe!
 
     fn run(payload: String) -> Result<transport::PluginResponse, ()> {
         Ok(transport::PluginResponse {
-            color: None,
             status: transport::ReplStatus::Success,
-            output: Some(format!("Hello, {}!", payload)),
+            stdout: Some(format!("Hello, {}!", payload)),
+            stderr: None,
         })
     }
 }

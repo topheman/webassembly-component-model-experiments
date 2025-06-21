@@ -367,7 +367,6 @@ pub mod repl {
             pub enum ReplStatus {
                 Success,
                 Error,
-                Warning,
             }
             impl ::core::fmt::Debug for ReplStatus {
                 fn fmt(
@@ -379,9 +378,6 @@ pub mod repl {
                             f.debug_tuple("ReplStatus::Success").finish()
                         }
                         ReplStatus::Error => f.debug_tuple("ReplStatus::Error").finish(),
-                        ReplStatus::Warning => {
-                            f.debug_tuple("ReplStatus::Warning").finish()
-                        }
                     }
                 }
             }
@@ -394,16 +390,15 @@ pub mod repl {
                     match val {
                         0 => ReplStatus::Success,
                         1 => ReplStatus::Error,
-                        2 => ReplStatus::Warning,
                         _ => panic!("invalid enum discriminant"),
                     }
                 }
             }
             #[derive(Clone)]
             pub struct PluginResponse {
-                pub color: Option<_rt::String>,
                 pub status: ReplStatus,
-                pub output: Option<_rt::String>,
+                pub stdout: Option<_rt::String>,
+                pub stderr: Option<_rt::String>,
             }
             impl ::core::fmt::Debug for PluginResponse {
                 fn fmt(
@@ -411,9 +406,9 @@ pub mod repl {
                     f: &mut ::core::fmt::Formatter<'_>,
                 ) -> ::core::fmt::Result {
                     f.debug_struct("PluginResponse")
-                        .field("color", &self.color)
                         .field("status", &self.status)
-                        .field("output", &self.output)
+                        .field("stdout", &self.stdout)
+                        .field("stderr", &self.stderr)
                         .finish()
                 }
             }
@@ -560,36 +555,36 @@ pub mod exports {
                         Ok(e) => {
                             *ptr2.add(0).cast::<u8>() = (0i32) as u8;
                             let super::super::super::super::repl::api::transport::PluginResponse {
-                                color: color3,
                                 status: status3,
-                                output: output3,
+                                stdout: stdout3,
+                                stderr: stderr3,
                             } = e;
-                            match color3 {
+                            *ptr2
+                                .add(::core::mem::size_of::<*const u8>())
+                                .cast::<u8>() = (status3.clone() as i32) as u8;
+                            match stdout3 {
                                 Some(e) => {
                                     *ptr2
-                                        .add(::core::mem::size_of::<*const u8>())
+                                        .add(2 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
                                     let vec4 = (e.into_bytes()).into_boxed_slice();
                                     let ptr4 = vec4.as_ptr().cast::<u8>();
                                     let len4 = vec4.len();
                                     ::core::mem::forget(vec4);
                                     *ptr2
-                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .add(4 * ::core::mem::size_of::<*const u8>())
                                         .cast::<usize>() = len4;
                                     *ptr2
-                                        .add(2 * ::core::mem::size_of::<*const u8>())
+                                        .add(3 * ::core::mem::size_of::<*const u8>())
                                         .cast::<*mut u8>() = ptr4.cast_mut();
                                 }
                                 None => {
                                     *ptr2
-                                        .add(::core::mem::size_of::<*const u8>())
+                                        .add(2 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            *ptr2
-                                .add(4 * ::core::mem::size_of::<*const u8>())
-                                .cast::<u8>() = (status3.clone() as i32) as u8;
-                            match output3 {
+                            match stderr3 {
                                 Some(e) => {
                                     *ptr2
                                         .add(5 * ::core::mem::size_of::<*const u8>())
@@ -625,16 +620,18 @@ pub mod exports {
                     match l0 {
                         0 => {
                             let l1 = i32::from(
-                                *arg0.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                                *arg0
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<u8>(),
                             );
                             match l1 {
                                 0 => {}
                                 _ => {
                                     let l2 = *arg0
-                                        .add(2 * ::core::mem::size_of::<*const u8>())
+                                        .add(3 * ::core::mem::size_of::<*const u8>())
                                         .cast::<*mut u8>();
                                     let l3 = *arg0
-                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .add(4 * ::core::mem::size_of::<*const u8>())
                                         .cast::<usize>();
                                     _rt::cabi_dealloc(l2, l3, 1);
                                 }
@@ -831,23 +828,23 @@ pub(crate) use __export_plugin_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 710] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xc5\x04\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 703] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xbe\x04\x01A\x02\x01\
 A\x07\x01B\x09\x01r\x02\x04names\x05values\x04\0\x0bhttp-header\x03\0\0\x01p\x01\
 \x01r\x03\x06status{\x07headers\x02\x04bodys\x04\0\x0dhttp-response\x03\0\x03\x01\
 @\x02\x03urls\x07headers\x02\0\x04\x04\0\x03get\x01\x05\x01@\x03\x03urls\x07head\
 ers\x02\x04bodys\0\x04\x04\0\x04post\x01\x06\x03\0\x14repl:api/http-client\x05\0\
-\x01B\x0c\x01m\x03\x07success\x05error\x07warning\x04\0\x0brepl-status\x03\0\0\x01\
-ks\x01r\x03\x05color\x02\x06status\x01\x06output\x02\x04\0\x0fplugin-response\x03\
-\0\x03\x01r\x02\x07commands\x07payloads\x04\0\x11readline-response\x03\0\x05\x01\
-k~\x01r\x03\x07commands\x09arg-count\x07\x03mans\x04\0\x0dplugin-config\x03\0\x08\
-\x01r\x02\x03keys\x05values\x04\0\x08repl-var\x03\0\x0a\x03\0\x12repl:api/transp\
-ort\x05\x01\x02\x03\0\x01\x0fplugin-response\x01B\x0b\x02\x03\x02\x01\x02\x04\0\x0f\
-plugin-response\x03\0\0\x01@\0\0s\x04\0\x04name\x01\x02\x04\0\x03man\x01\x02\x01\
-k~\x01@\0\0\x03\x04\0\x09arg-count\x01\x04\x01j\x01\x01\0\x01@\x01\x07payloads\0\
-\x05\x04\0\x03run\x01\x06\x04\0\x0frepl:api/plugin\x05\x03\x04\0\x13repl:api/plu\
-gin-api\x04\0\x0b\x10\x01\0\x0aplugin-api\x03\0\0\0G\x09producers\x01\x0cprocess\
-ed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+\x01B\x0c\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\0\x01ks\x01r\x03\
+\x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0fplugin-response\x03\0\x03\x01\
+r\x02\x07commands\x07payloads\x04\0\x11readline-response\x03\0\x05\x01k~\x01r\x03\
+\x07commands\x09arg-count\x07\x03mans\x04\0\x0dplugin-config\x03\0\x08\x01r\x02\x03\
+keys\x05values\x04\0\x08repl-var\x03\0\x0a\x03\0\x12repl:api/transport\x05\x01\x02\
+\x03\0\x01\x0fplugin-response\x01B\x0b\x02\x03\x02\x01\x02\x04\0\x0fplugin-respo\
+nse\x03\0\0\x01@\0\0s\x04\0\x04name\x01\x02\x04\0\x03man\x01\x02\x01k~\x01@\0\0\x03\
+\x04\0\x09arg-count\x01\x04\x01j\x01\x01\0\x01@\x01\x07payloads\0\x05\x04\0\x03r\
+un\x01\x06\x04\0\x0frepl:api/plugin\x05\x03\x04\0\x13repl:api/plugin-api\x04\0\x0b\
+\x10\x01\0\x0aplugin-api\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-\
+component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

@@ -16,7 +16,6 @@ pub mod repl {
             pub enum ReplStatus {
                 Success,
                 Error,
-                Warning,
             }
             impl ::core::fmt::Debug for ReplStatus {
                 fn fmt(
@@ -28,9 +27,6 @@ pub mod repl {
                             f.debug_tuple("ReplStatus::Success").finish()
                         }
                         ReplStatus::Error => f.debug_tuple("ReplStatus::Error").finish(),
-                        ReplStatus::Warning => {
-                            f.debug_tuple("ReplStatus::Warning").finish()
-                        }
                     }
                 }
             }
@@ -43,16 +39,15 @@ pub mod repl {
                     match val {
                         0 => ReplStatus::Success,
                         1 => ReplStatus::Error,
-                        2 => ReplStatus::Warning,
                         _ => panic!("invalid enum discriminant"),
                     }
                 }
             }
             #[derive(Clone)]
             pub struct PluginResponse {
-                pub color: Option<_rt::String>,
                 pub status: ReplStatus,
-                pub output: Option<_rt::String>,
+                pub stdout: Option<_rt::String>,
+                pub stderr: Option<_rt::String>,
             }
             impl ::core::fmt::Debug for PluginResponse {
                 fn fmt(
@@ -60,9 +55,9 @@ pub mod repl {
                     f: &mut ::core::fmt::Formatter<'_>,
                 ) -> ::core::fmt::Result {
                     f.debug_struct("PluginResponse")
-                        .field("color", &self.color)
                         .field("status", &self.status)
-                        .field("output", &self.output)
+                        .field("stdout", &self.stdout)
+                        .field("stderr", &self.stderr)
                         .finish()
                 }
             }
@@ -435,9 +430,9 @@ pub mod repl {
                                 let l5 = i32::from(
                                     *ptr2.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
                                 );
-                                let l9 = i32::from(
+                                let l6 = i32::from(
                                     *ptr2
-                                        .add(4 * ::core::mem::size_of::<*const u8>())
+                                        .add(2 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>(),
                                 );
                                 let l10 = i32::from(
@@ -446,32 +441,32 @@ pub mod repl {
                                         .cast::<u8>(),
                                 );
                                 super::super::super::repl::api::transport::PluginResponse {
-                                    color: match l5 {
+                                    status: super::super::super::repl::api::transport::ReplStatus::_lift(
+                                        l5 as u8,
+                                    ),
+                                    stdout: match l6 {
                                         0 => None,
                                         1 => {
                                             let e = {
-                                                let l6 = *ptr2
-                                                    .add(2 * ::core::mem::size_of::<*const u8>())
-                                                    .cast::<*mut u8>();
                                                 let l7 = *ptr2
                                                     .add(3 * ::core::mem::size_of::<*const u8>())
+                                                    .cast::<*mut u8>();
+                                                let l8 = *ptr2
+                                                    .add(4 * ::core::mem::size_of::<*const u8>())
                                                     .cast::<usize>();
-                                                let len8 = l7;
-                                                let bytes8 = _rt::Vec::from_raw_parts(
-                                                    l6.cast(),
-                                                    len8,
-                                                    len8,
+                                                let len9 = l8;
+                                                let bytes9 = _rt::Vec::from_raw_parts(
+                                                    l7.cast(),
+                                                    len9,
+                                                    len9,
                                                 );
-                                                _rt::string_lift(bytes8)
+                                                _rt::string_lift(bytes9)
                                             };
                                             Some(e)
                                         }
                                         _ => _rt::invalid_enum_discriminant(),
                                     },
-                                    status: super::super::super::repl::api::transport::ReplStatus::_lift(
-                                        l9 as u8,
-                                    ),
-                                    output: match l10 {
+                                    stderr: match l10 {
                                         0 => None,
                                         1 => {
                                             let e = {
@@ -745,28 +740,28 @@ pub(crate) use __export_host_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 909] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x8e\x06\x01A\x02\x01\
-A\x0c\x01B\x0c\x01m\x03\x07success\x05error\x07warning\x04\0\x0brepl-status\x03\0\
-\0\x01ks\x01r\x03\x05color\x02\x06status\x01\x06output\x02\x04\0\x0fplugin-respo\
-nse\x03\0\x03\x01r\x02\x07commands\x07payloads\x04\0\x11readline-response\x03\0\x05\
-\x01k~\x01r\x03\x07commands\x09arg-count\x07\x03mans\x04\0\x0dplugin-config\x03\0\
-\x08\x01r\x02\x03keys\x05values\x04\0\x08repl-var\x03\0\x0a\x03\0\x12repl:api/tr\
-ansport\x05\0\x02\x03\0\0\x11readline-response\x02\x03\0\0\x0dplugin-config\x02\x03\
-\0\0\x08repl-var\x01B\x10\x02\x03\x02\x01\x01\x04\0\x11readline-response\x03\0\0\
-\x02\x03\x02\x01\x02\x04\0\x0dplugin-config\x03\0\x02\x02\x03\x02\x01\x03\x04\0\x08\
-repl-var\x03\0\x04\x01p\x03\x01@\0\0\x06\x04\0\x0bget-plugins\x01\x07\x01p\x05\x01\
-@\x01\x04vars\x08\x01\0\x04\0\x0dset-repl-vars\x01\x09\x01@\0\0\x08\x04\0\x0dget\
--repl-vars\x01\x0a\x01@\x01\x03var\x05\x01\0\x04\0\x0cset-repl-var\x01\x0b\x03\0\
-\x13repl:api/host-state\x05\x04\x02\x03\0\0\x0fplugin-response\x01B\x0a\x02\x03\x02\
-\x01\x05\x04\0\x0fplugin-response\x03\0\0\x01j\x01\x01\0\x01@\x02\x0bplugin-name\
-s\x07payloads\0\x02\x04\0\x03run\x01\x03\x01@\x01\x0bplugin-names\0s\x04\0\x03ma\
-n\x01\x04\x01k~\x01@\x01\x0bplugin-names\0\x05\x04\0\x09arg-count\x01\x06\x03\0\x16\
-repl:api/plugin-runner\x05\x06\x01B\x04\x02\x03\x02\x01\x01\x04\0\x11readline-re\
-sponse\x03\0\0\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x02\x04\0\x13repl:a\
-pi/repl-logic\x05\x07\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\
-\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10\
-wit-bindgen-rust\x060.41.0";
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 902] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x87\x06\x01A\x02\x01\
+A\x0c\x01B\x0c\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\0\x01ks\x01\
+r\x03\x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0fplugin-response\x03\0\x03\
+\x01r\x02\x07commands\x07payloads\x04\0\x11readline-response\x03\0\x05\x01k~\x01\
+r\x03\x07commands\x09arg-count\x07\x03mans\x04\0\x0dplugin-config\x03\0\x08\x01r\
+\x02\x03keys\x05values\x04\0\x08repl-var\x03\0\x0a\x03\0\x12repl:api/transport\x05\
+\0\x02\x03\0\0\x11readline-response\x02\x03\0\0\x0dplugin-config\x02\x03\0\0\x08\
+repl-var\x01B\x10\x02\x03\x02\x01\x01\x04\0\x11readline-response\x03\0\0\x02\x03\
+\x02\x01\x02\x04\0\x0dplugin-config\x03\0\x02\x02\x03\x02\x01\x03\x04\0\x08repl-\
+var\x03\0\x04\x01p\x03\x01@\0\0\x06\x04\0\x0bget-plugins\x01\x07\x01p\x05\x01@\x01\
+\x04vars\x08\x01\0\x04\0\x0dset-repl-vars\x01\x09\x01@\0\0\x08\x04\0\x0dget-repl\
+-vars\x01\x0a\x01@\x01\x03var\x05\x01\0\x04\0\x0cset-repl-var\x01\x0b\x03\0\x13r\
+epl:api/host-state\x05\x04\x02\x03\0\0\x0fplugin-response\x01B\x0a\x02\x03\x02\x01\
+\x05\x04\0\x0fplugin-response\x03\0\0\x01j\x01\x01\0\x01@\x02\x0bplugin-names\x07\
+payloads\0\x02\x04\0\x03run\x01\x03\x01@\x01\x0bplugin-names\0s\x04\0\x03man\x01\
+\x04\x01k~\x01@\x01\x0bplugin-names\0\x05\x04\0\x09arg-count\x01\x06\x03\0\x16re\
+pl:api/plugin-runner\x05\x06\x01B\x04\x02\x03\x02\x01\x01\x04\0\x11readline-resp\
+onse\x03\0\0\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x02\x04\0\x13repl:api\
+/repl-logic\x05\x07\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\
+\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-\
+bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {
