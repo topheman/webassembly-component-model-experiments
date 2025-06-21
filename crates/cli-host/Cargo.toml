@@ -11,3 +11,6 @@ clap = { workspace = true }
 tokio = { workspace = true }
 anyhow = { workspace = true }
 api = { path = "../api" }
+
+[dev-dependencies]
+rexpect = "0.5"
