@@ -13,18 +13,9 @@ struct Component {}
 impl ReplLogicGuest for Component {
     fn readline(line: String) -> transport::ReadlineResponse {
         let vars = host_state::get_repl_vars();
-        let result = parser::parse_line(&line, &vars.into());
 
-        // builtins::run(&result.command, &result.payload);
-
-        // builtin export
-        if result.command == "export" {
-            let (key, value) = result.payload.split_once('=').unwrap();
-            host_state::set_repl_var(&transport::ReplVar {
-                key: key.to_string(),
-                value: value.to_string(),
-            });
-        }
+        // parse the line into a command and payload + expand variables
+        let parsed_line = parser::parse_line(&line, &vars.into());
 
         // keep track of the last command in $0
         host_state::set_repl_var(&transport::ReplVar {
@@ -32,7 +23,17 @@ impl ReplLogicGuest for Component {
             value: line,
         });
 
-        transport::ReadlineResponse::ToRun(result)
+        // try to run reserved commands or show their manual
+        // must be done before running plugins, because plugins must not override reserved commands
+        if let Some(response) = reserved::run(&parsed_line.command, &parsed_line.payload) {
+            return transport::ReadlineResponse::Ready(response);
+        }
+        if let Some(response) = reserved::man(&parsed_line.command) {
+            return transport::ReadlineResponse::Ready(response);
+        }
+
+        // if no reserved command was run return the parsed line to be passed to the plugin to run from the host
+        transport::ReadlineResponse::ToRun(parsed_line)
     }
 }
 

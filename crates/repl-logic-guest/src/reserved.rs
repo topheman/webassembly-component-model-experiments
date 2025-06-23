@@ -3,35 +3,46 @@ use crate::bindings::repl::api::{host_state, transport};
 struct ReservedCommand {
     name: &'static str,
     man: &'static str,
-    run: fn(command: &str, payload: &str) -> transport::PluginResponse,
+    run: fn(payload: &str) -> transport::PluginResponse,
 }
 
 /// A list of the commands that are reserved (not overridable by plugins)
-const RESERVED_COMMANDS: &[ReservedCommand; 1] = &[ReservedCommand {
-    name: "export",
-    man: r#"
+const RESERVED_COMMANDS: &[ReservedCommand] = &[
+    ReservedCommand {
+        name: "export",
+        man: r#"
     export <key>=<value>
 
     Export a variable to the environment.
     "#,
-    run: |command, payload| {
-        let (key, value) = payload.split_once('=').unwrap();
-        host_state::set_repl_var(&transport::ReplVar {
-            key: key.to_string(),
-            value: value.to_string(),
-        });
-        transport::PluginResponse {
-            status: transport::ReplStatus::Success,
-            stdout: Some(format!("{}={}", key, value)),
-            stderr: None,
-        }
+        run: |payload| {
+            let (key, value) = payload.split_once('=').unwrap();
+            host_state::set_repl_var(&transport::ReplVar {
+                key: key.to_string(),
+                value: value.to_string(),
+            });
+            transport::PluginResponse {
+                status: transport::ReplStatus::Success,
+                stdout: Some(format!("{}={}", key, value)),
+                stderr: None,
+            }
+        },
     },
-}];
+    ReservedCommand {
+        name: "help",
+        man: r#"
+        help <command>
+
+        Show the manual for a command.
+        "#,
+        run: |_payload| man("help").unwrap(),
+    },
+];
 
 pub fn run(command: &str, payload: &str) -> Option<transport::PluginResponse> {
     for reserved_command in RESERVED_COMMANDS {
         if reserved_command.name == command {
-            let result = (reserved_command.run)(command, payload);
+            let result = (reserved_command.run)(payload);
             return Some(result);
         }
         if command == "man" {
