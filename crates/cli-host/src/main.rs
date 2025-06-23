@@ -30,7 +30,11 @@ async fn main() -> Result<()> {
     let mut host = WasmHost::new(&engine);
 
     // Load the REPL logic component
-    let repl_logic_path = PathBuf::from("target/wasm32-wasip1/debug/repl_logic_guest.wasm"); // todo use a config file ?
+    let repl_logic_path = if cfg!(debug_assertions) {
+        PathBuf::from("target/wasm32-wasip1/debug/repl_logic_guest.wasm")
+    } else {
+        PathBuf::from("target/wasm32-wasip1/release/repl_logic_guest.wasm")
+    };
     host.load_repl_logic(&engine, repl_logic_path).await?;
 
     // // Load plugins
