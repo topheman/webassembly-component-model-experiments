@@ -23,7 +23,7 @@ const RESERVED_COMMANDS: &[ReservedCommand] = &[
             });
             transport::PluginResponse {
                 status: transport::ReplStatus::Success,
-                stdout: Some(format!("{}={}", key, value)),
+                stdout: Some(format!("")),
                 stderr: None,
             }
         },

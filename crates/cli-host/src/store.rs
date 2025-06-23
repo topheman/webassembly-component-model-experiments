@@ -139,6 +139,5 @@ impl api::host_api::repl::api::host_state::Host for WasiState {
     async fn set_repl_var(&mut self, var: api::host_api::repl::api::transport::ReplVar) {
         // Set a single environment variable
         self.repl_vars.insert(var.key.clone(), var.value.clone());
-        println!("Setting single repl var: {} = {}", var.key, var.value);
     }
 }

@@ -11,12 +11,16 @@ struct Cli {
     /// Paths to WebAssembly plugin files
     #[arg(long)]
     plugins: Vec<PathBuf>,
+
+    #[arg(long, default_value_t = false)]
+    debug: bool,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     // Parse command line arguments
     let cli = Cli::parse();
+    let debug = cli.debug;
     println!("[Host] Starting REPL host...");
 
     // Create the WebAssembly engine
@@ -49,7 +53,9 @@ async fn main() -> Result<()> {
             .await?;
         plugins_config.push((name.clone(), arg_count, man));
     }
-    println!("[Host] Loaded plugins config: {:?}", plugins_config);
+    if debug {
+        eprintln!("[Host][Debug] Loaded plugins config: {:?}", plugins_config);
+    }
 
     host.store
         .data_mut()
@@ -59,7 +65,12 @@ async fn main() -> Result<()> {
         .data_mut()
         .repl_vars
         .insert("USER".to_string(), "Tophe".to_string());
-    println!("[Host] Loaded env vars: {:?}", host.store.data().repl_vars);
+    if debug {
+        eprintln!(
+            "[Host][Debug] Loaded env vars: {:?}",
+            host.store.data().repl_vars
+        );
+    }
 
     let Some(repl_logic) = host.repl_logic else {
         return Err(anyhow::anyhow!("No REPL logic loaded"));
@@ -67,7 +78,14 @@ async fn main() -> Result<()> {
 
     loop {
         let mut line = String::new();
-        print!("repl> ");
+        match host.store.data().repl_vars.get("?") {
+            Some(last_status) => {
+                print!("repl ({})> ", last_status);
+            }
+            None => {
+                print!("repl> ");
+            }
+        }
         std::io::stdout().flush()?;
         std::io::stdin().read_line(&mut line)?;
         let result = repl_logic
@@ -78,7 +96,9 @@ async fn main() -> Result<()> {
 
         match result {
             transport::ReadlineResponse::ToRun(parsed_line) => {
-                println!("To run: {:?}", parsed_line);
+                if debug {
+                    eprintln!("[Host][Debug] To run: {:?}", parsed_line);
+                }
                 match host.plugins.get(&parsed_line.command) {
                     Some(plugin_instance) => {
                         let result = plugin_instance
@@ -86,18 +106,72 @@ async fn main() -> Result<()> {
                             .repl_api_plugin()
                             .call_run(&mut host.store, &parsed_line.payload)
                             .await?;
-                        println!("{:?}", result);
+                        if let Ok(result) = result {
+                            if let Some(stdout) = result.stdout {
+                                println!("{}", stdout);
+                            }
+                            if let Some(stderr) = result.stderr {
+                                eprintln!("{}", stderr);
+                            }
+                            if result.status
+                                == api::plugin_api::repl::api::transport::ReplStatus::Success
+                            {
+                                // change $? to 0
+                                host.store
+                                    .data_mut()
+                                    .repl_vars
+                                    .insert("?".to_string(), "0".to_string());
+                            } else {
+                                // change $? to 1
+                                host.store
+                                    .data_mut()
+                                    .repl_vars
+                                    .insert("?".to_string(), "1".to_string());
+                            }
+                        } else {
+                            eprintln!("Error: {:?}", result);
+                            // change $? to 1
+                            host.store
+                                .data_mut()
+                                .repl_vars
+                                .insert("?".to_string(), "1".to_string());
+                        }
                     }
                     None => {
                         println!(
                             "Unknown command: {}. Try `help` to see available commands.",
                             parsed_line.command
                         );
+                        // change $? to 1
+                        host.store
+                            .data_mut()
+                            .repl_vars
+                            .insert("?".to_string(), "1".to_string());
                     }
                 }
             }
             transport::ReadlineResponse::Ready(plugin_response) => {
-                println!("Ready: {:?}", plugin_response);
+                if let Some(stdout) = plugin_response.stdout {
+                    println!("{}", stdout);
+                }
+                if let Some(stderr) = plugin_response.stderr {
+                    eprintln!("{}", stderr);
+                }
+                if plugin_response.status
+                    == api::host_api::repl::api::transport::ReplStatus::Success
+                {
+                    // change $? to 0
+                    host.store
+                        .data_mut()
+                        .repl_vars
+                        .insert("?".to_string(), "0".to_string());
+                } else {
+                    // change $? to 1
+                    host.store
+                        .data_mut()
+                        .repl_vars
+                        .insert("?".to_string(), "1".to_string());
+                }
             }
         }
     }
