@@ -32,7 +32,7 @@ impl ReplLogicGuest for Component {
             value: line,
         });
 
-        result
+        transport::ReadlineResponse::ToRun(result)
     }
 }
 

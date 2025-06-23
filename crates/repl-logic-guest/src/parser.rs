@@ -1,12 +1,12 @@
 use crate::bindings::repl::api::transport;
 use crate::vars::ReplLogicVar;
 
-pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> transport::ReadlineResponse {
+pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> transport::ParsedLine {
     // Split the line into command and arguments
     let parts: Vec<&str> = line.split_whitespace().collect();
 
     if parts.is_empty() {
-        return transport::ReadlineResponse {
+        return transport::ParsedLine {
             command: String::new(),
             payload: String::new(),
         };
@@ -21,7 +21,7 @@ pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> transport::ReadlineRes
         String::new()
     };
 
-    transport::ReadlineResponse { command, payload }
+    transport::ParsedLine { command, payload }
 }
 
 #[cfg(test)]

@@ -10,9 +10,14 @@ interface transport {
     error,
   }
 
-  record readline-response {
+  record parsed-line {
     command: string,
     payload: string,
+  }
+
+  variant readline-response {
+    to-run(parsed-line),
+    ready(plugin-response),
   }
 
   record plugin-config {

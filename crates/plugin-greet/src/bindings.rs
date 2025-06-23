@@ -413,19 +413,39 @@ pub mod repl {
                 }
             }
             #[derive(Clone)]
-            pub struct ReadlineResponse {
+            pub struct ParsedLine {
                 pub command: _rt::String,
                 pub payload: _rt::String,
+            }
+            impl ::core::fmt::Debug for ParsedLine {
+                fn fmt(
+                    &self,
+                    f: &mut ::core::fmt::Formatter<'_>,
+                ) -> ::core::fmt::Result {
+                    f.debug_struct("ParsedLine")
+                        .field("command", &self.command)
+                        .field("payload", &self.payload)
+                        .finish()
+                }
+            }
+            #[derive(Clone)]
+            pub enum ReadlineResponse {
+                ToRun(ParsedLine),
+                Ready(PluginResponse),
             }
             impl ::core::fmt::Debug for ReadlineResponse {
                 fn fmt(
                     &self,
                     f: &mut ::core::fmt::Formatter<'_>,
                 ) -> ::core::fmt::Result {
-                    f.debug_struct("ReadlineResponse")
-                        .field("command", &self.command)
-                        .field("payload", &self.payload)
-                        .finish()
+                    match self {
+                        ReadlineResponse::ToRun(e) => {
+                            f.debug_tuple("ReadlineResponse::ToRun").field(e).finish()
+                        }
+                        ReadlineResponse::Ready(e) => {
+                            f.debug_tuple("ReadlineResponse::Ready").field(e).finish()
+                        }
+                    }
                 }
             }
             #[derive(Clone)]
@@ -828,17 +848,18 @@ pub(crate) use __export_plugin_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 703] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xbe\x04\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 742] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xe5\x04\x01A\x02\x01\
 A\x07\x01B\x09\x01r\x02\x04names\x05values\x04\0\x0bhttp-header\x03\0\0\x01p\x01\
 \x01r\x03\x06status{\x07headers\x02\x04bodys\x04\0\x0dhttp-response\x03\0\x03\x01\
 @\x02\x03urls\x07headers\x02\0\x04\x04\0\x03get\x01\x05\x01@\x03\x03urls\x07head\
 ers\x02\x04bodys\0\x04\x04\0\x04post\x01\x06\x03\0\x14repl:api/http-client\x05\0\
-\x01B\x0c\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\0\x01ks\x01r\x03\
+\x01B\x0e\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\0\x01ks\x01r\x03\
 \x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0fplugin-response\x03\0\x03\x01\
-r\x02\x07commands\x07payloads\x04\0\x11readline-response\x03\0\x05\x01k~\x01r\x03\
-\x07commands\x09arg-count\x07\x03mans\x04\0\x0dplugin-config\x03\0\x08\x01r\x02\x03\
-keys\x05values\x04\0\x08repl-var\x03\0\x0a\x03\0\x12repl:api/transport\x05\x01\x02\
+r\x02\x07commands\x07payloads\x04\0\x0bparsed-line\x03\0\x05\x01q\x02\x06to-run\x01\
+\x06\0\x05ready\x01\x04\0\x04\0\x11readline-response\x03\0\x07\x01k~\x01r\x03\x07\
+commands\x09arg-count\x09\x03mans\x04\0\x0dplugin-config\x03\0\x0a\x01r\x02\x03k\
+eys\x05values\x04\0\x08repl-var\x03\0\x0c\x03\0\x12repl:api/transport\x05\x01\x02\
 \x03\0\x01\x0fplugin-response\x01B\x0b\x02\x03\x02\x01\x02\x04\0\x0fplugin-respo\
 nse\x03\0\0\x01@\0\0s\x04\0\x04name\x01\x02\x04\0\x03man\x01\x02\x01k~\x01@\0\0\x03\
 \x04\0\x09arg-count\x01\x04\x01j\x01\x01\0\x01@\x01\x07payloads\0\x05\x04\0\x03r\

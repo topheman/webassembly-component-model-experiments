@@ -1,4 +1,5 @@
 use anyhow::Result;
+use api::host_api::repl::api::transport;
 use clap::Parser;
 use cli_host::{WasmEngine, WasmHost};
 use std::io::Write;
@@ -74,26 +75,30 @@ async fn main() -> Result<()> {
             .call_readline(&mut host.store, &line)
             .await?;
         // todo retrieve list of reserved commands from the repl-logic guest
-        if ["export"].contains(&result.command.as_str()) {
-            // do nothing, it's handled by the repl-logic guest
-        } else {
-            match host.plugins.get(&result.command) {
-                Some(plugin_instance) => {
-                    let result = plugin_instance
-                        .plugin
-                        .repl_api_plugin()
-                        .call_run(&mut host.store, &result.payload)
-                        .await?;
-                    println!("{:?}", result);
-                }
-                None => {
-                    println!(
-                        "Unknown command: {}. Try `help` to see available commands.",
-                        result.command
-                    );
+
+        match result {
+            transport::ReadlineResponse::ToRun(parsed_line) => {
+                println!("To run: {:?}", parsed_line);
+                match host.plugins.get(&parsed_line.command) {
+                    Some(plugin_instance) => {
+                        let result = plugin_instance
+                            .plugin
+                            .repl_api_plugin()
+                            .call_run(&mut host.store, &parsed_line.payload)
+                            .await?;
+                        println!("{:?}", result);
+                    }
+                    None => {
+                        println!(
+                            "Unknown command: {}. Try `help` to see available commands.",
+                            parsed_line.command
+                        );
+                    }
                 }
             }
+            transport::ReadlineResponse::Ready(plugin_response) => {
+                println!("Ready: {:?}", plugin_response);
+            }
         }
-        println!("{:?}", result);
     }
 }
