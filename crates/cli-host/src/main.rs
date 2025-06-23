@@ -73,6 +73,26 @@ async fn main() -> Result<()> {
             .repl_api_repl_logic()
             .call_readline(&mut host.store, &line)
             .await?;
+        if ["export"].contains(&result.command.as_str()) {
+            // do nothing, it's handled by the repl-logic guest
+        } else {
+            match host.plugins.get(&result.command) {
+                Some(plugin_instance) => {
+                    let result = plugin_instance
+                        .plugin
+                        .repl_api_plugin()
+                        .call_run(&mut host.store, &result.payload)
+                        .await?;
+                    println!("{:?}", result);
+                }
+                None => {
+                    println!(
+                        "Unknown command: {}. Try `help` to see available commands.",
+                        result.command
+                    );
+                }
+            }
+        }
         println!("{:?}", result);
     }
 }

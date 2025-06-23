@@ -1,4 +1,3 @@
-use anyhow::Result;
 use std::collections::HashMap;
 use wasmtime::component::ResourceTable;
 use wasmtime_wasi::p2::{IoView, WasiCtx, WasiView};
@@ -99,44 +98,6 @@ impl IoView for WasiState {
 impl WasiView for WasiState {
     fn ctx(&mut self) -> &mut WasiCtx {
         &mut self.ctx
-    }
-}
-
-/// Implementation of PluginRunnerHost trait for plugin runner
-impl api::host_api::repl::api::plugin_runner::Host for WasiState {
-    async fn run(
-        &mut self,
-        plugin_name: wasmtime::component::__internal::String,
-        payload: wasmtime::component::__internal::String,
-    ) -> Result<api::host_api::repl::api::transport::PluginResponse, ()> {
-        // todo - For now, return a placeholder response
-        Ok(api::host_api::repl::api::transport::PluginResponse {
-            status: api::host_api::repl::api::transport::ReplStatus::Success,
-            stdout: Some(format!(
-                "Plugin '{}' executed with payload: {}",
-                plugin_name, payload
-            )),
-            stderr: None,
-        })
-    }
-
-    async fn man(
-        &mut self,
-        plugin_name: wasmtime::component::__internal::String,
-    ) -> wasmtime::component::__internal::String {
-        // todo - For now, return a placeholder response
-        format!(
-            "Manual for plugin '{}' - TODO: implement actual manual",
-            plugin_name
-        )
-    }
-
-    async fn arg_count(
-        &mut self,
-        plugin_name: wasmtime::component::__internal::String,
-    ) -> Option<i8> {
-        // todo - For now, return a placeholder response
-        Some(0)
     }
 }
 

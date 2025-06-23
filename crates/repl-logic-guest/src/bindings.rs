@@ -62,6 +62,22 @@ pub mod repl {
                 }
             }
             #[derive(Clone)]
+            pub struct ReadlineResponse {
+                pub command: _rt::String,
+                pub payload: _rt::String,
+            }
+            impl ::core::fmt::Debug for ReadlineResponse {
+                fn fmt(
+                    &self,
+                    f: &mut ::core::fmt::Formatter<'_>,
+                ) -> ::core::fmt::Result {
+                    f.debug_struct("ReadlineResponse")
+                        .field("command", &self.command)
+                        .field("payload", &self.payload)
+                        .finish()
+                }
+            }
+            #[derive(Clone)]
             pub struct PluginConfig {
                 pub command: _rt::String,
                 pub arg_count: Option<i8>,
@@ -354,213 +370,6 @@ pub mod repl {
                 }
             }
         }
-        #[allow(dead_code, async_fn_in_trait, unused_imports, clippy::all)]
-        pub mod plugin_runner {
-            #[used]
-            #[doc(hidden)]
-            static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
-            use super::super::super::_rt;
-            pub type PluginResponse = super::super::super::repl::api::transport::PluginResponse;
-            #[allow(unused_unsafe, clippy::all)]
-            pub fn run(plugin_name: &str, payload: &str) -> Result<PluginResponse, ()> {
-                unsafe {
-                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
-                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
-                    struct RetArea(
-                        [::core::mem::MaybeUninit<
-                            u8,
-                        >; 8 * ::core::mem::size_of::<*const u8>()],
-                    );
-                    let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 8
-                            * ::core::mem::size_of::<*const u8>()],
-                    );
-                    let vec0 = plugin_name;
-                    let ptr0 = vec0.as_ptr().cast::<u8>();
-                    let len0 = vec0.len();
-                    let vec1 = payload;
-                    let ptr1 = vec1.as_ptr().cast::<u8>();
-                    let len1 = vec1.len();
-                    let ptr2 = ret_area.0.as_mut_ptr().cast::<u8>();
-                    #[cfg(target_arch = "wasm32")]
-                    #[link(wasm_import_module = "repl:api/plugin-runner")]
-                    unsafe extern "C" {
-                        #[link_name = "run"]
-                        fn wit_import3(
-                            _: *mut u8,
-                            _: usize,
-                            _: *mut u8,
-                            _: usize,
-                            _: *mut u8,
-                        );
-                    }
-                    #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import3(
-                        _: *mut u8,
-                        _: usize,
-                        _: *mut u8,
-                        _: usize,
-                        _: *mut u8,
-                    ) {
-                        unreachable!()
-                    }
-                    unsafe {
-                        wit_import3(ptr0.cast_mut(), len0, ptr1.cast_mut(), len1, ptr2)
-                    };
-                    let l4 = i32::from(*ptr2.add(0).cast::<u8>());
-                    let result14 = match l4 {
-                        0 => {
-                            let e = {
-                                let l5 = i32::from(
-                                    *ptr2.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
-                                );
-                                let l6 = i32::from(
-                                    *ptr2
-                                        .add(2 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>(),
-                                );
-                                let l10 = i32::from(
-                                    *ptr2
-                                        .add(5 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>(),
-                                );
-                                super::super::super::repl::api::transport::PluginResponse {
-                                    status: super::super::super::repl::api::transport::ReplStatus::_lift(
-                                        l5 as u8,
-                                    ),
-                                    stdout: match l6 {
-                                        0 => None,
-                                        1 => {
-                                            let e = {
-                                                let l7 = *ptr2
-                                                    .add(3 * ::core::mem::size_of::<*const u8>())
-                                                    .cast::<*mut u8>();
-                                                let l8 = *ptr2
-                                                    .add(4 * ::core::mem::size_of::<*const u8>())
-                                                    .cast::<usize>();
-                                                let len9 = l8;
-                                                let bytes9 = _rt::Vec::from_raw_parts(
-                                                    l7.cast(),
-                                                    len9,
-                                                    len9,
-                                                );
-                                                _rt::string_lift(bytes9)
-                                            };
-                                            Some(e)
-                                        }
-                                        _ => _rt::invalid_enum_discriminant(),
-                                    },
-                                    stderr: match l10 {
-                                        0 => None,
-                                        1 => {
-                                            let e = {
-                                                let l11 = *ptr2
-                                                    .add(6 * ::core::mem::size_of::<*const u8>())
-                                                    .cast::<*mut u8>();
-                                                let l12 = *ptr2
-                                                    .add(7 * ::core::mem::size_of::<*const u8>())
-                                                    .cast::<usize>();
-                                                let len13 = l12;
-                                                let bytes13 = _rt::Vec::from_raw_parts(
-                                                    l11.cast(),
-                                                    len13,
-                                                    len13,
-                                                );
-                                                _rt::string_lift(bytes13)
-                                            };
-                                            Some(e)
-                                        }
-                                        _ => _rt::invalid_enum_discriminant(),
-                                    },
-                                }
-                            };
-                            Ok(e)
-                        }
-                        1 => {
-                            let e = ();
-                            Err(e)
-                        }
-                        _ => _rt::invalid_enum_discriminant(),
-                    };
-                    result14
-                }
-            }
-            #[allow(unused_unsafe, clippy::all)]
-            pub fn man(plugin_name: &str) -> _rt::String {
-                unsafe {
-                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
-                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
-                    struct RetArea(
-                        [::core::mem::MaybeUninit<
-                            u8,
-                        >; 2 * ::core::mem::size_of::<*const u8>()],
-                    );
-                    let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 2
-                            * ::core::mem::size_of::<*const u8>()],
-                    );
-                    let vec0 = plugin_name;
-                    let ptr0 = vec0.as_ptr().cast::<u8>();
-                    let len0 = vec0.len();
-                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
-                    #[cfg(target_arch = "wasm32")]
-                    #[link(wasm_import_module = "repl:api/plugin-runner")]
-                    unsafe extern "C" {
-                        #[link_name = "man"]
-                        fn wit_import2(_: *mut u8, _: usize, _: *mut u8);
-                    }
-                    #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import2(_: *mut u8, _: usize, _: *mut u8) {
-                        unreachable!()
-                    }
-                    unsafe { wit_import2(ptr0.cast_mut(), len0, ptr1) };
-                    let l3 = *ptr1.add(0).cast::<*mut u8>();
-                    let l4 = *ptr1
-                        .add(::core::mem::size_of::<*const u8>())
-                        .cast::<usize>();
-                    let len5 = l4;
-                    let bytes5 = _rt::Vec::from_raw_parts(l3.cast(), len5, len5);
-                    let result6 = _rt::string_lift(bytes5);
-                    result6
-                }
-            }
-            #[allow(unused_unsafe, clippy::all)]
-            pub fn arg_count(plugin_name: &str) -> Option<i8> {
-                unsafe {
-                    #[repr(align(1))]
-                    struct RetArea([::core::mem::MaybeUninit<u8>; 2]);
-                    let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 2]);
-                    let vec0 = plugin_name;
-                    let ptr0 = vec0.as_ptr().cast::<u8>();
-                    let len0 = vec0.len();
-                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
-                    #[cfg(target_arch = "wasm32")]
-                    #[link(wasm_import_module = "repl:api/plugin-runner")]
-                    unsafe extern "C" {
-                        #[link_name = "arg-count"]
-                        fn wit_import2(_: *mut u8, _: usize, _: *mut u8);
-                    }
-                    #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import2(_: *mut u8, _: usize, _: *mut u8) {
-                        unreachable!()
-                    }
-                    unsafe { wit_import2(ptr0.cast_mut(), len0, ptr1) };
-                    let l3 = i32::from(*ptr1.add(0).cast::<u8>());
-                    let result5 = match l3 {
-                        0 => None,
-                        1 => {
-                            let e = {
-                                let l4 = i32::from(*ptr1.add(1).cast::<i8>());
-                                l4 as i8
-                            };
-                            Some(e)
-                        }
-                        _ => _rt::invalid_enum_discriminant(),
-                    };
-                    result5
-                }
-            }
-        }
     }
 }
 #[rustfmt::skip]
@@ -574,7 +383,7 @@ pub mod exports {
                 #[doc(hidden)]
                 static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
-                pub type PluginResponse = super::super::super::super::repl::api::transport::PluginResponse;
+                pub type ReadlineResponse = super::super::super::super::repl::api::transport::ReadlineResponse;
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_readline_cabi<T: Guest>(
@@ -586,94 +395,44 @@ pub mod exports {
                     let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
                     let result1 = T::readline(_rt::string_lift(bytes0));
                     let ptr2 = (&raw mut _RET_AREA.0).cast::<u8>();
-                    let super::super::super::super::repl::api::transport::PluginResponse {
-                        status: status3,
-                        stdout: stdout3,
-                        stderr: stderr3,
+                    let super::super::super::super::repl::api::transport::ReadlineResponse {
+                        command: command3,
+                        payload: payload3,
                     } = result1;
-                    *ptr2.add(0).cast::<u8>() = (status3.clone() as i32) as u8;
-                    match stdout3 {
-                        Some(e) => {
-                            *ptr2
-                                .add(::core::mem::size_of::<*const u8>())
-                                .cast::<u8>() = (1i32) as u8;
-                            let vec4 = (e.into_bytes()).into_boxed_slice();
-                            let ptr4 = vec4.as_ptr().cast::<u8>();
-                            let len4 = vec4.len();
-                            ::core::mem::forget(vec4);
-                            *ptr2
-                                .add(3 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len4;
-                            *ptr2
-                                .add(2 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = ptr4.cast_mut();
-                        }
-                        None => {
-                            *ptr2
-                                .add(::core::mem::size_of::<*const u8>())
-                                .cast::<u8>() = (0i32) as u8;
-                        }
-                    };
-                    match stderr3 {
-                        Some(e) => {
-                            *ptr2
-                                .add(4 * ::core::mem::size_of::<*const u8>())
-                                .cast::<u8>() = (1i32) as u8;
-                            let vec5 = (e.into_bytes()).into_boxed_slice();
-                            let ptr5 = vec5.as_ptr().cast::<u8>();
-                            let len5 = vec5.len();
-                            ::core::mem::forget(vec5);
-                            *ptr2
-                                .add(6 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len5;
-                            *ptr2
-                                .add(5 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = ptr5.cast_mut();
-                        }
-                        None => {
-                            *ptr2
-                                .add(4 * ::core::mem::size_of::<*const u8>())
-                                .cast::<u8>() = (0i32) as u8;
-                        }
-                    };
+                    let vec4 = (command3.into_bytes()).into_boxed_slice();
+                    let ptr4 = vec4.as_ptr().cast::<u8>();
+                    let len4 = vec4.len();
+                    ::core::mem::forget(vec4);
+                    *ptr2.add(::core::mem::size_of::<*const u8>()).cast::<usize>() = len4;
+                    *ptr2.add(0).cast::<*mut u8>() = ptr4.cast_mut();
+                    let vec5 = (payload3.into_bytes()).into_boxed_slice();
+                    let ptr5 = vec5.as_ptr().cast::<u8>();
+                    let len5 = vec5.len();
+                    ::core::mem::forget(vec5);
+                    *ptr2.add(3 * ::core::mem::size_of::<*const u8>()).cast::<usize>() = len5;
+                    *ptr2
+                        .add(2 * ::core::mem::size_of::<*const u8>())
+                        .cast::<*mut u8>() = ptr5.cast_mut();
                     ptr2
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn __post_return_readline<T: Guest>(arg0: *mut u8) {
-                    let l0 = i32::from(
-                        *arg0.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
-                    );
-                    match l0 {
-                        0 => {}
-                        _ => {
-                            let l1 = *arg0
-                                .add(2 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>();
-                            let l2 = *arg0
-                                .add(3 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>();
-                            _rt::cabi_dealloc(l1, l2, 1);
-                        }
-                    }
-                    let l3 = i32::from(
-                        *arg0.add(4 * ::core::mem::size_of::<*const u8>()).cast::<u8>(),
-                    );
-                    match l3 {
-                        0 => {}
-                        _ => {
-                            let l4 = *arg0
-                                .add(5 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>();
-                            let l5 = *arg0
-                                .add(6 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>();
-                            _rt::cabi_dealloc(l4, l5, 1);
-                        }
-                    }
+                    let l0 = *arg0.add(0).cast::<*mut u8>();
+                    let l1 = *arg0
+                        .add(::core::mem::size_of::<*const u8>())
+                        .cast::<usize>();
+                    _rt::cabi_dealloc(l0, l1, 1);
+                    let l2 = *arg0
+                        .add(2 * ::core::mem::size_of::<*const u8>())
+                        .cast::<*mut u8>();
+                    let l3 = *arg0
+                        .add(3 * ::core::mem::size_of::<*const u8>())
+                        .cast::<usize>();
+                    _rt::cabi_dealloc(l2, l3, 1);
                 }
                 pub trait Guest {
-                    fn readline(line: _rt::String) -> PluginResponse;
+                    fn readline(line: _rt::String) -> ReadlineResponse;
                 }
                 #[doc(hidden)]
                 macro_rules! __export_repl_api_repl_logic_cabi {
@@ -695,10 +454,10 @@ pub mod exports {
                 struct _RetArea(
                     [::core::mem::MaybeUninit<
                         u8,
-                    >; 7 * ::core::mem::size_of::<*const u8>()],
+                    >; 4 * ::core::mem::size_of::<*const u8>()],
                 );
                 static mut _RET_AREA: _RetArea = _RetArea(
-                    [::core::mem::MaybeUninit::uninit(); 7
+                    [::core::mem::MaybeUninit::uninit(); 4
                         * ::core::mem::size_of::<*const u8>()],
                 );
             }
@@ -774,9 +533,9 @@ pub(crate) use __export_host_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 900] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x85\x06\x01A\x02\x01\
-A\x0c\x01B\x0c\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\0\x01ks\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 725] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xd6\x04\x01A\x02\x01\
+A\x09\x01B\x0c\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\0\x01ks\x01\
 r\x03\x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0fplugin-response\x03\0\x03\
 \x01r\x02\x07commands\x07payloads\x04\0\x11readline-response\x03\0\x05\x01k~\x01\
 r\x03\x07commands\x09arg-count\x07\x03mans\x04\0\x0dplugin-config\x03\0\x08\x01r\
@@ -787,13 +546,9 @@ repl-var\x01B\x10\x02\x03\x02\x01\x01\x04\0\x11readline-response\x03\0\0\x02\x03
 var\x03\0\x04\x01p\x03\x01@\0\0\x06\x04\0\x0bget-plugins\x01\x07\x01p\x05\x01@\x01\
 \x04vars\x08\x01\0\x04\0\x0dset-repl-vars\x01\x09\x01@\0\0\x08\x04\0\x0dget-repl\
 -vars\x01\x0a\x01@\x01\x03var\x05\x01\0\x04\0\x0cset-repl-var\x01\x0b\x03\0\x13r\
-epl:api/host-state\x05\x04\x02\x03\0\0\x0fplugin-response\x01B\x0a\x02\x03\x02\x01\
-\x05\x04\0\x0fplugin-response\x03\0\0\x01j\x01\x01\0\x01@\x02\x0bplugin-names\x07\
-payloads\0\x02\x04\0\x03run\x01\x03\x01@\x01\x0bplugin-names\0s\x04\0\x03man\x01\
-\x04\x01k~\x01@\x01\x0bplugin-names\0\x05\x04\0\x09arg-count\x01\x06\x03\0\x16re\
-pl:api/plugin-runner\x05\x06\x01B\x04\x02\x03\x02\x01\x05\x04\0\x0fplugin-respon\
+epl:api/host-state\x05\x04\x01B\x04\x02\x03\x02\x01\x01\x04\0\x11readline-respon\
 se\x03\0\0\x01@\x01\x04lines\0\x01\x04\0\x08readline\x01\x02\x04\0\x13repl:api/r\
-epl-logic\x05\x07\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\
+epl-logic\x05\x05\x04\0\x11repl:api/host-api\x04\0\x0b\x0e\x01\0\x08host-api\x03\
 \0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-\
 bindgen-rust\x060.41.0";
 #[inline(never)]

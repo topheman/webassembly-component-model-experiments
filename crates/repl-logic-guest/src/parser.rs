@@ -1,24 +1,15 @@
+use crate::bindings::repl::api::transport;
 use crate::vars::ReplLogicVar;
 
-pub struct ParsedPluginLine {
-    pub command: String,
-    pub payload: String,
-}
-
-pub enum ParseResult {
-    Plugin(ParsedPluginLine),
-    Export((String, String)),
-}
-
-pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> ParseResult {
+pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> transport::ReadlineResponse {
     // Split the line into command and arguments
     let parts: Vec<&str> = line.split_whitespace().collect();
 
     if parts.is_empty() {
-        return ParseResult::Plugin(ParsedPluginLine {
+        return transport::ReadlineResponse {
             command: String::new(),
             payload: String::new(),
-        });
+        };
     }
 
     let command = parts[0].to_string();
@@ -30,12 +21,7 @@ pub fn parse_line(line: &str, env_vars: &ReplLogicVar) -> ParseResult {
         String::new()
     };
 
-    if command == "export" {
-        let (key, value) = payload.split_once('=').unwrap();
-        return ParseResult::Export((key.to_string(), value.to_string()));
-    }
-
-    ParseResult::Plugin(ParsedPluginLine { command, payload })
+    transport::ReadlineResponse { command, payload }
 }
 
 #[cfg(test)]

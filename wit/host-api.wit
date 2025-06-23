@@ -12,19 +12,11 @@ interface host-state {
 }
 
 interface repl-logic {
-  use transport.{plugin-response};
-  readline: func(line: string) -> plugin-response;
-}
-
-interface plugin-runner {
-  use transport.{plugin-response};
-  run: func(plugin-name: string, payload: string) -> result<plugin-response>;
-  man: func(plugin-name: string) -> string;
-  arg-count: func(plugin-name: string) -> option<s8>;
+  use transport.{readline-response};
+  readline: func(line: string) -> readline-response;
 }
 
 world host-api {
   import host-state;
-  import plugin-runner;
   export repl-logic;
 }
