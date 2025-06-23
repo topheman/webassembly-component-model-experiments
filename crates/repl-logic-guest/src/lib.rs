@@ -1,6 +1,7 @@
 #[allow(warnings)]
 mod bindings;
 mod parser;
+mod reserved;
 mod vars;
 
 use crate::bindings::exports::repl::api::repl_logic::Guest as ReplLogicGuest;
@@ -13,6 +14,8 @@ impl ReplLogicGuest for Component {
     fn readline(line: String) -> transport::ReadlineResponse {
         let vars = host_state::get_repl_vars();
         let result = parser::parse_line(&line, &vars.into());
+
+        // builtins::run(&result.command, &result.payload);
 
         // builtin export
         if result.command == "export" {

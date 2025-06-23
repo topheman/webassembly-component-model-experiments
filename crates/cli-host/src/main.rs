@@ -73,6 +73,7 @@ async fn main() -> Result<()> {
             .repl_api_repl_logic()
             .call_readline(&mut host.store, &line)
             .await?;
+        // todo retrieve list of reserved commands from the repl-logic guest
         if ["export"].contains(&result.command.as_str()) {
             // do nothing, it's handled by the repl-logic guest
         } else {
