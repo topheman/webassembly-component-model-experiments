@@ -1,7 +1,7 @@
 use anyhow::Result;
 use api::host_api::repl::api::transport;
 use clap::Parser;
-use cli_host::{WasmEngine, WasmHost};
+use cli_host::{StatusHandler, WasmEngine, WasmHost};
 use std::io::Write;
 use std::path::PathBuf;
 
@@ -80,7 +80,7 @@ async fn main() -> Result<()> {
         let mut line = String::new();
         match host.store.data().repl_vars.get("?") {
             Some(last_status) => {
-                print!("repl ({})> ", last_status);
+                print!("repl({})> ", last_status);
             }
             None => {
                 print!("repl> ");
@@ -95,6 +95,25 @@ async fn main() -> Result<()> {
         // todo retrieve list of reserved commands from the repl-logic guest
 
         match result {
+            // The built-in commands run in the repl-logic-guest contain stdout, stderr and a status
+            // We only need to output them and set the $? variable
+            transport::ReadlineResponse::Ready(plugin_response) => {
+                if let Some(stdout) = plugin_response.stdout {
+                    println!("{}", stdout);
+                }
+                if let Some(stderr) = plugin_response.stderr {
+                    eprintln!("{}", stderr);
+                }
+                StatusHandler::set_exit_status(
+                    &mut host.store.data_mut().repl_vars,
+                    plugin_response.status
+                        == api::host_api::repl::api::transport::ReplStatus::Success,
+                );
+            }
+            // The repl-logic-guest parses the command and payload (expanded variables)
+            // We run the command of the plugin from the host, which has access to
+            // - the plugins
+            // - the store
             transport::ReadlineResponse::ToRun(parsed_line) => {
                 if debug {
                     eprintln!("[Host][Debug] To run: {:?}", parsed_line);
@@ -113,28 +132,17 @@ async fn main() -> Result<()> {
                             if let Some(stderr) = result.stderr {
                                 eprintln!("{}", stderr);
                             }
-                            if result.status
-                                == api::plugin_api::repl::api::transport::ReplStatus::Success
-                            {
-                                // change $? to 0
-                                host.store
-                                    .data_mut()
-                                    .repl_vars
-                                    .insert("?".to_string(), "0".to_string());
-                            } else {
-                                // change $? to 1
-                                host.store
-                                    .data_mut()
-                                    .repl_vars
-                                    .insert("?".to_string(), "1".to_string());
-                            }
+                            StatusHandler::set_exit_status(
+                                &mut host.store.data_mut().repl_vars,
+                                result.status
+                                    == api::plugin_api::repl::api::transport::ReplStatus::Success,
+                            );
                         } else {
                             eprintln!("Error: {:?}", result);
-                            // change $? to 1
-                            host.store
-                                .data_mut()
-                                .repl_vars
-                                .insert("?".to_string(), "1".to_string());
+                            StatusHandler::set_exit_status(
+                                &mut host.store.data_mut().repl_vars,
+                                false,
+                            );
                         }
                     }
                     None => {
@@ -142,35 +150,8 @@ async fn main() -> Result<()> {
                             "Unknown command: {}. Try `help` to see available commands.",
                             parsed_line.command
                         );
-                        // change $? to 1
-                        host.store
-                            .data_mut()
-                            .repl_vars
-                            .insert("?".to_string(), "1".to_string());
+                        StatusHandler::set_exit_status(&mut host.store.data_mut().repl_vars, false);
                     }
-                }
-            }
-            transport::ReadlineResponse::Ready(plugin_response) => {
-                if let Some(stdout) = plugin_response.stdout {
-                    println!("{}", stdout);
-                }
-                if let Some(stderr) = plugin_response.stderr {
-                    eprintln!("{}", stderr);
-                }
-                if plugin_response.status
-                    == api::host_api::repl::api::transport::ReplStatus::Success
-                {
-                    // change $? to 0
-                    host.store
-                        .data_mut()
-                        .repl_vars
-                        .insert("?".to_string(), "0".to_string());
-                } else {
-                    // change $? to 1
-                    host.store
-                        .data_mut()
-                        .repl_vars
-                        .insert("?".to_string(), "1".to_string());
                 }
             }
         }
