@@ -1,6 +1,6 @@
 mod engine;
-mod host;
 mod store;
+mod wasm_host;
 
 pub use engine::WasmEngine;
-pub use host::{Host, PluginInstance};
+pub use wasm_host::{PluginInstance, WasmHost};

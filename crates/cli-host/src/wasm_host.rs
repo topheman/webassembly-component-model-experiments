@@ -13,13 +13,13 @@ pub struct PluginInstance {
 }
 
 /// The main host that manages plugins and the REPL logic
-pub struct Host {
+pub struct WasmHost {
     pub store: Store<WasiState>,
     pub repl_logic: Option<HostApi>,
     pub plugins: HashMap<String, PluginInstance>,
 }
 
-impl Host {
+impl WasmHost {
     pub fn new(engine: &WasmEngine) -> Self {
         Self {
             store: engine.create_store(),
