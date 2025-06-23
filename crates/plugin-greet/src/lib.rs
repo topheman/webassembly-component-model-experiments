@@ -14,7 +14,7 @@ impl Guest for Component {
     fn man() -> String {
         r#"
 NAME
-    greet - Greet the user
+    greet - Greet the user (built with Rust🦀)
 
 SYNOPSIS
     greet <name>

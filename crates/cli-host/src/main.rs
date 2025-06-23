@@ -118,6 +118,34 @@ async fn main() -> Result<()> {
                 if debug {
                     eprintln!("[Host][Debug] To run: {:?}", parsed_line);
                 }
+
+                // empty line - do nothing
+                if parsed_line.command == "" {
+                    StatusHandler::set_exit_status(&mut host.store.data_mut().repl_vars, true);
+                    continue;
+                }
+
+                // this is a man command for plugins, we run it from the host
+                if parsed_line.command == "man" {
+                    let Some(plugin_instance) = host.plugins.get(&parsed_line.payload) else {
+                        println!(
+                            "Unknown command: {}. Try `help` to see available commands.",
+                            parsed_line.payload
+                        );
+                        StatusHandler::set_exit_status(&mut host.store.data_mut().repl_vars, false);
+                        continue;
+                    };
+                    let man = plugin_instance
+                        .plugin
+                        .repl_api_plugin()
+                        .call_man(&mut host.store)
+                        .await?;
+                    println!("{}", man);
+                    StatusHandler::set_exit_status(&mut host.store.data_mut().repl_vars, true);
+                    continue;
+                }
+
+                // this is a plugin command, we run it from the host
                 match host.plugins.get(&parsed_line.command) {
                     Some(plugin_instance) => {
                         let result = plugin_instance
