@@ -38,9 +38,7 @@ mod tests {
     #[test]
     fn basic_parse() {
         let env_vars = make_env_vars();
-        let ParseResult::Plugin(result) = parse_line("echo Hello, world!", &env_vars) else {
-            panic!("Expected a plugin result");
-        };
+        let result = parse_line("echo Hello, world!", &env_vars);
         assert_eq!(result.command, "echo".to_string());
         assert_eq!(result.payload, "Hello, world!");
     }
@@ -48,9 +46,7 @@ mod tests {
     #[test]
     fn parse_with_args() {
         let env_vars = make_env_vars();
-        let ParseResult::Plugin(result) = parse_line("echo Hello, world! -n", &env_vars) else {
-            panic!("Expected a plugin result");
-        };
+        let result = parse_line("echo Hello, world! -n", &env_vars);
         assert_eq!(result.command, "echo");
         assert_eq!(result.payload, "Hello, world! -n");
     }
@@ -58,9 +54,7 @@ mod tests {
     #[test]
     fn parse_with_variable_to_expand() {
         let env_vars = make_env_vars();
-        let ParseResult::Plugin(result) = parse_line("echo $HOME", &env_vars) else {
-            panic!("Expected a plugin result");
-        };
+        let result = parse_line("echo $HOME", &env_vars);
         assert_eq!(result.command, "echo");
         assert_eq!(result.payload, "/home/user");
     }
@@ -68,9 +62,7 @@ mod tests {
     #[test]
     fn parse_with_multiple_variables() {
         let env_vars = make_env_vars();
-        let ParseResult::Plugin(result) = parse_line("echo $HOME/$USER", &env_vars) else {
-            panic!("Expected a plugin result");
-        };
+        let result = parse_line("echo $HOME/$USER", &env_vars);
         assert_eq!(result.command, "echo");
         assert_eq!(result.payload, "/home/user/john");
     }
@@ -78,9 +70,7 @@ mod tests {
     #[test]
     fn parse_with_unknown_variable() {
         let env_vars = make_env_vars();
-        let ParseResult::Plugin(result) = parse_line("echo $UNKNOWN", &env_vars) else {
-            panic!("Expected a plugin result");
-        };
+        let result = parse_line("echo $UNKNOWN", &env_vars);
         assert_eq!(result.command, "echo");
         assert_eq!(result.payload, "");
     }
@@ -88,9 +78,7 @@ mod tests {
     #[test]
     fn parse_empty_line() {
         let env_vars = make_env_vars();
-        let ParseResult::Plugin(result) = parse_line("", &env_vars) else {
-            panic!("Expected a plugin result");
-        };
+        let result = parse_line("", &env_vars);
         assert_eq!(result.command, "");
         assert_eq!(result.payload, "");
     }
@@ -98,9 +86,7 @@ mod tests {
     #[test]
     fn parse_command_only() {
         let env_vars = make_env_vars();
-        let ParseResult::Plugin(result) = parse_line("ls", &env_vars) else {
-            panic!("Expected a plugin result");
-        };
+        let result = parse_line("ls", &env_vars);
         assert_eq!(result.command, "ls");
         assert_eq!(result.payload, "");
     }
@@ -108,10 +94,8 @@ mod tests {
     #[test]
     fn parse_export() {
         let env_vars = make_env_vars();
-        let ParseResult::Export((key, value)) = parse_line("export FOO=BAR", &env_vars) else {
-            panic!("Expected an export result");
-        };
-        assert_eq!(key, "FOO");
-        assert_eq!(value, "BAR");
+        let result = parse_line("export FOO=BAR", &env_vars);
+        assert_eq!(result.command, "export");
+        assert_eq!(result.payload, "FOO=BAR");
     }
 }
