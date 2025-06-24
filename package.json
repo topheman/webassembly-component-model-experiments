@@ -1,0 +1,34 @@
+{
+  "name": "webassembly-component-model-repl",
+  "version": "0.1.0",
+  "description": "WebAssembly Component Model basic REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)",
+  "keywords": [
+    "WebAssembly",
+    "WebAssembly",
+    "Component",
+    "Model",
+    "WIT",
+    "wasmtime",
+    "wit-bindgen",
+    "repl",
+    "plugin-system"
+  ],
+  "homepage": "https://github.com/topheman/webassembly-component-model-repl#readme",
+  "bugs": {
+    "url": "https://github.com/topheman/webassembly-component-model-repl/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topheman/webassembly-component-model-repl.git"
+  },
+  "author": "Christophe Rosset",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@biomejs/biome": "2.0.5"
+  }
+}

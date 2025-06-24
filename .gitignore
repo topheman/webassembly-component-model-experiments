@@ -12,3 +12,7 @@ target/
 
 # Local files
 /local
+
+### JavaScript ###
+node_modules/
+dist/
