@@ -3,6 +3,7 @@ name = "api"
 version = "0.1.0"
 edition = { workspace = true }
 publish = false
+description = "Rust bindings for host-side WebAssembly Component Model interfaces, auto-generated from WIT definitions"
 build = "build.rs"
 
 [dependencies]

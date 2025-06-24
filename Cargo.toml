@@ -2,7 +2,8 @@
 resolver = "2"
 members = [
     "crates/api",
-    "crates/cli-host", "crates/plugin-greet",
+    "crates/cli-host",
+    "crates/plugin-greet",
     "crates/repl-logic-guest",
     # "crates/repl-guest",
     # "crates/plugin-hello"
@@ -11,6 +12,7 @@ members = [
 [workspace.package]
 publish = false
 edition = "2024"
+description = "WebAssembly Component Model basic REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)"
 
 [workspace.dependencies]
 wasmtime = { version = "33", default-features = false, features = [

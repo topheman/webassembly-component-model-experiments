@@ -3,6 +3,7 @@ name = "repl-logic-guest"
 version = "0.1.0"
 edition = { workspace = true }
 publish = false
+description = "Guest WASM component for REPL evaluation - compiles to WebAssembly for multi-language WIT hosts"
 
 [dependencies]
 wit-bindgen-rt = { workspace = true }
