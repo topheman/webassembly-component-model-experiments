@@ -6,6 +6,7 @@
   "author": "Christophe Rosset",
   "type": "module",
   "scripts": {
+    "wit-types": "rm -rf ./src/types && jco types --world-name plugin-api --out-dir ./src/types ../../wit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
