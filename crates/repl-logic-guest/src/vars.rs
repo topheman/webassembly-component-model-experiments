@@ -50,7 +50,7 @@ impl ReplLogicVar {
                 // Handle $VAR syntax
                 let mut var_name = String::new();
                 while let Some(ch) = chars.peek() {
-                    if ch.is_alphanumeric() || *ch == '_' {
+                    if ch.is_alphanumeric() || *ch == '_' || *ch == '?' {
                         var_name.push(chars.next().unwrap());
                     } else {
                         break;
