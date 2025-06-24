@@ -70,7 +70,16 @@ impl WasmEngine {
         component: Component,
     ) -> Result<PluginApi> {
         let mut linker: ComponentLinker<WasiState> = ComponentLinker::new(&self.engine);
-        wasmtime_wasi::p2::add_to_linker_sync(&mut linker)?;
+
+        // The plugins may access to the file system (and other WASI interfaces),
+        // wasmtime_wasi uses tokio under the hood. If we use `add_to_linker_sync`, we get the error:
+        // > thread 'main' panicked at /Users/tophe/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wasmtime-wasi-33.0.0/src/runtime.rs:108:15:
+        // > Cannot start a runtime from within a runtime. This happens because a function (like `block_on`) attempted to block the current thread while the thread is being used to drive asynchronous tasks.
+        //
+        // So we use `add_to_linker_async`, which will not create a private runtime and use the one we already are in.
+        //
+        // #nested-async-runtime https://github.com/bytecodealliance/wasmtime/issues/9515#issuecomment-2442376571
+        wasmtime_wasi::p2::add_to_linker_async(&mut linker)?;
 
         // Add the plugin API interface with host implementation
         PluginApi::add_to_linker(&mut linker, |state: &mut WasiState| &mut state.plugin_host)?;
