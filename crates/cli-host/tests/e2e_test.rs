@@ -189,4 +189,30 @@ mod e2e_test {
             .exp_string("repl(1)>")
             .expect("Empty command should lead to a new prompt, without changing $?");
     }
+
+    #[test]
+    fn test_ls_plugin() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_ls.wasm",
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch cli-host with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session.send_line("ls .").expect("Failed to send command");
+        session
+            .exp_string("Cargo.lock\nCargo.toml\nREADME.md\n")
+            .expect("Didn't get expected error output");
+    }
 }
