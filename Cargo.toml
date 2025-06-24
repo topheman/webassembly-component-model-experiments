@@ -4,6 +4,7 @@ members = [
     "crates/api",
     "crates/cli-host",
     "crates/plugin-greet",
+    "crates/plugin-ls",
     "crates/repl-logic-guest",
     # "crates/repl-guest",
     # "crates/plugin-hello"
