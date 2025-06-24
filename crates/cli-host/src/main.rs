@@ -14,6 +14,9 @@ struct Cli {
 
     #[arg(long, default_value_t = false)]
     debug: bool,
+
+    #[arg(long, default_value = ".")]
+    dir: PathBuf,
 }
 
 #[tokio::main]
@@ -23,11 +26,15 @@ async fn main() -> Result<()> {
     let debug = cli.debug;
     println!("[Host] Starting REPL host...");
 
+    // Create a WASI context for the host
+    // Binding stdio, args, env, preopened dir ...
+    let wasi_ctx = WasmEngine::build_wasi_ctx(&cli.dir)?;
+
     // Create the WebAssembly engine
     let engine = WasmEngine::new()?;
 
     // Create the host
-    let mut host = WasmHost::new(&engine);
+    let mut host = WasmHost::new(&engine, wasi_ctx);
 
     // Load the REPL logic component
     let repl_logic_path = if cfg!(debug_assertions) {

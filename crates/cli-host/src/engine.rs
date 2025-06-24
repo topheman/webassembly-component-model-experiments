@@ -1,9 +1,9 @@
 use anyhow::Result;
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use wasmtime::component::{Component, Linker as ComponentLinker, ResourceTable};
 use wasmtime::{Config, Engine, Store};
-use wasmtime_wasi::p2::WasiCtxBuilder;
+use wasmtime_wasi::p2::{WasiCtx, WasiCtxBuilder};
 
 // Import the generated bindings
 use crate::store::{PluginHost, WasiState};
@@ -34,13 +34,23 @@ impl WasmEngine {
         Ok(component)
     }
 
-    /// Create a new store with WASI context
-    pub fn create_store(&self) -> Store<WasiState> {
+    pub fn build_wasi_ctx(path: &PathBuf) -> Result<WasiCtx> {
         let wasi_ctx = WasiCtxBuilder::new()
             .inherit_stdio()
             .inherit_args()
             .inherit_env()
+            .preopened_dir(
+                path,
+                ".",
+                wasmtime_wasi::DirPerms::READ,
+                wasmtime_wasi::FilePerms::READ,
+            )?
             .build();
+        Ok(wasi_ctx)
+    }
+
+    /// Create a new store with WASI context
+    pub fn create_store(&self, wasi_ctx: WasiCtx) -> Store<WasiState> {
         Store::new(
             &self.engine,
             WasiState {

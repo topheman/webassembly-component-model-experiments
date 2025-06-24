@@ -6,6 +6,7 @@ use api::plugin_api::PluginApi;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use wasmtime::Store;
+use wasmtime_wasi::p2::WasiCtx;
 
 /// Represents a loaded plugin
 pub struct PluginInstance {
@@ -20,9 +21,9 @@ pub struct WasmHost {
 }
 
 impl WasmHost {
-    pub fn new(engine: &WasmEngine) -> Self {
+    pub fn new(engine: &WasmEngine, wasi_ctx: WasiCtx) -> Self {
         Self {
-            store: engine.create_store(),
+            store: engine.create_store(wasi_ctx),
             plugins: HashMap::new(),
             repl_logic: None,
         }
