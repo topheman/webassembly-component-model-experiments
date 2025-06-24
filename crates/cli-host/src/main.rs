@@ -69,6 +69,10 @@ async fn main() -> Result<()> {
         .data_mut()
         .repl_vars
         .insert("USER".to_string(), "Tophe".to_string());
+    host.store
+        .data_mut()
+        .repl_vars
+        .insert("?".to_string(), "0".to_string());
     if debug {
         eprintln!(
             "[Host][Debug] Loaded env vars: {:?}",
@@ -125,7 +129,6 @@ async fn main() -> Result<()> {
 
                 // empty line - do nothing
                 if parsed_line.command == "" {
-                    StatusHandler::set_exit_status(&mut host.store.data_mut().repl_vars, true);
                     continue;
                 }
 

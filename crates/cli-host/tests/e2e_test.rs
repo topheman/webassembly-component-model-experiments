@@ -47,7 +47,9 @@ mod e2e_test {
         session
             .exp_string("[Host] Loading plugin:")
             .expect("Didn't see plugin loading message");
-        session.exp_string("repl>").expect("Didn't see REPL prompt");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
     }
 
     #[test]
@@ -67,7 +69,9 @@ mod e2e_test {
         session
             .exp_string("[Host] Loading plugin:")
             .expect("Didn't see plugin loading message");
-        session.exp_string("repl>").expect("Didn't see REPL prompt");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
 
         session
             .send_line("greet Tophe")
@@ -97,7 +101,9 @@ mod e2e_test {
         session
             .exp_string("[Host] Loading plugin:")
             .expect("Didn't see plugin loading message");
-        session.exp_string("repl>").expect("Didn't see REPL prompt");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
 
         session
             .send_line("greet $USER")
@@ -127,7 +133,9 @@ mod e2e_test {
         session
             .exp_string("[Host] Loading plugin:")
             .expect("Didn't see plugin loading message");
-        session.exp_string("repl>").expect("Didn't see REPL prompt");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
 
         session
             .send_line("nonexistingcmd foo bar")
@@ -138,5 +146,47 @@ mod e2e_test {
         session
             .exp_string("repl(1)>")
             .expect("Didn't see next REPL prompt with $? set to 1");
+    }
+
+    #[test]
+    fn test_empty_line() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch cli-host with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+
+        session.send_line("").expect("Failed to send command");
+        session
+            .exp_string("repl(0)>")
+            .expect("Empty command should lead to a new prompt");
+
+        session
+            .send_line("nonexistingcmd foo bar")
+            .expect("Failed to send command");
+        session
+            .exp_string("Unknown command: nonexistingcmd. Try `help` to see available commands")
+            .expect("Didn't get expected error output");
+        session
+            .exp_string("repl(1)>")
+            .expect("Didn't see next REPL prompt with $? set to 1");
+
+        session.send_line("").expect("Failed to send command");
+        session
+            .exp_string("repl(1)>")
+            .expect("Empty command should lead to a new prompt, without changing $?");
     }
 }
