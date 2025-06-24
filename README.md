@@ -35,6 +35,8 @@ TODO: add usage instructions for both hosts
 
 - [just](https://github.com/casey/just?tab=readme-ov-file#installation)
 - [cargo component 0.21.1+](https://github.com/bytecodealliance/cargo-component?tab=readme-ov-file#installation)
+- [wasm-tools 1.235.0](https://github.com/bytecodealliance/wasm-tools?tab=readme-ov-file#installation)
+- [wasm-opt 116](https://github.com/WebAssembly/binaryen?tab=readme-ov-file#installation)
 
 Add WebAssembly targets:
 
@@ -42,9 +44,17 @@ Add WebAssembly targets:
 rustup target add wasm32-unknown-unknown wasm32-wasip1
 ```
 
+#### JavaScript
+
+```bash
+npm install
+```
+
 ### Build
 
 Run `just build` to build the rust part of the project.
+
+Run `npm run build` for the JavaScript part of the project.
 
 ### Run
 

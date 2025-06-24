@@ -7,10 +7,14 @@
   "type": "module",
   "scripts": {
     "wit-types": "rm -rf ./src/types && jco types --world-name plugin-api --out-dir ./src/types ../../wit",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bundle": "rolldown ./src/component.ts --file ./dist/component.js",
+    "componentize": "jco componentize ./dist/component.js --wit ../../wit --world-name plugin-api --out ./dist/component.wasm --disable http --disable random",
+    "build": "npm run bundle && npm run componentize",
+    "optimize": "jco opt ./dist/component.wasm -o ./dist/component-opt.wasm"
   },
   "dependencies": {
     "@bytecodealliance/componentize-js": "^0.18.2",
-    "@bytecodealliance/jco": "^1.11.2"
+    "@bytecodealliance/jco": "^1.11.2",
+    "rolldown": "^1.0.0-beta.19"
   }
 }
