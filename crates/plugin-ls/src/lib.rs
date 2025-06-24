@@ -38,9 +38,10 @@ Cargo.toml
     fn run(payload: String) -> Result<transport::PluginResponse, ()> {
         match std::fs::read_dir(&payload) {
             Ok(files) => {
-                let files = files
+                let mut files = files
                     .map(|file| file.unwrap().path().to_str().unwrap().to_string())
                     .collect::<Vec<_>>();
+                files.sort();
                 let files = files.join("\n");
                 return Ok(transport::PluginResponse {
                     status: transport::ReplStatus::Success,
