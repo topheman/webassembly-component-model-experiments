@@ -2,13 +2,16 @@ package repl:api;
 
 interface host-state {
   use transport.{readline-response};
-  use transport.{plugin-config};
   use transport.{repl-var};
 
-  get-plugins: func() -> list<plugin-config>;
+  get-plugins-names: func() -> list<string>;
   set-repl-vars: func(vars: list<repl-var>);
   get-repl-vars: func() -> list<repl-var>;
   set-repl-var: func(var: repl-var);
+}
+
+interface guest-state {
+  get-reserved-commands: func() -> list<string>;
 }
 
 interface repl-logic {
@@ -18,5 +21,6 @@ interface repl-logic {
 
 world host-api {
   import host-state;
+  export guest-state;
   export repl-logic;
 }

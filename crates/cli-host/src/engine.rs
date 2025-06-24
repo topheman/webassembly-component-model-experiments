@@ -48,6 +48,7 @@ impl WasmEngine {
                 table: ResourceTable::new(),
                 plugin_host: PluginHost {},
                 repl_vars: HashMap::new(),
+                plugins_names: Vec::new(),
             },
         )
     }

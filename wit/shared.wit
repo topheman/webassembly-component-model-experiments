@@ -20,12 +20,6 @@ interface transport {
     ready(plugin-response),
   }
 
-  record plugin-config {
-    command: string,
-    arg-count: option<s8>,
-    man: string,
-  }
-
   record repl-var {
     key: string,
     value: string,

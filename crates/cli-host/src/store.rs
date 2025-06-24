@@ -30,6 +30,9 @@ pub struct WasiState {
 
     /// Custom environment variables stored by the REPL
     pub repl_vars: HashMap<String, String>,
+
+    /// Names of the plugins loaded in the host
+    pub plugins_names: Vec<String>,
 }
 
 /// --- Host implementation for plugin API ---
@@ -102,12 +105,8 @@ impl WasiView for WasiState {
 }
 
 impl api::host_api::repl::api::host_state::Host for WasiState {
-    async fn get_plugins(
-        &mut self,
-    ) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::PluginConfig>
-    {
-        // todo - For now, return a placeholder response
-        Vec::new()
+    async fn get_plugins_names(&mut self) -> wasmtime::component::__internal::Vec<String> {
+        self.plugins_names.clone()
     }
 
     async fn set_repl_vars(

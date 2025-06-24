@@ -56,6 +56,7 @@ async fn main() -> Result<()> {
             .call_man(&mut host.store)
             .await?;
         plugins_config.push((name.clone(), arg_count, man));
+        host.store.data_mut().plugins_names.push(name.clone());
     }
     if debug {
         eprintln!("[Host][Debug] Loaded plugins config: {:?}", plugins_config);

@@ -4,6 +4,7 @@ mod parser;
 mod reserved;
 mod vars;
 
+use crate::bindings::exports::repl::api::guest_state::Guest as GuestStateGuest;
 use crate::bindings::exports::repl::api::repl_logic::Guest as ReplLogicGuest;
 use crate::bindings::repl::api::host_state;
 use crate::bindings::repl::api::transport;
@@ -34,6 +35,12 @@ impl ReplLogicGuest for Component {
 
         // if no reserved command was run return the parsed line to be passed to the plugin to run from the host
         transport::ReadlineResponse::ToRun(parsed_line)
+    }
+}
+
+impl GuestStateGuest for Component {
+    fn get_reserved_commands() -> Vec<String> {
+        reserved::get_reserved_commands()
     }
 }
 
