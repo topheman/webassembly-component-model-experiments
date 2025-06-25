@@ -6,6 +6,7 @@ build:
     just build-plugin-greet
     just build-plugin-ls
     just build-plugin-echo
+    just build-plugin-weather
 
 # Build all crates in release mode
 build-release:
@@ -15,6 +16,15 @@ build-release:
     just build-plugin-greet-release
     just build-plugin-ls-release
     just build-plugin-echo-release
+    just build-plugin-weather-release
+
+# Build the plugin-weather component
+build-plugin-weather:
+    cargo component build -p plugin-weather
+
+# Build the plugin-weather component in release mode
+build-plugin-weather-release:
+    cargo component build --release -p plugin-weather
 
 # Build the API crate (normal Rust build)
 build-api:

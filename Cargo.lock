@@ -1208,6 +1208,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "plugin-weather"
+version = "0.1.0"
+dependencies = [
+ "wit-bindgen-rt 0.42.1",
+]
+
+[[package]]
 name = "postcard"
 version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
