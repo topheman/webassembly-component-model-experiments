@@ -215,6 +215,53 @@ mod e2e_test {
             .exp_string(
                 ".cursor\r\n.git\r\n.gitignore\r\n.vscode\r\nCargo.lock\r\nCargo.toml\r\nREADME.md\r\n",
             )
+            .expect("Didn't get listing of current directory");
+    }
+
+    #[test]
+    fn test_0_variable_set() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_echo.wasm",
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch cli-host with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("echo foo bar")
+            .expect("Failed to send command");
+        session
+            .exp_string("foo bar")
+            .expect("Didn't get expected echo output");
+        session
+            .send_line("echo $0")
+            .expect("Failed to send command");
+        session
+            .exp_string("foo bar")
+            .expect("Didn't get expected echo output for $0");
+
+        session
+            .send_line("nonexistingcmd foo bar")
+            .expect("Failed to send command");
+        session
+            .exp_string("Unknown command: nonexistingcmd. Try `help` to see available commands")
             .expect("Didn't get expected error output");
+        session
+            .send_line("echo $0 yolo") // add yolo so that the expect doesn't match previous instances of "foo bar" only
+            .expect("Failed to send command");
+        session
+            .exp_string("foo bar yolo")
+            .expect("Didn't get expected echo output for $0 - should be the same as the last non failingcommand");
     }
 }
