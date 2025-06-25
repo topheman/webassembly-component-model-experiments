@@ -12,7 +12,6 @@ USAGE
 DESCRIPTION
     Echo a message.
   `,
-  argCount: () => 1,
   run: (payload: string) => {
     return {
       status: "success",

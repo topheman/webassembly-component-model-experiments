@@ -31,10 +31,6 @@ Cargo.toml
         .to_string()
     }
 
-    fn arg_count() -> Option<i8> {
-        Some(127) // todo use enums for arg count
-    }
-
     fn run(payload: String) -> Result<transport::PluginResponse, ()> {
         match std::fs::read_dir(&payload) {
             Ok(files) => {

@@ -51,19 +51,14 @@ async fn main() -> Result<()> {
         host.load_plugin(&engine, plugin_path.clone()).await?;
     }
 
-    let mut plugins_config: Vec<(String, Option<i8>, String)> = Vec::new();
+    let mut plugins_config: Vec<(String, String)> = Vec::new();
     for (name, plugin_instance) in &host.plugins {
-        let arg_count = plugin_instance
-            .plugin
-            .repl_api_plugin()
-            .call_arg_count(&mut host.store)
-            .await?;
         let man = plugin_instance
             .plugin
             .repl_api_plugin()
             .call_man(&mut host.store)
             .await?;
-        plugins_config.push((name.clone(), arg_count, man));
+        plugins_config.push((name.clone(), man));
         host.store.data_mut().plugins_names.push(name.clone());
     }
     if debug {
