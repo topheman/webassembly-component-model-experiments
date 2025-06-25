@@ -18,12 +18,6 @@ impl ReplLogicGuest for Component {
         // parse the line into a command and payload + expand variables
         let parsed_line = parser::parse_line(&line, &vars.into());
 
-        // keep track of the last command in $0
-        host_state::set_repl_var(&transport::ReplVar {
-            key: "0".to_string(),
-            value: line,
-        });
-
         // try to run reserved commands or show their manual
         // must be done before running plugins, because plugins must not override reserved commands
         if let Some(response) = reserved::run(&parsed_line.command, &parsed_line.payload) {
