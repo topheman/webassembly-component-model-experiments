@@ -5,6 +5,7 @@ build:
     just build-repl-logic-guest
     just build-plugin-greet
     just build-plugin-ls
+    just build-plugin-echo
 
 # Build all crates in release mode
 build-release:
@@ -13,6 +14,7 @@ build-release:
     just build-repl-logic-guest-release
     just build-plugin-greet-release
     just build-plugin-ls-release
+    just build-plugin-echo-release
 
 # Build the API crate (normal Rust build)
 build-api:
@@ -29,6 +31,14 @@ build-cli-host:
 # Build the CLI host in release mode
 build-cli-host-release:
     cargo build --release -p cli-host
+
+# Build the plugin-greet component
+build-plugin-echo:
+    cargo component build -p plugin-echo
+
+# Build the plugin-greet component in release mode
+build-plugin-echo-release:
+    cargo component build --release -p plugin-echo
 
 # Build the plugin-greet component
 build-plugin-greet:
