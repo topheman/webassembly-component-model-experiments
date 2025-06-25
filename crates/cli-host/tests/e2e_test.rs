@@ -210,10 +210,10 @@ mod e2e_test {
         session
             .exp_string("repl(0)>")
             .expect("Didn't see REPL prompt");
-        session.send_line("ls .").expect("Failed to send command");
+        session.send_line("ls").expect("Failed to send command");
         session
             .exp_string(
-                "./.cursor\r\n./.git\r\n./.gitignore\r\n./.vscode\r\n./Cargo.lock\r\n./Cargo.toml\r\n./README.md\r\n./crates\r\n",
+                ".cursor\r\n.git\r\n.gitignore\r\n.vscode\r\nCargo.lock\r\nCargo.toml\r\nREADME.md\r\n",
             )
             .expect("Didn't get expected error output");
     }
