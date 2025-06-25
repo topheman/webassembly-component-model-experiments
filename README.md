@@ -61,7 +61,24 @@ Run `npm run build` for the JavaScript part of the project.
 Example for the CLI host:
 
 ```bash
-./target/debug/cli-host --plugins ./target/wasm32-wasip1/debug/plugin_greet.wasm
+./target/debug/cli-host\
+  --plugins ./target/wasm32-wasip1/debug/plugin_greet.wasm\
+  --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
+  --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
+  --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm
+```
+
+You can pass the `--dir` argument to specify the directory to be preopened. By default, it will be the current directory.
+
+You can pass the `--debug` argument to run the host in debug mode.
+
+Other example:
+
+```bash
+./target/debug/cli-host\
+  --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
+  --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
+  --dir /tmp
 ```
 
 ### Test
