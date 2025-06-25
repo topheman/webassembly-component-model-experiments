@@ -43,13 +43,13 @@ impl api::plugin_api::repl::api::http_client::Host for PluginHost {
         &mut self,
         _url: String,
         _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>,
-    ) -> api::plugin_api::repl::api::http_client::HttpResponse {
+    ) -> Result<api::plugin_api::repl::api::http_client::HttpResponse, String> {
         // TODO: Implement HTTP client functionality
-        api::plugin_api::repl::api::http_client::HttpResponse {
-            status: 501,
+        Ok(api::plugin_api::repl::api::http_client::HttpResponse {
+            status: 200,
             headers: vec![],
             body: "HTTP client not implemented yet".to_string(),
-        }
+        })
     }
 
     async fn post(
@@ -57,13 +57,13 @@ impl api::plugin_api::repl::api::http_client::Host for PluginHost {
         _url: String,
         _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>,
         _body: String,
-    ) -> api::plugin_api::repl::api::http_client::HttpResponse {
+    ) -> Result<api::plugin_api::repl::api::http_client::HttpResponse, String> {
         // TODO: Implement HTTP client functionality
-        api::plugin_api::repl::api::http_client::HttpResponse {
+        Ok(api::plugin_api::repl::api::http_client::HttpResponse {
             status: 501,
             headers: vec![],
             body: "HTTP client not implemented yet".to_string(),
-        }
+        })
     }
 }
 

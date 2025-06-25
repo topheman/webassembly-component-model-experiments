@@ -47,17 +47,20 @@ pub mod repl {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn get(url: &str, headers: &[HttpHeader]) -> HttpResponse {
+            pub fn get(
+                url: &str,
+                headers: &[HttpHeader],
+            ) -> Result<HttpResponse, _rt::String> {
                 unsafe {
                     #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
                     #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
                     struct RetArea(
                         [::core::mem::MaybeUninit<
                             u8,
-                        >; 5 * ::core::mem::size_of::<*const u8>()],
+                        >; 6 * ::core::mem::size_of::<*const u8>()],
                     );
                     let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 5
+                        [::core::mem::MaybeUninit::uninit(); 6
                             * ::core::mem::size_of::<*const u8>()],
                     );
                     let vec0 = url;
@@ -125,85 +128,122 @@ pub mod repl {
                         unreachable!()
                     }
                     unsafe { wit_import6(ptr0.cast_mut(), len0, result4, len4, ptr5) };
-                    let l7 = i32::from(*ptr5.add(0).cast::<u16>());
-                    let l8 = *ptr5
-                        .add(::core::mem::size_of::<*const u8>())
-                        .cast::<*mut u8>();
-                    let l9 = *ptr5
-                        .add(2 * ::core::mem::size_of::<*const u8>())
-                        .cast::<usize>();
-                    let base16 = l8;
-                    let len16 = l9;
-                    let mut result16 = _rt::Vec::with_capacity(len16);
-                    for i in 0..len16 {
-                        let base = base16
-                            .add(i * (4 * ::core::mem::size_of::<*const u8>()));
-                        let e16 = {
-                            let l10 = *base.add(0).cast::<*mut u8>();
-                            let l11 = *base
-                                .add(::core::mem::size_of::<*const u8>())
-                                .cast::<usize>();
-                            let len12 = l11;
-                            let bytes12 = _rt::Vec::from_raw_parts(
-                                l10.cast(),
-                                len12,
-                                len12,
-                            );
-                            let l13 = *base
-                                .add(2 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>();
-                            let l14 = *base
-                                .add(3 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>();
-                            let len15 = l14;
-                            let bytes15 = _rt::Vec::from_raw_parts(
-                                l13.cast(),
-                                len15,
-                                len15,
-                            );
-                            HttpHeader {
-                                name: _rt::string_lift(bytes12),
-                                value: _rt::string_lift(bytes15),
-                            }
-                        };
-                        result16.push(e16);
-                    }
-                    _rt::cabi_dealloc(
-                        base16,
-                        len16 * (4 * ::core::mem::size_of::<*const u8>()),
-                        ::core::mem::size_of::<*const u8>(),
-                    );
-                    let l17 = *ptr5
-                        .add(3 * ::core::mem::size_of::<*const u8>())
-                        .cast::<*mut u8>();
-                    let l18 = *ptr5
-                        .add(4 * ::core::mem::size_of::<*const u8>())
-                        .cast::<usize>();
-                    let len19 = l18;
-                    let bytes19 = _rt::Vec::from_raw_parts(l17.cast(), len19, len19);
-                    let result20 = HttpResponse {
-                        status: l7 as u16,
-                        headers: result16,
-                        body: _rt::string_lift(bytes19),
+                    let l7 = i32::from(*ptr5.add(0).cast::<u8>());
+                    let result24 = match l7 {
+                        0 => {
+                            let e = {
+                                let l8 = i32::from(
+                                    *ptr5.add(::core::mem::size_of::<*const u8>()).cast::<u16>(),
+                                );
+                                let l9 = *ptr5
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l10 = *ptr5
+                                    .add(3 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let base17 = l9;
+                                let len17 = l10;
+                                let mut result17 = _rt::Vec::with_capacity(len17);
+                                for i in 0..len17 {
+                                    let base = base17
+                                        .add(i * (4 * ::core::mem::size_of::<*const u8>()));
+                                    let e17 = {
+                                        let l11 = *base.add(0).cast::<*mut u8>();
+                                        let l12 = *base
+                                            .add(::core::mem::size_of::<*const u8>())
+                                            .cast::<usize>();
+                                        let len13 = l12;
+                                        let bytes13 = _rt::Vec::from_raw_parts(
+                                            l11.cast(),
+                                            len13,
+                                            len13,
+                                        );
+                                        let l14 = *base
+                                            .add(2 * ::core::mem::size_of::<*const u8>())
+                                            .cast::<*mut u8>();
+                                        let l15 = *base
+                                            .add(3 * ::core::mem::size_of::<*const u8>())
+                                            .cast::<usize>();
+                                        let len16 = l15;
+                                        let bytes16 = _rt::Vec::from_raw_parts(
+                                            l14.cast(),
+                                            len16,
+                                            len16,
+                                        );
+                                        HttpHeader {
+                                            name: _rt::string_lift(bytes13),
+                                            value: _rt::string_lift(bytes16),
+                                        }
+                                    };
+                                    result17.push(e17);
+                                }
+                                _rt::cabi_dealloc(
+                                    base17,
+                                    len17 * (4 * ::core::mem::size_of::<*const u8>()),
+                                    ::core::mem::size_of::<*const u8>(),
+                                );
+                                let l18 = *ptr5
+                                    .add(4 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l19 = *ptr5
+                                    .add(5 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len20 = l19;
+                                let bytes20 = _rt::Vec::from_raw_parts(
+                                    l18.cast(),
+                                    len20,
+                                    len20,
+                                );
+                                HttpResponse {
+                                    status: l8 as u16,
+                                    headers: result17,
+                                    body: _rt::string_lift(bytes20),
+                                }
+                            };
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = {
+                                let l21 = *ptr5
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l22 = *ptr5
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len23 = l22;
+                                let bytes23 = _rt::Vec::from_raw_parts(
+                                    l21.cast(),
+                                    len23,
+                                    len23,
+                                );
+                                _rt::string_lift(bytes23)
+                            };
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
                     };
                     if layout4.size() != 0 {
                         _rt::alloc::dealloc(result4.cast(), layout4);
                     }
-                    result20
+                    result24
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn post(url: &str, headers: &[HttpHeader], body: &str) -> HttpResponse {
+            pub fn post(
+                url: &str,
+                headers: &[HttpHeader],
+                body: &str,
+            ) -> Result<HttpResponse, _rt::String> {
                 unsafe {
                     #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
                     #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
                     struct RetArea(
                         [::core::mem::MaybeUninit<
                             u8,
-                        >; 5 * ::core::mem::size_of::<*const u8>()],
+                        >; 6 * ::core::mem::size_of::<*const u8>()],
                     );
                     let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 5
+                        [::core::mem::MaybeUninit::uninit(); 6
                             * ::core::mem::size_of::<*const u8>()],
                     );
                     let vec0 = url;
@@ -288,71 +328,104 @@ pub mod repl {
                             ptr6,
                         )
                     };
-                    let l8 = i32::from(*ptr6.add(0).cast::<u16>());
-                    let l9 = *ptr6
-                        .add(::core::mem::size_of::<*const u8>())
-                        .cast::<*mut u8>();
-                    let l10 = *ptr6
-                        .add(2 * ::core::mem::size_of::<*const u8>())
-                        .cast::<usize>();
-                    let base17 = l9;
-                    let len17 = l10;
-                    let mut result17 = _rt::Vec::with_capacity(len17);
-                    for i in 0..len17 {
-                        let base = base17
-                            .add(i * (4 * ::core::mem::size_of::<*const u8>()));
-                        let e17 = {
-                            let l11 = *base.add(0).cast::<*mut u8>();
-                            let l12 = *base
-                                .add(::core::mem::size_of::<*const u8>())
-                                .cast::<usize>();
-                            let len13 = l12;
-                            let bytes13 = _rt::Vec::from_raw_parts(
-                                l11.cast(),
-                                len13,
-                                len13,
-                            );
-                            let l14 = *base
-                                .add(2 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>();
-                            let l15 = *base
-                                .add(3 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>();
-                            let len16 = l15;
-                            let bytes16 = _rt::Vec::from_raw_parts(
-                                l14.cast(),
-                                len16,
-                                len16,
-                            );
-                            HttpHeader {
-                                name: _rt::string_lift(bytes13),
-                                value: _rt::string_lift(bytes16),
-                            }
-                        };
-                        result17.push(e17);
-                    }
-                    _rt::cabi_dealloc(
-                        base17,
-                        len17 * (4 * ::core::mem::size_of::<*const u8>()),
-                        ::core::mem::size_of::<*const u8>(),
-                    );
-                    let l18 = *ptr6
-                        .add(3 * ::core::mem::size_of::<*const u8>())
-                        .cast::<*mut u8>();
-                    let l19 = *ptr6
-                        .add(4 * ::core::mem::size_of::<*const u8>())
-                        .cast::<usize>();
-                    let len20 = l19;
-                    let bytes20 = _rt::Vec::from_raw_parts(l18.cast(), len20, len20);
-                    let result21 = HttpResponse {
-                        status: l8 as u16,
-                        headers: result17,
-                        body: _rt::string_lift(bytes20),
+                    let l8 = i32::from(*ptr6.add(0).cast::<u8>());
+                    let result25 = match l8 {
+                        0 => {
+                            let e = {
+                                let l9 = i32::from(
+                                    *ptr6.add(::core::mem::size_of::<*const u8>()).cast::<u16>(),
+                                );
+                                let l10 = *ptr6
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l11 = *ptr6
+                                    .add(3 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let base18 = l10;
+                                let len18 = l11;
+                                let mut result18 = _rt::Vec::with_capacity(len18);
+                                for i in 0..len18 {
+                                    let base = base18
+                                        .add(i * (4 * ::core::mem::size_of::<*const u8>()));
+                                    let e18 = {
+                                        let l12 = *base.add(0).cast::<*mut u8>();
+                                        let l13 = *base
+                                            .add(::core::mem::size_of::<*const u8>())
+                                            .cast::<usize>();
+                                        let len14 = l13;
+                                        let bytes14 = _rt::Vec::from_raw_parts(
+                                            l12.cast(),
+                                            len14,
+                                            len14,
+                                        );
+                                        let l15 = *base
+                                            .add(2 * ::core::mem::size_of::<*const u8>())
+                                            .cast::<*mut u8>();
+                                        let l16 = *base
+                                            .add(3 * ::core::mem::size_of::<*const u8>())
+                                            .cast::<usize>();
+                                        let len17 = l16;
+                                        let bytes17 = _rt::Vec::from_raw_parts(
+                                            l15.cast(),
+                                            len17,
+                                            len17,
+                                        );
+                                        HttpHeader {
+                                            name: _rt::string_lift(bytes14),
+                                            value: _rt::string_lift(bytes17),
+                                        }
+                                    };
+                                    result18.push(e18);
+                                }
+                                _rt::cabi_dealloc(
+                                    base18,
+                                    len18 * (4 * ::core::mem::size_of::<*const u8>()),
+                                    ::core::mem::size_of::<*const u8>(),
+                                );
+                                let l19 = *ptr6
+                                    .add(4 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l20 = *ptr6
+                                    .add(5 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len21 = l20;
+                                let bytes21 = _rt::Vec::from_raw_parts(
+                                    l19.cast(),
+                                    len21,
+                                    len21,
+                                );
+                                HttpResponse {
+                                    status: l9 as u16,
+                                    headers: result18,
+                                    body: _rt::string_lift(bytes21),
+                                }
+                            };
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = {
+                                let l22 = *ptr6
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l23 = *ptr6
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len24 = l23;
+                                let bytes24 = _rt::Vec::from_raw_parts(
+                                    l22.cast(),
+                                    len24,
+                                    len24,
+                                );
+                                _rt::string_lift(bytes24)
+                            };
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
                     };
                     if layout4.size() != 0 {
                         _rt::alloc::dealloc(result4.cast(), layout4);
                     }
-                    result21
+                    result25
                 }
             }
         }
@@ -708,6 +781,13 @@ mod _rt {
         let layout = alloc::Layout::from_size_align_unchecked(size, align);
         alloc::dealloc(ptr, layout);
     }
+    pub unsafe fn invalid_enum_discriminant<T>() -> T {
+        if cfg!(debug_assertions) {
+            panic!("invalid enum discriminant")
+        } else {
+            unsafe { core::hint::unreachable_unchecked() }
+        }
+    }
     #[cfg(target_arch = "wasm32")]
     pub fn run_ctors_once() {
         wit_bindgen_rt::run_ctors_once();
@@ -750,22 +830,23 @@ pub(crate) use __export_plugin_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 670] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x9d\x04\x01A\x02\x01\
-A\x07\x01B\x09\x01r\x02\x04names\x05values\x04\0\x0bhttp-header\x03\0\0\x01p\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 676] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xa3\x04\x01A\x02\x01\
+A\x07\x01B\x0a\x01r\x02\x04names\x05values\x04\0\x0bhttp-header\x03\0\0\x01p\x01\
 \x01r\x03\x06status{\x07headers\x02\x04bodys\x04\0\x0dhttp-response\x03\0\x03\x01\
-@\x02\x03urls\x07headers\x02\0\x04\x04\0\x03get\x01\x05\x01@\x03\x03urls\x07head\
-ers\x02\x04bodys\0\x04\x04\0\x04post\x01\x06\x03\0\x14repl:api/http-client\x05\0\
-\x01B\x0b\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\0\x01ks\x01r\x03\
-\x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0fplugin-response\x03\0\x03\x01\
-r\x02\x07commands\x07payloads\x04\0\x0bparsed-line\x03\0\x05\x01q\x02\x06to-run\x01\
-\x06\0\x05ready\x01\x04\0\x04\0\x11readline-response\x03\0\x07\x01r\x02\x03keys\x05\
-values\x04\0\x08repl-var\x03\0\x09\x03\0\x12repl:api/transport\x05\x01\x02\x03\0\
-\x01\x0fplugin-response\x01B\x08\x02\x03\x02\x01\x02\x04\0\x0fplugin-response\x03\
-\0\0\x01@\0\0s\x04\0\x04name\x01\x02\x04\0\x03man\x01\x02\x01j\x01\x01\0\x01@\x01\
-\x07payloads\0\x03\x04\0\x03run\x01\x04\x04\0\x0frepl:api/plugin\x05\x03\x04\0\x13\
-repl:api/plugin-api\x04\0\x0b\x10\x01\0\x0aplugin-api\x03\0\0\0G\x09producers\x01\
-\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+j\x01\x04\x01s\x01@\x02\x03urls\x07headers\x02\0\x05\x04\0\x03get\x01\x06\x01@\x03\
+\x03urls\x07headers\x02\x04bodys\0\x05\x04\0\x04post\x01\x07\x03\0\x14repl:api/h\
+ttp-client\x05\0\x01B\x0b\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\
+\0\x01ks\x01r\x03\x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0fplugin-resp\
+onse\x03\0\x03\x01r\x02\x07commands\x07payloads\x04\0\x0bparsed-line\x03\0\x05\x01\
+q\x02\x06to-run\x01\x06\0\x05ready\x01\x04\0\x04\0\x11readline-response\x03\0\x07\
+\x01r\x02\x03keys\x05values\x04\0\x08repl-var\x03\0\x09\x03\0\x12repl:api/transp\
+ort\x05\x01\x02\x03\0\x01\x0fplugin-response\x01B\x08\x02\x03\x02\x01\x02\x04\0\x0f\
+plugin-response\x03\0\0\x01@\0\0s\x04\0\x04name\x01\x02\x04\0\x03man\x01\x02\x01\
+j\x01\x01\0\x01@\x01\x07payloads\0\x03\x04\0\x03run\x01\x04\x04\0\x0frepl:api/pl\
+ugin\x05\x03\x04\0\x13repl:api/plugin-api\x04\0\x0b\x10\x01\0\x0aplugin-api\x03\0\
+\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-bi\
+ndgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

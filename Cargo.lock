@@ -1211,6 +1211,8 @@ dependencies = [
 name = "plugin-weather"
 version = "0.1.0"
 dependencies = [
+ "serde",
+ "serde_json",
  "wit-bindgen-rt 0.42.1",
 ]
 

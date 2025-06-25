@@ -1,8 +1,12 @@
+mod api;
 #[allow(warnings)]
 mod bindings;
 
 use crate::bindings::exports::repl::api::plugin::Guest;
+use crate::bindings::repl::api::http_client;
 use crate::bindings::repl::api::transport;
+
+use crate::api::get_weather_from_body;
 
 struct Component;
 
@@ -27,11 +31,41 @@ DESCRIPTION
     }
 
     fn run(payload: String) -> Result<transport::PluginResponse, ()> {
-        Ok(transport::PluginResponse {
-            status: transport::ReplStatus::Success,
-            stdout: Some(format!("Weather for {}", payload)),
-            stderr: None,
-        })
+        match http_client::get(
+            format!("https://wttr.in/{}?format=j1", payload).as_str(),
+            &[],
+        ) {
+            Ok(response) => {
+                // todo: add more ok status codes - put that on the host side
+                if response.status != 200 {
+                    return Ok(transport::PluginResponse {
+                        status: transport::ReplStatus::Error,
+                        stdout: None,
+                        stderr: Some(format!(
+                            "Error fetching weather - status code:{}",
+                            response.status
+                        )),
+                    });
+                }
+                match get_weather_from_body(response.body.as_str()) {
+                    Ok(weather) => Ok(transport::PluginResponse {
+                        status: transport::ReplStatus::Success,
+                        stdout: Some(weather),
+                        stderr: None,
+                    }),
+                    Err(e) => Ok(transport::PluginResponse {
+                        status: transport::ReplStatus::Error,
+                        stdout: None,
+                        stderr: Some(format!("Error parsing result: {}", e.to_string())),
+                    }),
+                }
+            }
+            Err(e) => Ok(transport::PluginResponse {
+                status: transport::ReplStatus::Error,
+                stdout: None,
+                stderr: Some(format!("Error fetching weather: {}", e.to_string())),
+            }),
+        }
     }
 }
 

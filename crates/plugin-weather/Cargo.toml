@@ -6,6 +6,8 @@ publish = false
 description = "Example weather plugin for WebAssembly Component Model REPL - demonstrates using network by calling to an external API"
 
 [dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.140"
 wit-bindgen-rt = { workspace = true, features = ["bitflags"] }
 
 [lib]
