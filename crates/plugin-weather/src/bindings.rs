@@ -228,206 +228,6 @@ pub mod repl {
                     result24
                 }
             }
-            #[allow(unused_unsafe, clippy::all)]
-            pub fn post(
-                url: &str,
-                headers: &[HttpHeader],
-                body: &str,
-            ) -> Result<HttpResponse, _rt::String> {
-                unsafe {
-                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
-                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
-                    struct RetArea(
-                        [::core::mem::MaybeUninit<
-                            u8,
-                        >; 6 * ::core::mem::size_of::<*const u8>()],
-                    );
-                    let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 6
-                            * ::core::mem::size_of::<*const u8>()],
-                    );
-                    let vec0 = url;
-                    let ptr0 = vec0.as_ptr().cast::<u8>();
-                    let len0 = vec0.len();
-                    let vec4 = headers;
-                    let len4 = vec4.len();
-                    let layout4 = _rt::alloc::Layout::from_size_align_unchecked(
-                        vec4.len() * (4 * ::core::mem::size_of::<*const u8>()),
-                        ::core::mem::size_of::<*const u8>(),
-                    );
-                    let result4 = if layout4.size() != 0 {
-                        let ptr = _rt::alloc::alloc(layout4).cast::<u8>();
-                        if ptr.is_null() {
-                            _rt::alloc::handle_alloc_error(layout4);
-                        }
-                        ptr
-                    } else {
-                        ::core::ptr::null_mut()
-                    };
-                    for (i, e) in vec4.into_iter().enumerate() {
-                        let base = result4
-                            .add(i * (4 * ::core::mem::size_of::<*const u8>()));
-                        {
-                            let HttpHeader { name: name1, value: value1 } = e;
-                            let vec2 = name1;
-                            let ptr2 = vec2.as_ptr().cast::<u8>();
-                            let len2 = vec2.len();
-                            *base
-                                .add(::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len2;
-                            *base.add(0).cast::<*mut u8>() = ptr2.cast_mut();
-                            let vec3 = value1;
-                            let ptr3 = vec3.as_ptr().cast::<u8>();
-                            let len3 = vec3.len();
-                            *base
-                                .add(3 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len3;
-                            *base
-                                .add(2 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = ptr3.cast_mut();
-                        }
-                    }
-                    let vec5 = body;
-                    let ptr5 = vec5.as_ptr().cast::<u8>();
-                    let len5 = vec5.len();
-                    let ptr6 = ret_area.0.as_mut_ptr().cast::<u8>();
-                    #[cfg(target_arch = "wasm32")]
-                    #[link(wasm_import_module = "repl:api/http-client")]
-                    unsafe extern "C" {
-                        #[link_name = "post"]
-                        fn wit_import7(
-                            _: *mut u8,
-                            _: usize,
-                            _: *mut u8,
-                            _: usize,
-                            _: *mut u8,
-                            _: usize,
-                            _: *mut u8,
-                        );
-                    }
-                    #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import7(
-                        _: *mut u8,
-                        _: usize,
-                        _: *mut u8,
-                        _: usize,
-                        _: *mut u8,
-                        _: usize,
-                        _: *mut u8,
-                    ) {
-                        unreachable!()
-                    }
-                    unsafe {
-                        wit_import7(
-                            ptr0.cast_mut(),
-                            len0,
-                            result4,
-                            len4,
-                            ptr5.cast_mut(),
-                            len5,
-                            ptr6,
-                        )
-                    };
-                    let l8 = i32::from(*ptr6.add(0).cast::<u8>());
-                    let result25 = match l8 {
-                        0 => {
-                            let e = {
-                                let l9 = i32::from(
-                                    *ptr6.add(::core::mem::size_of::<*const u8>()).cast::<u16>(),
-                                );
-                                let l10 = *ptr6
-                                    .add(2 * ::core::mem::size_of::<*const u8>())
-                                    .cast::<*mut u8>();
-                                let l11 = *ptr6
-                                    .add(3 * ::core::mem::size_of::<*const u8>())
-                                    .cast::<usize>();
-                                let base18 = l10;
-                                let len18 = l11;
-                                let mut result18 = _rt::Vec::with_capacity(len18);
-                                for i in 0..len18 {
-                                    let base = base18
-                                        .add(i * (4 * ::core::mem::size_of::<*const u8>()));
-                                    let e18 = {
-                                        let l12 = *base.add(0).cast::<*mut u8>();
-                                        let l13 = *base
-                                            .add(::core::mem::size_of::<*const u8>())
-                                            .cast::<usize>();
-                                        let len14 = l13;
-                                        let bytes14 = _rt::Vec::from_raw_parts(
-                                            l12.cast(),
-                                            len14,
-                                            len14,
-                                        );
-                                        let l15 = *base
-                                            .add(2 * ::core::mem::size_of::<*const u8>())
-                                            .cast::<*mut u8>();
-                                        let l16 = *base
-                                            .add(3 * ::core::mem::size_of::<*const u8>())
-                                            .cast::<usize>();
-                                        let len17 = l16;
-                                        let bytes17 = _rt::Vec::from_raw_parts(
-                                            l15.cast(),
-                                            len17,
-                                            len17,
-                                        );
-                                        HttpHeader {
-                                            name: _rt::string_lift(bytes14),
-                                            value: _rt::string_lift(bytes17),
-                                        }
-                                    };
-                                    result18.push(e18);
-                                }
-                                _rt::cabi_dealloc(
-                                    base18,
-                                    len18 * (4 * ::core::mem::size_of::<*const u8>()),
-                                    ::core::mem::size_of::<*const u8>(),
-                                );
-                                let l19 = *ptr6
-                                    .add(4 * ::core::mem::size_of::<*const u8>())
-                                    .cast::<*mut u8>();
-                                let l20 = *ptr6
-                                    .add(5 * ::core::mem::size_of::<*const u8>())
-                                    .cast::<usize>();
-                                let len21 = l20;
-                                let bytes21 = _rt::Vec::from_raw_parts(
-                                    l19.cast(),
-                                    len21,
-                                    len21,
-                                );
-                                HttpResponse {
-                                    status: l9 as u16,
-                                    headers: result18,
-                                    body: _rt::string_lift(bytes21),
-                                }
-                            };
-                            Ok(e)
-                        }
-                        1 => {
-                            let e = {
-                                let l22 = *ptr6
-                                    .add(::core::mem::size_of::<*const u8>())
-                                    .cast::<*mut u8>();
-                                let l23 = *ptr6
-                                    .add(2 * ::core::mem::size_of::<*const u8>())
-                                    .cast::<usize>();
-                                let len24 = l23;
-                                let bytes24 = _rt::Vec::from_raw_parts(
-                                    l22.cast(),
-                                    len24,
-                                    len24,
-                                );
-                                _rt::string_lift(bytes24)
-                            };
-                            Err(e)
-                        }
-                        _ => _rt::invalid_enum_discriminant(),
-                    };
-                    if layout4.size() != 0 {
-                        _rt::alloc::dealloc(result4.cast(), layout4);
-                    }
-                    result25
-                }
-            }
         }
         #[allow(dead_code, async_fn_in_trait, unused_imports, clippy::all)]
         pub mod transport {
@@ -830,23 +630,22 @@ pub(crate) use __export_plugin_api_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 676] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xa3\x04\x01A\x02\x01\
-A\x07\x01B\x0a\x01r\x02\x04names\x05values\x04\0\x0bhttp-header\x03\0\0\x01p\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 642] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x81\x04\x01A\x02\x01\
+A\x07\x01B\x08\x01r\x02\x04names\x05values\x04\0\x0bhttp-header\x03\0\0\x01p\x01\
 \x01r\x03\x06status{\x07headers\x02\x04bodys\x04\0\x0dhttp-response\x03\0\x03\x01\
-j\x01\x04\x01s\x01@\x02\x03urls\x07headers\x02\0\x05\x04\0\x03get\x01\x06\x01@\x03\
-\x03urls\x07headers\x02\x04bodys\0\x05\x04\0\x04post\x01\x07\x03\0\x14repl:api/h\
-ttp-client\x05\0\x01B\x0b\x01m\x02\x07success\x05error\x04\0\x0brepl-status\x03\0\
-\0\x01ks\x01r\x03\x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0fplugin-resp\
-onse\x03\0\x03\x01r\x02\x07commands\x07payloads\x04\0\x0bparsed-line\x03\0\x05\x01\
-q\x02\x06to-run\x01\x06\0\x05ready\x01\x04\0\x04\0\x11readline-response\x03\0\x07\
-\x01r\x02\x03keys\x05values\x04\0\x08repl-var\x03\0\x09\x03\0\x12repl:api/transp\
-ort\x05\x01\x02\x03\0\x01\x0fplugin-response\x01B\x08\x02\x03\x02\x01\x02\x04\0\x0f\
-plugin-response\x03\0\0\x01@\0\0s\x04\0\x04name\x01\x02\x04\0\x03man\x01\x02\x01\
-j\x01\x01\0\x01@\x01\x07payloads\0\x03\x04\0\x03run\x01\x04\x04\0\x0frepl:api/pl\
-ugin\x05\x03\x04\0\x13repl:api/plugin-api\x04\0\x0b\x10\x01\0\x0aplugin-api\x03\0\
-\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-bi\
-ndgen-rust\x060.41.0";
+j\x01\x04\x01s\x01@\x02\x03urls\x07headers\x02\0\x05\x04\0\x03get\x01\x06\x03\0\x14\
+repl:api/http-client\x05\0\x01B\x0b\x01m\x02\x07success\x05error\x04\0\x0brepl-s\
+tatus\x03\0\0\x01ks\x01r\x03\x06status\x01\x06stdout\x02\x06stderr\x02\x04\0\x0f\
+plugin-response\x03\0\x03\x01r\x02\x07commands\x07payloads\x04\0\x0bparsed-line\x03\
+\0\x05\x01q\x02\x06to-run\x01\x06\0\x05ready\x01\x04\0\x04\0\x11readline-respons\
+e\x03\0\x07\x01r\x02\x03keys\x05values\x04\0\x08repl-var\x03\0\x09\x03\0\x12repl\
+:api/transport\x05\x01\x02\x03\0\x01\x0fplugin-response\x01B\x08\x02\x03\x02\x01\
+\x02\x04\0\x0fplugin-response\x03\0\0\x01@\0\0s\x04\0\x04name\x01\x02\x04\0\x03m\
+an\x01\x02\x01j\x01\x01\0\x01@\x01\x07payloads\0\x03\x04\0\x03run\x01\x04\x04\0\x0f\
+repl:api/plugin\x05\x03\x04\0\x13repl:api/plugin-api\x04\0\x0b\x10\x01\0\x0aplug\
+in-api\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227\
+.1\x10wit-bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

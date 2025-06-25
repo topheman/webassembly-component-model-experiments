@@ -41,28 +41,29 @@ pub struct PluginHost {}
 impl api::plugin_api::repl::api::http_client::Host for PluginHost {
     async fn get(
         &mut self,
-        _url: String,
-        _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>,
+        url: String,
+        _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>, // todo: handle headers
     ) -> Result<api::plugin_api::repl::api::http_client::HttpResponse, String> {
-        // TODO: Implement HTTP client functionality
+        let response = reqwest::Client::new()
+            .get(url)
+            // .headers(header_map)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        // let response = reqwest::get(_url).await.map_err(|e| e.to_string())?;
         Ok(api::plugin_api::repl::api::http_client::HttpResponse {
-            status: 200,
-            headers: vec![],
-            body: "HTTP client not implemented yet".to_string(),
-        })
-    }
-
-    async fn post(
-        &mut self,
-        _url: String,
-        _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>,
-        _body: String,
-    ) -> Result<api::plugin_api::repl::api::http_client::HttpResponse, String> {
-        // TODO: Implement HTTP client functionality
-        Ok(api::plugin_api::repl::api::http_client::HttpResponse {
-            status: 501,
-            headers: vec![],
-            body: "HTTP client not implemented yet".to_string(),
+            status: response.status().as_u16(),
+            headers: response
+                .headers()
+                .iter()
+                .map(
+                    |(k, v)| api::plugin_api::repl::api::http_client::HttpHeader {
+                        name: k.to_string(),
+                        value: v.to_str().unwrap().to_string(),
+                    },
+                )
+                .collect(),
+            body: response.text().await.map_err(|e| e.to_string())?,
         })
     }
 }

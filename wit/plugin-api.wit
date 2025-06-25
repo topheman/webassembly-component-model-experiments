@@ -20,7 +20,6 @@ interface http-client {
   }
 
   get: func(url: string, headers: list<http-header>) -> result<http-response, string>;
-  post: func(url: string, headers: list<http-header>, body: string) -> result<http-response, string>;
 }
 
 world plugin-api {

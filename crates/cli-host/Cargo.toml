@@ -12,6 +12,7 @@ clap = { workspace = true }
 tokio = { workspace = true }
 anyhow = { workspace = true }
 api = { path = "../api" }
+reqwest = "0.12.20"
 
 [dev-dependencies]
 rexpect = "0.5"
