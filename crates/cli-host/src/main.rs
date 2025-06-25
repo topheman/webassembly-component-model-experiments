@@ -1,7 +1,8 @@
 use anyhow::Result;
 use api::host_api::repl::api::transport;
 use clap::Parser;
-use cli_host::{StatusHandler, WasmEngine, WasmHost};
+use cli_host::helpers::{StatusHandler, StdoutHandler};
+use cli_host::{WasmEngine, WasmHost};
 use std::io::Write;
 use std::path::PathBuf;
 
@@ -115,7 +116,10 @@ async fn main() -> Result<()> {
             // We only need to output them and set the $? variable
             transport::ReadlineResponse::Ready(plugin_response) => {
                 if let Some(stdout) = plugin_response.stdout {
-                    println!("{}", stdout);
+                    StdoutHandler::print_and_set_last_result(
+                        &mut host.store.data_mut().repl_vars,
+                        stdout,
+                    );
                 }
                 if let Some(stderr) = plugin_response.stderr {
                     eprintln!("{}", stderr);
@@ -155,7 +159,10 @@ async fn main() -> Result<()> {
                         .repl_api_plugin()
                         .call_man(&mut host.store)
                         .await?;
-                    println!("{}", man);
+                    StdoutHandler::print_and_set_last_result(
+                        &mut host.store.data_mut().repl_vars,
+                        man,
+                    );
                     StatusHandler::set_exit_status(&mut host.store.data_mut().repl_vars, true);
                     continue;
                 }
@@ -170,7 +177,10 @@ async fn main() -> Result<()> {
                             .await?;
                         if let Ok(result) = result {
                             if let Some(stdout) = result.stdout {
-                                println!("{}", stdout);
+                                StdoutHandler::print_and_set_last_result(
+                                    &mut host.store.data_mut().repl_vars,
+                                    stdout,
+                                );
                             }
                             if let Some(stderr) = result.stderr {
                                 eprintln!("{}", stderr);
@@ -194,6 +204,7 @@ async fn main() -> Result<()> {
                             parsed_line.command
                         );
                         StatusHandler::set_exit_status(&mut host.store.data_mut().repl_vars, false);
+                        continue;
                     }
                 }
             }

@@ -10,3 +10,12 @@ impl StatusHandler {
         repl_vars.insert("?".to_string(), status.to_string());
     }
 }
+
+pub struct StdoutHandler;
+
+impl StdoutHandler {
+    pub fn print_and_set_last_result(repl_vars: &mut HashMap<String, String>, result: String) {
+        println!("{}", result);
+        repl_vars.insert("0".to_string(), result);
+    }
+}

@@ -1,8 +1,7 @@
 mod engine;
-mod status_handler;
+pub mod helpers;
 mod store;
 mod wasm_host;
 
 pub use engine::WasmEngine;
-pub use status_handler::StatusHandler;
 pub use wasm_host::{PluginInstance, WasmHost};
