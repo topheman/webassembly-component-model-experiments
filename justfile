@@ -3,20 +3,24 @@ build:
     just build-api
     just build-cli-host
     just build-repl-logic-guest
-    just build-plugin-greet
-    just build-plugin-ls
-    just build-plugin-echo
-    just build-plugin-weather
+    just build-plugins
 
 # Build all crates in release mode
 build-release:
     just build-api-release
     just build-cli-host-release
     just build-repl-logic-guest-release
-    just build-plugin-greet-release
-    just build-plugin-ls-release
-    just build-plugin-echo-release
-    just build-plugin-weather-release
+    just build-plugins-release
+
+# Build all plugins in debug mode
+build-plugins:
+    #!/usr/bin/env bash
+    just --list|grep build-plugin-|awk '{print $1}'|grep -v release|xargs just
+
+# Build all plugins in release mode
+build-plugins-release:
+    #!/usr/bin/env bash
+    just --list|grep build-plugin-|awk '{print $1}'|grep release|xargs just
 
 # Build the plugin-weather component
 build-plugin-weather:
@@ -78,21 +82,13 @@ build-repl-logic-guest-release:
 build-rust:
     just build-api
     just build-cli-host
-    just build-plugin-greet
+    just build-plugins
 
 # Build just the Rust crates in release mode (no components)
 build-rust-release:
     just build-api-release
     just build-cli-host-release
-    just build-plugin-greet-release
-
-# Build just the component
-build-component:
-    just build-repl-logic-guest
-
-# Build just the component in release mode
-build-component-release:
-    just build-repl-logic-guest-release
+    just build-plugins-release
 
 # Clean all build artifacts
 clean:

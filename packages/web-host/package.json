@@ -4,9 +4,9 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"predev": "./clis/prepareWasmFiles.ts --mode debug",
+		"predev": "just build-plugins && ./clis/prepareWasmFiles.ts --mode debug",
 		"dev": "vite",
-		"prebuild": "./clis/prepareWasmFiles.ts --mode release",
+		"prebuild": "just build-plugins-release && ./clis/prepareWasmFiles.ts --mode release",
 		"build": "tsc -b && vite build",
 		"preview": "vite preview",
 		"lint": "biome check .",
