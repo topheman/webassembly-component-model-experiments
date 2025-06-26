@@ -34,9 +34,6 @@ TODO: add usage instructions for both hosts
 #### Rust
 
 - [just](https://github.com/casey/just?tab=readme-ov-file#installation)
-- [cargo component 0.21.1+](https://github.com/bytecodealliance/cargo-component?tab=readme-ov-file#installation)
-- [wasm-tools 1.235.0](https://github.com/bytecodealliance/wasm-tools?tab=readme-ov-file#installation)
-- [wasm-opt 116](https://github.com/WebAssembly/binaryen?tab=readme-ov-file#installation)
 
 Add WebAssembly targets:
 
@@ -48,6 +45,22 @@ rustup target add wasm32-unknown-unknown wasm32-wasip1
 
 ```bash
 npm install
+```
+
+#### Optional
+
+Those are **optional** tools that are handy for WebAssembly development:
+
+- [cargo-binstall](https://github.com/cargo-bins/cargo-binstall?tab=readme-ov-file#installation)
+- [cargo component 0.21.1+](https://github.com/bytecodealliance/cargo-component?tab=readme-ov-file#installation)
+- [wasm-tools 1.235.0](https://github.com/bytecodealliance/wasm-tools?tab=readme-ov-file#installation)
+- [wasm-opt 116](https://github.com/WebAssembly/binaryen?tab=readme-ov-file#installation)
+
+```bash
+# latest versions
+cargo binstall cargo-component wasm-tools wasm-opt
+# specific versions I used for this project
+cargo binstall cargo-component@0.21.1 wasm-tools@1.235.0 wasm-opt
 ```
 
 ### Build
