@@ -17,6 +17,6 @@ DESCRIPTION
       status: "success",
       stdout: payload,
       stderr: undefined,
-    }
-  }
-}
+    };
+  },
+};
