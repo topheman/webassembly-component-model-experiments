@@ -8,8 +8,10 @@
 		"dev": "vite",
 		"prebuild": "./clis/prepareWasmFiles.ts --mode release",
 		"build": "tsc -b && vite build",
-		"lint": "eslint .",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"typecheck": "tsc --noEmit -p tsconfig.app.json"
 	},
 	"dependencies": {
 		"react": "^19.1.0",

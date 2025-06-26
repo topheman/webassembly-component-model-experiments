@@ -1,7 +1,7 @@
 #!/usr/bin/env node --experimental-strip-types --no-warnings
-import { program } from "commander";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
+import { program } from "commander";
 
 const wasmFiles: Array<{ debug: string; release: string }> = [
 	{
@@ -36,7 +36,7 @@ function prepareWasmFiles({ mode }: { mode: "debug" | "release" }) {
 		);
 		try {
 			fs.copyFileSync(copyFrom, copyTo);
-		} catch (e) {
+		} catch (_e) {
 			console.log("");
 			console.error(`Failed to copy ${copyFrom} to ${copyTo}`);
 			console.log("");
