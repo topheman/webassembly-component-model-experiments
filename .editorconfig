@@ -1,0 +1,2 @@
+[*]
+indent_size = 2 # biome uses tabs by default, display them as 2 spaces on github web ui
