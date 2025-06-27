@@ -27,7 +27,7 @@ TODO: add usage instructions for both hosts
 ### Prerequisites
 
 - Rust 1.87+
-- Node.js 22+
+- Node.js 22.6.0+ (need `--experimental-strip-types` flag)
 
 ### Setup
 
