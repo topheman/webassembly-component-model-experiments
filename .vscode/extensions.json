@@ -3,6 +3,7 @@
     "rust-lang.rust-analyzer",
     "bytecodealliance.wit-idl",
     "skellock.just",
-    "biomejs.biome"
+    "biomejs.biome",
+    "bradlc.vscode-tailwindcss"
   ]
 }
