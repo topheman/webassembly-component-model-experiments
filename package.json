@@ -28,13 +28,16 @@
     "build-plugin-echo": "cd packages/plugin-echo && npm run build",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "prepare": "husky"
   },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
     "@biomejs/biome": "2.0.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
     "typescript": "^5.8.3"
   }
 }
