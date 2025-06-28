@@ -2,6 +2,18 @@
 
 @theme {
   --animate-spin-slow: spin 5s linear infinite;
+  --color-primary: #900000;
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-300: #fca5a5;
+  --color-primary-400: #f87171;
+  --color-primary-500: #ef4444;
+  --color-primary-600: #dc2626;
+  --color-primary-700: #b91c1c;
+  --color-primary-800: #991b1b;
+  --color-primary-900: #900000;
+  --color-primary-950: #450a0a;
 }
 
 :root {
@@ -10,8 +22,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: #222;
+  background-color: #f8f6f4;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,10 +36,22 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #f8f6f4;
+  color: #222;
 }
 
 /* Focus styles for better accessibility */
 button:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+@layer utilities {
+  a {
+    color: var(--color-primary);
+    text-decoration-line: underline;
+  }
+  a:hover {
+    text-decoration-line: none;
+  }
 }
