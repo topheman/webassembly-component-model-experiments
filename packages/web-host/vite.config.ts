@@ -10,11 +10,11 @@ export default defineConfig({
     alias: {
       "repl:api/http-client": path.resolve(
         __dirname,
-        "./src/host/http-client.ts",
+        "./src/wasm/host/http-client.ts",
       ),
       "repl:api/host-state": path.resolve(
         __dirname,
-        "./src/host/host-state.ts",
+        "./src/wasm/host/host-state.ts",
       ),
     },
   },

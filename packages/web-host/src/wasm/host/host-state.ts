@@ -1,5 +1,5 @@
-import type { ReplApiHostState } from "../types/generated/host-api";
-import type { ReplVar } from "../types/generated/interfaces/repl-api-host-state";
+import type { ReplApiHostState } from "../../types/generated/host-api";
+import type { ReplVar } from "../../types/generated/interfaces/repl-api-host-state";
 
 type HostState = typeof ReplApiHostState;
 
@@ -8,10 +8,7 @@ const internalState = {
   pluginsNames: new Set<string>(),
 };
 
-export function init(replVars: ReplVar[], pluginsNames: string[]) {
-  internalState.replVars = new Map(
-    replVars.map(({ key, value }) => [key, value]),
-  );
+export function _setPluginsNames(pluginsNames: string[]) {
   internalState.pluginsNames = new Set(pluginsNames);
 }
 

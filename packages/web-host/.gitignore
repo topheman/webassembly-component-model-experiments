@@ -25,4 +25,4 @@ dist-ssr
 
 # Project specific
 public/*.wasm
-src/wasm
+src/wasm/generated

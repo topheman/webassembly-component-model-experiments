@@ -23,8 +23,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "paths": {
-      "repl:api/host-state": ["./src/host/host-state.ts"],
-      "repl:api/http-client": ["./src/host/http-client.ts"]
+      "repl:api/host-state": ["./src/wasm/host/host-state.ts"],
+      "repl:api/http-client": ["./src/wasm/host/http-client.ts"]
     }
   },
   "include": ["src", "clis"]

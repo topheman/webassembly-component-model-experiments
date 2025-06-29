@@ -35,6 +35,7 @@ function prepareWasmFiles({ mode }: { mode: "debug" | "release" }) {
     "web-host",
     "src",
     "wasm",
+    "generated",
   );
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir);
