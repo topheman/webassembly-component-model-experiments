@@ -20,6 +20,10 @@ const wasmFiles: Array<{ debug: string; release: string }> = [
     debug: "target/wasm32-wasip1/debug/plugin_weather.wasm",
     release: "target/wasm32-wasip1/release/plugin_weather.wasm",
   },
+  {
+    debug: "target/wasm32-wasip1/debug/repl_logic_guest.wasm",
+    release: "target/wasm32-wasip1/release/repl_logic_guest.wasm",
+  },
 ];
 
 function prepareWasmFiles({ mode }: { mode: "debug" | "release" }) {
