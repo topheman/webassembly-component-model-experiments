@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { HomePage } from "./components/HomePage";
 import { ReplPage } from "./components/ReplPage";
 import { WasmProvider } from "./components/Wasm/Wasm";
-
-type Page = "home" | "repl";
+import { useHashNavigation } from "./hooks/useHashNavigation";
 
 const Header = () => (
   <header className="bg-primary text-white shadow-lg">
@@ -33,7 +31,7 @@ const Footer = () => (
 );
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<Page>("home");
+  const { currentPage, navigateToRepl, navigateToHome } = useHashNavigation();
 
   return (
     <WasmProvider>
@@ -41,9 +39,9 @@ function App() {
         <Header />
         <main className="flex-1">
           {currentPage === "home" ? (
-            <HomePage onStartRepl={() => setCurrentPage("repl")} />
+            <HomePage onStartRepl={navigateToRepl} />
           ) : (
-            <ReplPage onBackToHome={() => setCurrentPage("home")} />
+            <ReplPage onBackToHome={navigateToHome} />
           )}
         </main>
         <Footer />
