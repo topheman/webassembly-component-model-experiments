@@ -22,7 +22,7 @@
 		"wasm:transpile": "npm run wasm:transpile:plugin-echo && npm run wasm:transpile:plugin-weather && npm run wasm:transpile:plugin-greet && npm run wasm:transpile:plugin-ls && npm run wasm:transpile:repl-logic-guest",
     "wit-types:host-api": "jco types --world-name host-api --out-dir ./src/types/generated ../../wit",
     "wit-types:plugin-api": "jco types --world-name plugin-api --out-dir ./src/types/generated ../../wit",
-		"wit-types": "npm run wit-types:clean && npm run wit-types:host-api && npm run wit-types:plugin-api",
+		"wit-types": "npm run wit-types:clean && npm run wit-types:host-api && npm run wit-types:plugin-api && biome format --write ./src/types/generated",
     "wit-types:clean": "rm -rf ./src/types/generated"
 	},
 	"dependencies": {
