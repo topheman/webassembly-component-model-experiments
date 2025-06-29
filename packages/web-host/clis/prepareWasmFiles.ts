@@ -29,15 +29,19 @@ const wasmFiles: Array<{ debug: string; release: string }> = [
 function prepareWasmFiles({ mode }: { mode: "debug" | "release" }) {
   console.log(`Preparing wasm files for mode: ${mode}`);
   const workspaceRoot = path.join(import.meta.dirname, "..", "..", "..");
+  const targetDir = path.join(
+    workspaceRoot,
+    "packages",
+    "web-host",
+    "src",
+    "wasm",
+  );
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir);
+  }
   for (const wasmFile of wasmFiles) {
     const copyFrom = path.join(workspaceRoot, wasmFile[mode]);
-    const copyTo = path.join(
-      workspaceRoot,
-      "packages",
-      "web-host",
-      "public",
-      path.basename(wasmFile[mode]),
-    );
+    const copyTo = path.join(targetDir, path.basename(wasmFile[mode]));
     try {
       fs.copyFileSync(copyFrom, copyTo);
     } catch (_e) {

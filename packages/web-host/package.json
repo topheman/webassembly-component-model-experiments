@@ -4,14 +4,22 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"predev": "just build-plugins && just build-repl-logic-guest && ./clis/prepareWasmFiles.ts --mode debug",
+		"predev": "npm run prebuild",
+		"predev:debug": "just build-plugins && just build-repl-logic-guest && ./clis/prepareWasmFiles.ts --mode debug && npm run wasm:transpile",
 		"dev": "vite",
-		"prebuild": "just build-plugins-release && just build-repl-logic-guest-release && ./clis/prepareWasmFiles.ts --mode release",
+		"dev:debug": "vite",
+		"prebuild": "just build-plugins-release && just build-repl-logic-guest-release && ./clis/prepareWasmFiles.ts --mode release && npm run wasm:transpile",
 		"build": "tsc -b && vite build",
 		"preview": "vite preview",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
-		"typecheck": "tsc --noEmit -p tsconfig.app.json"
+		"typecheck": "tsc --noEmit -p tsconfig.app.json",
+		"wasm:transpile:plugin-echo": "jco transpile src/wasm/plugin_echo.wasm -o ./src/wasm/plugin_echo/transpiled",
+		"wasm:transpile:plugin-weather": "jco transpile src/wasm/plugin_weather.wasm -o ./src/wasm/plugin_weather/transpiled",
+		"wasm:transpile:plugin-greet": "jco transpile src/wasm/plugin_greet.wasm -o ./src/wasm/plugin_greet/transpiled",
+		"wasm:transpile:plugin-ls": "jco transpile src/wasm/plugin_ls.wasm -o ./src/wasm/plugin_ls/transpiled",
+		"wasm:transpile:repl-logic-guest": "jco transpile src/wasm/repl_logic_guest.wasm -o ./src/wasm/repl_logic_guest/transpiled",
+		"wasm:transpile": "npm run wasm:transpile:plugin-echo && npm run wasm:transpile:plugin-weather && npm run wasm:transpile:plugin-greet && npm run wasm:transpile:plugin-ls && npm run wasm:transpile:repl-logic-guest"
 	},
 	"dependencies": {
 		"clsx": "^2.1.1",
@@ -21,6 +29,7 @@
 		"tailwind-merge": "^3.3.1"
 	},
 	"devDependencies": {
+		"@bytecodealliance/jco": "^1.11.2",
 		"@tailwindcss/vite": "^4.1.11",
 		"@types/node": "^24.0.4",
 		"@types/react": "^19.1.8",
