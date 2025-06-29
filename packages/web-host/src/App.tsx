@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { HomePage } from "./components/HomePage";
 import { ReplPage } from "./components/ReplPage";
+import { WasmProvider } from "./components/Wasm/Wasm";
 
 type Page = "home" | "repl";
 
@@ -35,17 +36,19 @@ function App() {
   const [currentPage, setCurrentPage] = useState<Page>("home");
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
-      <Header />
-      <main className="flex-1">
-        {currentPage === "home" ? (
-          <HomePage onStartRepl={() => setCurrentPage("repl")} />
-        ) : (
-          <ReplPage onBackToHome={() => setCurrentPage("home")} />
-        )}
-      </main>
-      <Footer />
-    </div>
+    <WasmProvider>
+      <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+        <Header />
+        <main className="flex-1">
+          {currentPage === "home" ? (
+            <HomePage onStartRepl={() => setCurrentPage("repl")} />
+          ) : (
+            <ReplPage onBackToHome={() => setCurrentPage("home")} />
+          )}
+        </main>
+        <Footer />
+      </div>
+    </WasmProvider>
   );
 }
 
