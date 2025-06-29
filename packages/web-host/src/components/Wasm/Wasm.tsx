@@ -1,4 +1,6 @@
-import { createContext, useEffect, useReducer, useState } from "react";
+import { init as initHostState } from "repl:api/host-state";
+import { createContext, useEffect, useState } from "react";
+import type { PluginApi, ReplLogicApi } from "../../types";
 
 const PLUGINS_PATHS = [
   "../../wasm/plugin_echo/transpiled/plugin_echo.js",
@@ -40,22 +42,25 @@ const WasmContext = createContext<WasmContext>({
 });
 
 function makeApi() {
-  const plugins = new Map();
-  const replVars = new Map();
+  console.log("makeApi");
+  const plugins = new Map<string, PluginApi>();
+  initHostState([], []); // todo: better init
   let replLogicGuest: (...args: any) => any | undefined;
   return {
-    registerPlugin(name: string, func: (...args: any) => any) {
-      plugins.set(name, func);
+    registerPlugin(name: string, pluginInstance: PluginApi) {
+      plugins.set(name, pluginInstance);
+      console.log("registerPlugin", name, pluginInstance);
     },
-    registerReplLogicGuest(func: (...args: any) => any) {
+    registerReplLogicGuest(func: any) {
+      console.log("registerReplLogicGuest", func);
       replLogicGuest = func;
     },
-    runPlugin(name: string, payload: string) {
-      const plugin = plugins.get(name);
-      if (!plugin) {
+    getPlugin(name: string): PluginApi {
+      const pluginInstance = plugins.get(name);
+      if (!pluginInstance) {
         throw new Error(`Plugin ${name} not found`);
       }
-      return plugin(payload);
+      return pluginInstance;
     },
     runReplLogicGuest(payload: string) {
       if (!replLogicGuest) {
@@ -63,52 +68,35 @@ function makeApi() {
       }
       return replLogicGuest().run(payload);
     },
-    host: {
-      setReplVars(vars: Record<string, string>) {
-        for (const [name, value] of Object.entries(vars)) {
-          replVars.set(name, value);
-        }
-      },
-      setReplVar(name: string, value: string) {
-        replVars.set(name, value);
-      },
-      getReplVars() {
-        return Array.from(replVars.entries()).map(([name, value]) => ({
-          name,
-          value,
-        }));
-      },
-      getPluginsNames() {
-        return Array.from(plugins.keys());
-      },
-    },
   };
 }
 
-function loadPlugins(paths: string[]) {
+function loadPlugins(paths: string[]): Promise<{ plugin: PluginApi }[]> {
   return Promise.all(
     paths.map(async (path) => {
       const module = await import(path);
-      const plugin = module.default;
-      return plugin;
+      console.log("loadPlugins", path, module);
+      return module;
     }),
   );
 }
 
-async function loadReplLogicGuest() {
+async function loadReplLogicGuest(): Promise<ReplLogicApi> {
   const module = await import(REPL_LOGIC_GUEST_PATH);
-  const plugin = module.default;
-  return plugin;
+  console.log("loadReplLogicGuest", module);
+  return module;
 }
 
 async function prepareWasmApi() {
-  const [plugins, replLogicGuest] = await Promise.all([
-    loadPlugins(PLUGINS_PATHS),
+  const [replLogicGuest, plugins] = await Promise.all([
     loadReplLogicGuest(),
+    loadPlugins(PLUGINS_PATHS),
   ]);
   const api = makeApi();
+  console.log("plugins", plugins);
   for (const plugin of plugins) {
-    api.registerPlugin(plugin.func.name(), plugin.func);
+    console.log("plugin", plugin);
+    api.registerPlugin(plugin.plugin.name(), plugin.plugin);
   }
   api.registerReplLogicGuest(replLogicGuest);
   return api;
@@ -122,8 +110,10 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    console.log("useEffect prepareWasmApi");
     prepareWasmApi()
       .then((api) => {
+        console.log("useEffect prepareWasmApi success", api);
         setContext({
           status: "ready",
           error: null,
@@ -131,6 +121,7 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
         });
       })
       .catch((error) => {
+        console.log("useEffect prepareWasmApi error", error);
         setContext({
           status: "error",
           error,

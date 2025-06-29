@@ -1,0 +1,37 @@
+import type { ReplApiHostState } from "../types/generated/host-api";
+import type { ReplVar } from "../types/generated/interfaces/repl-api-host-state";
+
+type HostState = typeof ReplApiHostState;
+
+const internalState = {
+  replVars: new Map<string, string>(),
+  pluginsNames: new Set<string>(),
+};
+
+export function init(replVars: ReplVar[], pluginsNames: string[]) {
+  internalState.replVars = new Map(
+    replVars.map(({ key, value }) => [key, value]),
+  );
+  internalState.pluginsNames = new Set(pluginsNames);
+}
+
+export function getPluginsNames(): string[] {
+  return Array.from(internalState.pluginsNames);
+}
+
+export function getReplVars(): ReplVar[] {
+  return Array.from(internalState.replVars.entries()).map(([name, value]) => ({
+    key: name,
+    value,
+  }));
+}
+
+export function setReplVar({ key, value }: { key: string; value: string }) {
+  internalState.replVars.set(key, value);
+}
+
+export function setReplVars(vars: ReplVar[]) {
+  for (const { key, value } of vars) {
+    internalState.replVars.set(key, value);
+  }
+}

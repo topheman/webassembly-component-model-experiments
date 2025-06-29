@@ -5,10 +5,10 @@
 	"type": "module",
 	"scripts": {
 		"predev": "npm run prebuild",
-		"predev:debug": "just build-plugins && just build-repl-logic-guest && ./clis/prepareWasmFiles.ts --mode debug && npm run wasm:transpile",
+		"predev:debug": "npm run wit-types && just build-plugins && just build-repl-logic-guest && ./clis/prepareWasmFiles.ts --mode debug && npm run wasm:transpile",
 		"dev": "vite",
 		"dev:debug": "vite",
-		"prebuild": "just build-plugins-release && just build-repl-logic-guest-release && ./clis/prepareWasmFiles.ts --mode release && npm run wasm:transpile",
+		"prebuild": "npm run wit-types && just build-plugins-release && just build-repl-logic-guest-release && ./clis/prepareWasmFiles.ts --mode release && npm run wasm:transpile",
 		"build": "tsc -b && vite build",
 		"preview": "vite preview",
 		"lint": "biome check .",
@@ -19,7 +19,11 @@
 		"wasm:transpile:plugin-greet": "jco transpile src/wasm/plugin_greet.wasm -o ./src/wasm/plugin_greet/transpiled",
 		"wasm:transpile:plugin-ls": "jco transpile src/wasm/plugin_ls.wasm -o ./src/wasm/plugin_ls/transpiled",
 		"wasm:transpile:repl-logic-guest": "jco transpile src/wasm/repl_logic_guest.wasm -o ./src/wasm/repl_logic_guest/transpiled",
-		"wasm:transpile": "npm run wasm:transpile:plugin-echo && npm run wasm:transpile:plugin-weather && npm run wasm:transpile:plugin-greet && npm run wasm:transpile:plugin-ls && npm run wasm:transpile:repl-logic-guest"
+		"wasm:transpile": "npm run wasm:transpile:plugin-echo && npm run wasm:transpile:plugin-weather && npm run wasm:transpile:plugin-greet && npm run wasm:transpile:plugin-ls && npm run wasm:transpile:repl-logic-guest",
+    "wit-types:host-api": "jco types --world-name host-api --out-dir ./src/types/generated ../../wit",
+    "wit-types:plugin-api": "jco types --world-name plugin-api --out-dir ./src/types/generated ../../wit",
+		"wit-types": "npm run wit-types:clean && npm run wit-types:host-api && npm run wit-types:plugin-api",
+    "wit-types:clean": "rm -rf ./src/types/generated"
 	},
 	"dependencies": {
 		"clsx": "^2.1.1",
