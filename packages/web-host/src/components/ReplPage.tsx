@@ -1,5 +1,5 @@
 import { useWasm } from "../hooks/wasm";
-import { Repl } from "./Rep";
+import { Repl } from "./Repl";
 
 interface ReplPageProps {
   onBackToHome: () => void;
