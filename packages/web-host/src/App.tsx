@@ -1,6 +1,6 @@
 import { HomePage } from "./components/HomePage";
 import { ReplPage } from "./components/ReplPage";
-import { useHashNavigation } from "./hooks/useHashNavigation";
+import { useHashNavigation } from "./hooks/navigation";
 import { WasmProvider } from "./hooks/wasm";
 
 const Header = () => (
