@@ -20,8 +20,33 @@ Those hosts then run the same codebase which is compiled to WebAssembly:
 
 <p align="center"><a href="https://topheman.github.io/webassembly-component-model-experiments/"><img src="./packages/web-host/public/wasi.png" alt="Demo" /></a></p>
 <p align="center">
-  Check the demo at <a href="https://topheman.github.io/webassembly-component-model-experiments/">topheman.github.io/webassembly-component-model-experiments</a>
+  Check the online demo at<br/><a href="https://topheman.github.io/webassembly-component-model-experiments/">topheman.github.io/webassembly-component-model-experiments</a>
 </p>
+
+## Usage
+
+### cli-host (rust)
+
+#### Install
+
+```bash
+# Install the cli-host binary - todo: make it available on crates.io
+cargo install --git https://github.com/topheman/webassembly-component-model-experiments.git --branch main cli-host
+```
+
+#### Run
+
+```bash
+./target/debug/cli-host\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_greet.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_ls.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_echo.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_weather.wasm
+```
+
+### web-host (typescript)
+
+Go check [topheman.github.io/webassembly-component-model-experiments](https://topheman.github.io/webassembly-component-model-experiments) online demo.
 
 ## Development
 

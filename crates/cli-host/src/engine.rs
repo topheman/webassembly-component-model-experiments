@@ -29,8 +29,46 @@ impl WasmEngine {
         &self.engine
     }
 
-    pub async fn load_component(&self, path: &Path) -> Result<Component> {
+    /// Load a WebAssembly component from either a local file or HTTP URL
+    pub async fn load_component(&self, source: &str) -> Result<Component> {
+        // Check if the source is a URL (starts with http:// or https://)
+        if source.starts_with("http://") || source.starts_with("https://") {
+            self.load_component_from_url(source).await
+        } else {
+            // Treat as local file path
+            let path = Path::new(source);
+            self.load_component_from_file(path).await
+        }
+    }
+
+    /// Load a WebAssembly component from a local file
+    pub async fn load_component_from_file(&self, path: &Path) -> Result<Component> {
         let component = Component::from_file(&self.engine, path)?;
+        Ok(component)
+    }
+
+    /// Load a WebAssembly component from an HTTP URL
+    pub async fn load_component_from_url(&self, url: &str) -> Result<Component> {
+        // Create an HTTP client
+        let client = reqwest::Client::new();
+
+        // Download the component bytes
+        let response = client.get(url).send().await?;
+
+        // Check if the request was successful
+        if !response.status().is_success() {
+            return Err(anyhow::anyhow!(
+                "Failed to download component from {}: HTTP {}",
+                url,
+                response.status()
+            ));
+        }
+
+        // Get the component bytes
+        let bytes = response.bytes().await?;
+
+        // Create the component from bytes
+        let component = Component::from_binary(&self.engine, &bytes)?;
         Ok(component)
     }
 

@@ -4,7 +4,6 @@ use anyhow::Result;
 use api::host_api::HostApi;
 use api::plugin_api::PluginApi;
 use std::collections::HashMap;
-use std::path::PathBuf;
 use wasmtime::Store;
 use wasmtime_wasi::p2::WasiCtx;
 
@@ -29,8 +28,8 @@ impl WasmHost {
         }
     }
 
-    pub async fn load_plugin(&mut self, engine: &WasmEngine, path: PathBuf) -> Result<()> {
-        let component = engine.load_component(&path).await?;
+    pub async fn load_plugin(&mut self, engine: &WasmEngine, source: &str) -> Result<()> {
+        let component = engine.load_component(source).await?;
         let plugin = engine
             .instantiate_plugin(&mut self.store, component)
             .await?;
@@ -43,8 +42,8 @@ impl WasmHost {
         Ok(())
     }
 
-    pub async fn load_repl_logic(&mut self, engine: &WasmEngine, path: PathBuf) -> Result<()> {
-        let component = engine.load_component(&path).await?;
+    pub async fn load_repl_logic(&mut self, engine: &WasmEngine, source: &str) -> Result<()> {
+        let component = engine.load_component(source).await?;
         let repl_logic = engine
             .instantiate_repl_logic(&mut self.store, component)
             .await?;

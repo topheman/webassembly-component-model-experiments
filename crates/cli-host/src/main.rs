@@ -9,9 +9,9 @@ use std::path::PathBuf;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
-    /// Paths to WebAssembly plugin files
+    /// Paths or URLs to WebAssembly plugin files
     #[arg(long)]
-    plugins: Vec<PathBuf>,
+    plugins: Vec<String>,
 
     #[arg(long, default_value_t = false)]
     debug: bool,
@@ -38,17 +38,17 @@ async fn main() -> Result<()> {
     let mut host = WasmHost::new(&engine, wasi_ctx);
 
     // Load the REPL logic component
-    let repl_logic_path = if cfg!(debug_assertions) {
-        PathBuf::from("target/wasm32-wasip1/debug/repl_logic_guest.wasm")
+    let repl_logic_source = if cfg!(debug_assertions) {
+        "target/wasm32-wasip1/debug/repl_logic_guest.wasm"
     } else {
-        PathBuf::from("target/wasm32-wasip1/release/repl_logic_guest.wasm")
+        "target/wasm32-wasip1/release/repl_logic_guest.wasm"
     };
-    host.load_repl_logic(&engine, repl_logic_path).await?;
+    host.load_repl_logic(&engine, repl_logic_source).await?;
 
-    // // Load plugins
-    for plugin_path in &cli.plugins {
-        println!("[Host] Loading plugin: {}", plugin_path.display());
-        host.load_plugin(&engine, plugin_path.clone()).await?;
+    // Load plugins
+    for plugin_source in &cli.plugins {
+        println!("[Host] Loading plugin: {}", plugin_source);
+        host.load_plugin(&engine, plugin_source).await?;
     }
 
     let mut plugins_config: Vec<(String, String)> = Vec::new();
