@@ -1,4 +1,4 @@
-# WebAssembly Component Model REPL
+# WebAssembly Component Model Experiments
 
 The goal of this project is to demonstrate the power of the WebAssembly Component Model, with more than a simple hello world.
 

@@ -16,7 +16,7 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="text-center mb-12">
         <h2 className="text-4xl font-bold text-primary mb-4">
-          WebAssembly Component Model REPL
+          WebAssembly Component Model Experiments
         </h2>
         <p className="text-xl text-gray-600 mb-8">
           A web-based REPL interface for WebAssembly Component Model

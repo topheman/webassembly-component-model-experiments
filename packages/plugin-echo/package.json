@@ -1,7 +1,7 @@
 {
   "name": "plugin-echo",
   "version": "0.1.0",
-  "description": "Example echo plugin for WebAssembly Component Model REPL - demonstrates basic plugin API implementation in TypeScript",
+  "description": "Example echo plugin for REPL based on WebAssembly Component Model - demonstrates basic plugin API implementation in TypeScript",
   "license": "ISC",
   "author": "Christophe Rosset",
   "type": "module",

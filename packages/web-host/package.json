@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
+	"description": "Web host for Terminal REPL with plugin system (using WebAssembly Component Model)",
 	"scripts": {
 		"predev": "npm run prebuild",
 		"predev:debug": "npm run wit-types && just build-plugins && just build-repl-logic-guest && ./clis/prepareWasmFiles.ts --mode debug && npm run wasm:transpile",

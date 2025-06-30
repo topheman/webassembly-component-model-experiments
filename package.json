@@ -1,25 +1,23 @@
 {
-  "name": "webassembly-component-model-repl",
+  "name": "webassembly-component-model-experiments",
   "version": "0.1.0",
-  "description": "WebAssembly Component Model basic REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)",
+  "description": "Terminal REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)",
   "keywords": [
     "WebAssembly",
-    "WebAssembly",
-    "Component",
-    "Model",
+    "WebAssembly Component Model",
     "WIT",
     "wasmtime",
     "wit-bindgen",
     "repl",
     "plugin-system"
   ],
-  "homepage": "https://github.com/topheman/webassembly-component-model-repl#readme",
+  "homepage": "https://github.com/topheman/webassembly-component-model-experiments#readme",
   "bugs": {
-    "url": "https://github.com/topheman/webassembly-component-model-repl/issues"
+    "url": "https://github.com/topheman/webassembly-component-model-experiments/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/topheman/webassembly-component-model-repl.git"
+    "url": "git+https://github.com/topheman/webassembly-component-model-experiments.git"
   },
   "author": "Christophe Rosset",
   "scripts": {

@@ -3,7 +3,7 @@ name = "plugin-greet"
 version = "0.1.0"
 edition = { workspace = true }
 publish = false
-description = "Example greeting plugin for WebAssembly Component Model REPL - demonstrates basic plugin API implementation with argument handling and response formatting"
+description = "Example greeting plugin for REPL based on WebAssembly Component Model - demonstrates basic plugin API implementation with argument handling and response formatting"
 
 [dependencies]
 wit-bindgen-rt = { workspace = true, features = ["bitflags"] }

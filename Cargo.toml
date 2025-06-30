@@ -15,7 +15,18 @@ members = [
 [workspace.package]
 publish = false
 edition = "2024"
-description = "WebAssembly Component Model basic REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)"
+description = "Terminal REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)"
+keywords = [
+    "WebAssembly",
+    "WebAssembly Component Model",
+    "WIT",
+    "wasmtime",
+    "wit-bindgen",
+    "repl",
+    "plugin-system",
+]
+homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
+repository = "git+https://github.com/topheman/webassembly-component-model-experiments.git"
 
 [workspace.dependencies]
 wasmtime = { version = "33", default-features = false, features = [

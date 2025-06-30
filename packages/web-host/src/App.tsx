@@ -7,7 +7,9 @@ const Header = () => (
   <header className="bg-primary text-white shadow-lg">
     <div className="container mx-auto px-4 py-4">
       <div className="flex items-center gap-3">
-        <h1 className="text-xl font-bold">WebAssembly Component Model REPL</h1>
+        <h1 className="text-xl font-bold">
+          WebAssembly Component Model Experiments
+        </h1>
       </div>
     </div>
   </header>
