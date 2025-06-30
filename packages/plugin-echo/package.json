@@ -10,11 +10,15 @@
     "bundle": "rolldown ./src/component.ts --file ./dist/component.js",
     "componentize": "jco componentize ./dist/component.js --wit ../../wit --world-name plugin-api --out ./dist/component.wasm --disable http --disable random",
     "build": "npm run wit-types && npm run bundle && npm run componentize",
-    "optimize": "jco opt ./dist/component.wasm -o ./dist/component-opt.wasm"
+    "optimize": "jco opt ./dist/component.wasm -o ./dist/component-opt.wasm",
+    "typecheck": "tsc --noEmit ./src/component.ts"
   },
   "dependencies": {
     "@bytecodealliance/componentize-js": "^0.18.2",
     "@bytecodealliance/jco": "^1.11.2",
     "rolldown": "^1.0.0-beta.19"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
   }
 }
