@@ -131,7 +131,7 @@ cargo component new --lib crates/plugin-hello
 #### Dev
 
 ```bash
-npm run dev:web-host
+npm run web-host:dev
 ```
 
 This Will (see [packages/web-host/package.json](./packages/web-host/package.json)):
@@ -148,7 +148,7 @@ Go to [http://localhost:5173](http://localhost:5173) to see the web host.
 #### Build
 
 ```bash
-npm run build:web-host
+npm run web-host:build
 ```
 
 Will do the same as the dev command, small changes:
@@ -156,7 +156,7 @@ Will do the same as the dev command, small changes:
 - the build tasks called on the rust side are `just *-release` (release mode)
 - it doesn't start the vite dev server, it builds the static files in the `dist` directory
 
-You can then run `npm run preview:web-host` to preview the build.
+You can then run `npm run web-host:preview` to preview the build.
 
 ## Developer experience
 
