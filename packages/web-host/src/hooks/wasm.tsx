@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 
-import { prepareEngine } from "../../wasm/engine";
+import { prepareEngine } from "../wasm/engine";
 
 type WasmContext =
   | {

@@ -1,7 +1,7 @@
 import { HomePage } from "./components/HomePage";
 import { ReplPage } from "./components/ReplPage";
-import { WasmProvider } from "./components/Wasm/Wasm";
 import { useHashNavigation } from "./hooks/useHashNavigation";
+import { WasmProvider } from "./hooks/wasm";
 
 const Header = () => (
   <header className="bg-gradient-to-r from-[var(--color-wasi-purple)] to-[var(--color-wasi-violet)] text-white shadow-lg">
