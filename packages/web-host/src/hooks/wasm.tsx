@@ -1,13 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import { prepareEngine } from "../wasm/engine";
 
 type WasmContext =
-  | {
-      status: "idle";
-      error: null;
-      engine: null;
-    }
   | {
       status: "loading";
       error: null;
@@ -16,7 +11,7 @@ type WasmContext =
   | {
       status: "ready";
       error: null;
-      engine: Awaited<ReturnType<typeof prepareEngine>>;
+      engine: WasmEngine;
     }
   | {
       status: "error";
@@ -24,15 +19,21 @@ type WasmContext =
       engine: null;
     };
 
+export type WasmEngine = Awaited<ReturnType<typeof prepareEngine>>;
+
 const WasmContext = createContext<WasmContext>({
-  status: "idle",
+  status: "loading",
   error: null,
   engine: null,
 });
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export function WasmProvider({ children }: { children: React.ReactNode }) {
   const [context, setContext] = useState<WasmContext>({
-    status: "idle",
+    status: "loading",
     error: null,
     engine: null,
   });
@@ -40,7 +41,8 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     console.log("useEffect prepareEngine");
     prepareEngine()
-      .then((engine) => {
+      .then(async (engine) => {
+        // await sleep(1000);
         console.log("useEffect prepareEngine success", engine);
         setContext({
           status: "ready",
@@ -61,4 +63,9 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
   return (
     <WasmContext.Provider value={context}>{children}</WasmContext.Provider>
   );
+}
+
+export function useWasm() {
+  const context = useContext(WasmContext);
+  return context;
 }
