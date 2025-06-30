@@ -1,7 +1,4 @@
-import type { ReplApiHostState } from "../../types/generated/host-api";
 import type { ReplVar } from "../../types/generated/interfaces/repl-api-host-state";
-
-type HostState = typeof ReplApiHostState;
 
 const internalState = {
   replVars: new Map<string, string>(),
