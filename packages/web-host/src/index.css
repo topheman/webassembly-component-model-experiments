@@ -2,18 +2,21 @@
 
 @theme {
   --animate-spin-slow: spin 5s linear infinite;
-  --color-primary: #900000;
-  --color-primary-50: #fef2f2;
-  --color-primary-100: #fee2e2;
-  --color-primary-200: #fecaca;
-  --color-primary-300: #fca5a5;
-  --color-primary-400: #f87171;
-  --color-primary-500: #ef4444;
-  --color-primary-600: #dc2626;
-  --color-primary-700: #b91c1c;
-  --color-primary-800: #991b1b;
-  --color-primary-900: #900000;
-  --color-primary-950: #450a0a;
+  --color-wasi-purple: #6c63ff;
+  --color-wasi-violet: #9b42d6;
+  --color-wasi-accent: #5ce1e6;
+  --color-primary: var(--color-wasi-purple);
+  --color-primary-50: #f5f3ff;
+  --color-primary-100: #ede9fe;
+  --color-primary-200: #ddd6fe;
+  --color-primary-300: #c4b5fd;
+  --color-primary-400: #a78bfa;
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+  --color-primary-800: #5b21b6;
+  --color-primary-900: #4c1d95;
+  --color-primary-950: #2e1065;
 }
 
 :root {
@@ -47,11 +50,28 @@ button:focus-visible {
 }
 
 @layer utilities {
-  a {
+  h3,
+  h4,
+  h5,
+  h6,
+  a,
+  strong {
     color: var(--color-primary);
+  }
+  a {
     text-decoration-line: underline;
   }
   a:hover {
     text-decoration-line: none;
+  }
+}
+
+@keyframes pulse110 {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
   }
 }
