@@ -44,6 +44,57 @@ cargo install --git https://github.com/topheman/webassembly-component-model-expe
   --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_weather.wasm
 ```
 
+Other flags:
+
+- `--dir`: directory to be preopened (by default, the current directory)
+- `--help`: displays manual
+- `--repl-logic`: path or URL to WebAssembly REPL logic file (if not provided, the one included in the binary will be used)
+- `--debug`: run the host in debug mode (by default, the host runs in release mode)
+
+<details>
+<summary>🚀 Example of running the CLI host</summary>
+<pre>
+cli-host\
+ --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_greet.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_ls.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_echo.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_weather.wasm
+[Host] Starting REPL host...
+[Host] Loading REPL logic from: ./target/wasm32-wasip1/debug/repl_logic_guest.wasm
+[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_greet.wasm
+[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_ls.wasm
+[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_echo.wasm
+[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_weather.wasm
+repl(0)> echo foo
+foo
+repl(0)> echo $ROOT/$USER
+/Users/Tophe
+repl(0)> export FOO=toto
+
+repl(0)> echo $FOO
+toto
+repl(0)> greet $FOO
+Hello, toto!
+repl(0)> ls wit
+wit/host-api.wit
+wit/plugin-api.wit
+wit/shared.wit
+repl(0)> weather Paris
+Sunny
+repl(0)> weather New York
+Partly cloudy
+repl(0)> azertyuiop
+Unknown command: azertyuiop. Try `help` to see available commands.
+repl(1)> echo $?
+1
+repl(0)> greet $USER
+Hello, Tophe!
+repl(0)> echo $0
+Hello, Tophe!
+repl(0)>
+</pre>
+</details>
+
 ### web-host (typescript)
 
 Go check [topheman.github.io/webassembly-component-model-experiments](https://topheman.github.io/webassembly-component-model-experiments) online demo.
@@ -100,9 +151,6 @@ This will run the `cli-host` binary which will itself:
   - parse the command
   - dispatch the command to the plugin(s) if needed (run the `run`, `man` functions of the plugins via the [`host-api`](./wit/host-api.wit) interface)
   - display the result
-
-You can pass the `--dir` argument to specify the directory to be preopened. By default, it will be the current directory.
-You can pass the `--debug` argument to run the host in debug mode.
 
 Other example:
 

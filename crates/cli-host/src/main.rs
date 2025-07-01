@@ -20,6 +20,10 @@ struct Cli {
     #[arg(long)]
     plugins: Vec<String>,
 
+    /// Path or URL to WebAssembly REPL logic file
+    #[arg(long)]
+    repl_logic: Option<String>,
+
     #[arg(long, default_value_t = false)]
     debug: bool,
 
@@ -44,9 +48,16 @@ async fn main() -> Result<()> {
     // Create the host
     let mut host = WasmHost::new(&engine, wasi_ctx);
 
-    // Load the REPL logic component
-    host.load_repl_logic_from_bytes(&engine, REPL_LOGIC_WASM)
-        .await?;
+    if let Some(repl_logic_source) = cli.repl_logic {
+        println!("[Host] Loading REPL logic from: {}", repl_logic_source);
+        // Override the REPL logic in the binary with the one passed by params
+        host.load_repl_logic(&engine, &repl_logic_source).await?;
+    } else {
+        println!("[Host] Loading REPL logic from binary");
+        // Load the REPL logic component from the wasm included in the binary
+        host.load_repl_logic_from_bytes(&engine, REPL_LOGIC_WASM)
+            .await?;
+    }
 
     // Load plugins
     for plugin_source in &cli.plugins {
