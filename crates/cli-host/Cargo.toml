@@ -4,6 +4,17 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 description = "Command-line interface host for Terminal REPL with plugin system (using WebAssembly Component Model)"
+keywords = [
+  "WebAssembly",
+  "WebAssembly Component Model",
+  "WIT",
+  "wasmtime",
+  "wit-bindgen",
+  "repl",
+  "plugin-system",
+]
+homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
+repository = "git+https://github.com/topheman/webassembly-component-model-experiments.git"
 
 [dependencies]
 wasmtime = { workspace = true }
