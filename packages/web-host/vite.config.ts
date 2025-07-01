@@ -18,4 +18,7 @@ export default defineConfig({
       ),
     },
   },
+  base: process.env.GITHUB_ACTIONS
+    ? "/webassembly-component-model-experiments/"
+    : "/",
 });
