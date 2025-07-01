@@ -50,4 +50,17 @@ impl WasmHost {
         self.repl_logic = Some(repl_logic);
         Ok(())
     }
+
+    pub async fn load_repl_logic_from_bytes(
+        &mut self,
+        engine: &WasmEngine,
+        bytes: &[u8],
+    ) -> Result<()> {
+        let component = engine.load_component_from_bytes(bytes)?;
+        let repl_logic = engine
+            .instantiate_repl_logic(&mut self.store, component)
+            .await?;
+        self.repl_logic = Some(repl_logic);
+        Ok(())
+    }
 }

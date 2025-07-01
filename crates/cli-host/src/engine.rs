@@ -72,6 +72,12 @@ impl WasmEngine {
         Ok(component)
     }
 
+    /// Load a WebAssembly component from bytes
+    pub fn load_component_from_bytes(&self, bytes: &[u8]) -> Result<Component> {
+        let component = Component::from_binary(&self.engine, bytes)?;
+        Ok(component)
+    }
+
     pub fn build_wasi_ctx(path: &PathBuf) -> Result<WasiCtx> {
         let wasi_ctx = WasiCtxBuilder::new()
             .inherit_stdio()

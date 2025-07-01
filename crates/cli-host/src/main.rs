@@ -6,6 +6,13 @@ use cli_host::{WasmEngine, WasmHost};
 use std::io::Write;
 use std::path::PathBuf;
 
+// Embed the WASM file at compile time
+const REPL_LOGIC_WASM: &[u8] = if cfg!(debug_assertions) {
+    include_bytes!("../../../target/wasm32-wasip1/debug/repl_logic_guest.wasm")
+} else {
+    include_bytes!("../../../target/wasm32-wasip1/release/repl_logic_guest.wasm")
+};
+
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
@@ -38,12 +45,8 @@ async fn main() -> Result<()> {
     let mut host = WasmHost::new(&engine, wasi_ctx);
 
     // Load the REPL logic component
-    let repl_logic_source = if cfg!(debug_assertions) {
-        "target/wasm32-wasip1/debug/repl_logic_guest.wasm"
-    } else {
-        "target/wasm32-wasip1/release/repl_logic_guest.wasm"
-    };
-    host.load_repl_logic(&engine, repl_logic_source).await?;
+    host.load_repl_logic_from_bytes(&engine, REPL_LOGIC_WASM)
+        .await?;
 
     // Load plugins
     for plugin_source in &cli.plugins {
