@@ -22,7 +22,9 @@
   "author": "Christophe Rosset",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build-plugin-echo",
+    "build": "npm run web-host:build",
+    "preview": "npm run web-host:preview",
+    "dev": "npm run web-host:dev",
     "build-plugin-echo": "cd packages/plugin-echo && npm run build",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",

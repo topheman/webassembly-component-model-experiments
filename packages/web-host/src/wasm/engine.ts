@@ -1,4 +1,4 @@
-import type { PluginApi, ReplLogicApi } from "../types";
+import type { HostApi, PluginApi } from "../types";
 
 const PLUGINS_PATHS = [
   import.meta.resolve("./generated/plugin_echo/transpiled/plugin_echo.js"),
@@ -13,25 +13,25 @@ const REPL_LOGIC_GUEST_PATH = import.meta.resolve(
 );
 
 function makeEngine() {
-  const plugins = new Map<string, PluginApi>();
-  let replLogicGuest: ReplLogicApi | undefined;
+  const plugins = new Map<string, PluginApi["plugin"]>();
+  let replLogicGuest: HostApi | undefined;
   return {
-    registerPlugin(name: string, pluginInstance: PluginApi) {
+    registerPlugin(name: string, pluginInstance: PluginApi["plugin"]) {
       console.log("registerPlugin", name, pluginInstance);
       plugins.set(name, pluginInstance);
     },
-    registerReplLogicGuest(func: ReplLogicApi) {
+    registerReplLogicGuest(func: HostApi) {
       console.log("registerReplLogicGuest", func);
       replLogicGuest = func;
     },
-    getPlugin(name: string): PluginApi {
+    getPlugin(name: string): PluginApi["plugin"] {
       const pluginInstance = plugins.get(name);
       if (!pluginInstance) {
         throw new Error(`Plugin ${name} not found`);
       }
       return pluginInstance;
     },
-    getReplLogicGuest(): ReplLogicApi {
+    getReplLogicGuest(): HostApi {
       if (!replLogicGuest) {
         throw new Error("Repl logic guest not found");
       }
@@ -40,7 +40,7 @@ function makeEngine() {
   };
 }
 
-function loadPlugins(paths: string[]): Promise<PluginApi[]> {
+function loadPlugins(paths: string[]): Promise<PluginApi["plugin"][]> {
   return Promise.all(
     paths.map(async (path) => {
       const module = await import(path);
@@ -50,7 +50,7 @@ function loadPlugins(paths: string[]): Promise<PluginApi[]> {
   );
 }
 
-async function loadReplLogicGuest(): Promise<ReplLogicApi> {
+async function loadReplLogicGuest(): Promise<HostApi> {
   const module = await import(REPL_LOGIC_GUEST_PATH);
   console.log("loadReplLogicGuest", module);
   return module;

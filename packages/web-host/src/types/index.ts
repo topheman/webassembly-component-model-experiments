@@ -1,5 +1,5 @@
-import type { replLogic as ReplLogicTypes } from "./generated/host-api";
-import type { plugin as PluginTypes } from "./generated/plugin-api";
+import type * as HostApiNamespace from "./generated/host-api";
+import type * as PluginApiNamespace from "./generated/plugin-api";
 
-export type PluginApi = typeof PluginTypes;
-export type ReplLogicApi = typeof ReplLogicTypes;
+export type HostApi = typeof HostApiNamespace;
+export type PluginApi = typeof PluginApiNamespace;

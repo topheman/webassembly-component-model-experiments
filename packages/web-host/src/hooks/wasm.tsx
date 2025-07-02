@@ -27,6 +27,8 @@ const WasmContext = createContext<WasmContext>({
   engine: null,
 });
 
+// biome-ignore lint/correctness/noUnusedVariables: only used in debug
+// @ts-ignore
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
