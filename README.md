@@ -38,10 +38,10 @@ cargo install --git https://github.com/topheman/webassembly-component-model-expe
 
 ```bash
 ./target/debug/cli-host\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_greet.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_ls.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_echo.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_weather.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 ```
 
 Other flags:
@@ -55,16 +55,16 @@ Other flags:
 <summary>🚀 Example of running the CLI host</summary>
 <pre>
 cli-host\
- --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_greet.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_ls.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_echo.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_weather.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: ./target/wasm32-wasip1/debug/repl_logic_guest.wasm
-[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_greet.wasm
-[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_ls.wasm
-[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_echo.wasm
-[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_weather.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 repl(0)> echo foo
 foo
 repl(0)> echo $ROOT/$USER
@@ -187,7 +187,7 @@ This Will (see [packages/web-host/package.json](./packages/web-host/package.json
 - generate types from the [wit](./wit) files using the [jco](https://github.com/bytecodealliance/jco) tool
 - build the plugins from rust to wasm (so that you don't have to do it manually)
 - build the repl-logic-guest from rust to wasm (so that you don't have to do it manually)
-- copy the wasm files in `target/wasm32-wasip1/release` to the `packages/web-host/src/wasm/generated` directory
+- copy the wasm files in `target/wasm32-wasip1/release` to the `packages/web-host/public/plugins` directory (to make them available via http for the `cli-host`)
 - transpile the wasm files to javascript using the [jco](https://github.com/bytecodealliance/jco) tool into `packages/web-host/src/wasm/generated/*/transpiled` (this is the glue code wrapping the wasm files which is needed to interact with in the browser or node)
 - start the vite dev server
 

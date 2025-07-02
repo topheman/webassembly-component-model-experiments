@@ -33,9 +33,8 @@ function prepareWasmFiles({ mode }: { mode: "debug" | "release" }) {
     workspaceRoot,
     "packages",
     "web-host",
-    "src",
-    "wasm",
-    "generated",
+    "public",
+    "plugins",
   );
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir);

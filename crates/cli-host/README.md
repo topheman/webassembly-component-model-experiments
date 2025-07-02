@@ -34,26 +34,26 @@ Run the CLI host, loading the plugins from the web (you can also load them from 
 
 ```bash
 cli-host\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_greet.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_ls.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_echo.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_weather.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 ```
 
 <details>
 <summary>🚀 Example of running the CLI host</summary>
 <pre>
 cli-host\
- --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_greet.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_ls.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_echo.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/generated/plugin_weather.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: ./target/wasm32-wasip1/debug/repl_logic_guest.wasm
-[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_greet.wasm
-[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_ls.wasm
-[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_echo.wasm
-[Host] Loading plugin: ./target/wasm32-wasip1/debug/plugin_weather.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 repl(0)> echo foo
 foo
 repl(0)> echo $ROOT/$USER

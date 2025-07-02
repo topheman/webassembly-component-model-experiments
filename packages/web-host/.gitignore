@@ -24,5 +24,5 @@ dist-ssr
 *.sw?
 
 # Project specific
-public/*.wasm
+public/plugins/*.wasm
 src/wasm/generated
