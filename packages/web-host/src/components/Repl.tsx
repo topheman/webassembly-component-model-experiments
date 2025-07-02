@@ -1,19 +1,18 @@
 import { useState } from "react";
+import { useReplLogic } from "../hooks/replLogic";
 import type { WasmEngine } from "../hooks/wasm";
 
 export function Repl({ engine }: { engine: WasmEngine }) {
   console.log("Repl", engine);
   const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
+  const { handleInput, replHistory } = useReplLogic({ engine });
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const input = formData.get("input") as string;
     console.log("input", input);
-    const result = engine.getReplLogicGuest().replLogic.readline(input);
-    console.log("result", result);
-    setOutput(JSON.stringify(result, null, 2));
+    handleInput(input);
   }
 
   return (
@@ -38,7 +37,7 @@ export function Repl({ engine }: { engine: WasmEngine }) {
         </form>
       </div>
       <div>
-        <pre>{output}</pre>
+        <pre>{JSON.stringify(replHistory, null, 2)}</pre>
       </div>
     </div>
   );
