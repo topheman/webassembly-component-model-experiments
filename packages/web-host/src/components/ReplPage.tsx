@@ -9,15 +9,15 @@ export const ReplPage = ({ onBackToHome }: ReplPageProps) => {
   const wasm = useWasm();
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <div className="flex items-center justify-between mb-10">
-        <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-wasi-purple)] to-[var(--color-wasi-violet)] drop-shadow">
+    <div className="container mx-auto px-4 md:py-12 py-0 max-w-4xl">
+      <div className="flex items-center justify-between md:mb-10 my-2">
+        <h2 className="md:text-4xl text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-wasi-purple)] to-[var(--color-wasi-violet)] drop-shadow">
           REPL Interface
         </h2>
         <button
           type="button"
           onClick={onBackToHome}
-          className="cursor-pointer inline-flex items-center gap-2 bg-gradient-to-r from-[var(--color-wasi-accent)] to-[var(--color-wasi-violet)] text-white font-semibold px-6 py-2 rounded-full shadow hover:from-[var(--color-wasi-violet)] hover:to-[var(--color-wasi-purple)] transition-all"
+          className="cursor-pointer inline-flex items-center gap-2 bg-gradient-to-r from-[var(--color-wasi-accent)] to-[var(--color-wasi-violet)] text-white font-semibold md:px-6 md:py-2 px-4 py-1 rounded-full shadow hover:from-[var(--color-wasi-violet)] hover:to-[var(--color-wasi-purple)] transition-all"
         >
           <span className="text-lg">←</span> Back to Home
         </button>
