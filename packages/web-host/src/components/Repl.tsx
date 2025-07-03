@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useReplLogic } from "../hooks/replLogic";
 import type { WasmEngine } from "../hooks/wasm";
 import { cn } from "../utils/css";
+import { ReplHistory } from "./ReplHistory";
 
 export function Repl({ engine }: { engine: WasmEngine }) {
   console.log("Repl", engine);
-  const historyRef = useRef<HTMLPreElement>(null);
+  const historyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState("");
   const { handleInput, replHistory } = useReplLogic({ engine });
@@ -33,15 +34,14 @@ export function Repl({ engine }: { engine: WasmEngine }) {
 
   return (
     <div>
-      <pre
+      <ReplHistory
         ref={historyRef}
         className={cn(
           "static overflow-y-scroll md:max-h-[60vh] max-h-[75vh]",
           inputFocus && "max-h-[40vh]",
         )}
-      >
-        {JSON.stringify(replHistory, null, 2)}
-      </pre>
+        history={replHistory}
+      />
       <div>
         <form onSubmit={handleSubmit}>
           <div className="flex items-center gap-2">

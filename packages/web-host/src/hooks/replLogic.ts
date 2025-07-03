@@ -5,6 +5,13 @@ import type { WasmEngine } from "./wasm";
 
 const MAX_HISTORY_LENGTH = 50;
 
+export type ReplHistoryEntry = {
+  stdin: string;
+  stdout?: string;
+  stderr?: string;
+  status: ReplStatus;
+};
+
 function setExitStatus(status: ReplStatus) {
   if (status === "success") {
     setReplVar({ key: "?", value: "0" });
@@ -18,12 +25,7 @@ function makeReplLogicHandler({
   updateReplHistory,
 }: {
   engine: WasmEngine;
-  updateReplHistory: (payload: {
-    stdin: string;
-    stdout?: string;
-    stderr?: string;
-    status: ReplStatus;
-  }) => void;
+  updateReplHistory: (payload: ReplHistoryEntry) => void;
 }) {
   return function handleInput(input: string) {
     const result = engine.getReplLogicGuest().replLogic.readline(input);
@@ -55,18 +57,8 @@ function makeReplLogicHandler({
  * @returns
  */
 function replStateReducer(
-  state: Array<{
-    stdin: string;
-    stdout?: string;
-    stderr?: string;
-    status: ReplStatus;
-  }>,
-  payload: {
-    stdin: string;
-    stdout?: string;
-    stderr?: string;
-    status: ReplStatus;
-  },
+  state: Array<ReplHistoryEntry>,
+  payload: ReplHistoryEntry,
 ) {
   if (state.length >= MAX_HISTORY_LENGTH) {
     // remove the oldest entry
