@@ -1,5 +1,5 @@
+import { setReplVar } from "repl:api/host-state";
 import { createContext, useContext, useEffect, useState } from "react";
-
 import { prepareEngine } from "../wasm/engine";
 
 type WasmContext =
@@ -46,6 +46,9 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
       .then(async (engine) => {
         // await sleep(1000);
         console.log("useEffect prepareEngine success", engine);
+        setReplVar({ key: "ROOT", value: "/Users" });
+        setReplVar({ key: "USER", value: "Tophe" });
+        setReplVar({ key: "?", value: "0" });
         setContext({
           status: "ready",
           error: null,

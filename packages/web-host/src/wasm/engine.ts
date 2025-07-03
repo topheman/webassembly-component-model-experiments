@@ -12,12 +12,8 @@ function makeEngine() {
       console.log("registerReplLogicGuest", func);
       replLogicGuest = func;
     },
-    getPlugin(name: string): PluginApi["plugin"] {
-      const pluginInstance = plugins.get(name);
-      if (!pluginInstance) {
-        throw new Error(`Plugin ${name} not found`);
-      }
-      return pluginInstance;
+    getPlugin(name: string): PluginApi["plugin"] | undefined {
+      return plugins.get(name);
     },
     getReplLogicGuest(): HostApi {
       if (!replLogicGuest) {

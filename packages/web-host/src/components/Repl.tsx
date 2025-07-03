@@ -1,4 +1,4 @@
-import { Play, RefreshCcw } from "lucide-react";
+import { Play, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReplLogic } from "../hooks/replLogic";
 import type { WasmEngine } from "../hooks/wasm";
@@ -16,13 +16,8 @@ function getRandomCommand() {
     () => "azertyuiop",
     () => "echo $0",
     () => "echo $?",
-    () => "man echo",
-    () => "man ls",
-    () => "man weather",
-    () => "man greet",
-    () => "man export",
     () => "help",
-    () => "man help",
+    () => "man weather",
   ];
   return commands[Math.floor(Math.random() * commands.length)]();
 }
@@ -93,7 +88,7 @@ export function Repl({ engine }: { engine: WasmEngine }) {
             />
             <button
               type="submit"
-              className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="cursor-pointer bg-primary text-white px-4 py-2 rounded-md"
               title="Run"
             >
               <Play />
@@ -111,10 +106,10 @@ export function Repl({ engine }: { engine: WasmEngine }) {
                 }, 0);
               }}
               type="button"
-              className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="cursor-pointer bg-primary text-white px-4 py-2 rounded-md"
               title="Run random command"
             >
-              <RefreshCcw />
+              <WandSparkles />
             </button>
           </div>
         </form>
