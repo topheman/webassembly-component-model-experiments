@@ -3,7 +3,7 @@ import { useMemo, useReducer } from "react";
 import type { ReplStatus } from "../types";
 import type { WasmEngine } from "./wasm";
 
-const MAX_HISTORY_LENGTH = 5;
+const MAX_HISTORY_LENGTH = 50;
 
 function setExitStatus(status: ReplStatus) {
   if (status === "success") {
