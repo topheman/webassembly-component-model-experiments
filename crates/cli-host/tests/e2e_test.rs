@@ -196,7 +196,7 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_ls.wasm",
+            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_ls.wasm --dir wit",
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch cli-host with plugin greet");
@@ -212,9 +212,7 @@ mod e2e_test {
             .expect("Didn't see REPL prompt");
         session.send_line("ls").expect("Failed to send command");
         session
-            .exp_string(
-                ".cursor\r\n.git\r\n.gitignore\r\n.vscode\r\nCargo.lock\r\nCargo.toml\r\nREADME.md\r\n",
-            )
+            .exp_string("host-api.wit\r\nplugin-api.wit\r\nshared.wit\r\n")
             .expect("Didn't get listing of current directory");
     }
 
