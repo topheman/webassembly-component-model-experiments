@@ -1,15 +1,17 @@
 # Build all crates with appropriate commands
 build:
     just build-api
-    just build-cli-host
     just build-repl-logic-guest
+    just build-repl-logic-guest-release
+    just build-cli-host
     just build-plugins
 
 # Build all crates in release mode
 build-release:
     just build-api-release
-    just build-cli-host-release
+    just build-repl-logic-guest
     just build-repl-logic-guest-release
+    just build-cli-host-release
     just build-plugins-release
 
 # Build all plugins in debug mode

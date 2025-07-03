@@ -37,7 +37,7 @@ DESCRIPTION
         ) {
             Ok(response) => {
                 // todo: add more ok status codes - put that on the host side
-                if response.status != 200 {
+                if !response.ok {
                     return Ok(transport::PluginResponse {
                         status: transport::ReplStatus::Error,
                         stdout: None,

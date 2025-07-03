@@ -53,6 +53,7 @@ impl api::plugin_api::repl::api::http_client::Host for PluginHost {
         // let response = reqwest::get(_url).await.map_err(|e| e.to_string())?;
         Ok(api::plugin_api::repl::api::http_client::HttpResponse {
             status: response.status().as_u16(),
+            ok: response.status().is_success(),
             headers: response
                 .headers()
                 .iter()

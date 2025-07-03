@@ -15,6 +15,7 @@ interface http-client {
 
   record http-response {
     status: u16,
+    ok: bool,
     headers: list<http-header>,
     body: string,
   }

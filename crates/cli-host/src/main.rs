@@ -7,10 +7,9 @@ use std::io::Write;
 use std::path::PathBuf;
 
 // Embed the WASM file at compile time
-const REPL_LOGIC_WASM: &[u8] = if cfg!(debug_assertions) {
-    include_bytes!("../../../target/wasm32-wasip1/debug/repl_logic_guest.wasm")
-} else {
-    include_bytes!("../../../target/wasm32-wasip1/release/repl_logic_guest.wasm")
+const REPL_LOGIC_WASM: &[u8] = match cfg!(debug_assertions) {
+    true => include_bytes!("../../../target/wasm32-wasip1/debug/repl_logic_guest.wasm"),
+    false => include_bytes!("../../../target/wasm32-wasip1/release/repl_logic_guest.wasm"),
 };
 
 #[derive(Parser, Debug)]
