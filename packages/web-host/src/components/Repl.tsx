@@ -1,24 +1,56 @@
+import { Play, RefreshCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReplLogic } from "../hooks/replLogic";
 import type { WasmEngine } from "../hooks/wasm";
 import { cn } from "../utils/css";
 import { ReplHistory } from "./ReplHistory";
 
+function getRandomCommand() {
+  const commands = [
+    () => "echo foo",
+    () => "echo $ROOT/$USER",
+    () => `export USER=${Math.random() > 0.5 ? "Tophe" : "Topheman"}`,
+    () => "ls",
+    () => "weather Paris",
+    () => "greet $USER",
+    () => "azertyuiop",
+    () => "echo $0",
+    () => "echo $?",
+    () => "man echo",
+    () => "man ls",
+    () => "man weather",
+    () => "man greet",
+    () => "man export",
+    () => "help",
+    () => "man help",
+  ];
+  return commands[Math.floor(Math.random() * commands.length)]();
+}
+
 export function Repl({ engine }: { engine: WasmEngine }) {
   console.log("Repl", engine);
   const historyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const [input, setInput] = useState("");
   const { handleInput, replHistory } = useReplLogic({ engine });
   const [inputFocus, setInputFocus] = useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(
+    event: Pick<
+      React.FormEvent<HTMLFormElement>,
+      "preventDefault" | "currentTarget"
+    >,
+  ) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const input = formData.get("input") as string;
+    if (input.trim() === "") {
+      return;
+    }
     console.log("input", input);
     handleInput(input);
-    if (inputRef.current) {
+    if (inputRef.current && inputFocus) {
       inputRef.current.select();
     }
   }
@@ -47,7 +79,7 @@ export function Repl({ engine }: { engine: WasmEngine }) {
         history={replHistory}
       />
       <div>
-        <form onSubmit={handleSubmit}>
+        <form ref={formRef} onSubmit={handleSubmit}>
           <div className="flex items-center gap-2">
             <input
               name="input"
@@ -61,9 +93,28 @@ export function Repl({ engine }: { engine: WasmEngine }) {
             />
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md"
+              title="Run"
             >
-              Run
+              <Play />
+            </button>
+            <button
+              onClick={() => {
+                setInput(getRandomCommand());
+                // trigger the onSubmit event
+                setTimeout(() => {
+                  handleSubmit({
+                    preventDefault: () => {},
+                    // biome-ignore lint/style/noNonNullAssertion: formRef is not null
+                    currentTarget: formRef.current!,
+                  });
+                }, 0);
+              }}
+              type="button"
+              className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md"
+              title="Run random command"
+            >
+              <RefreshCcw />
             </button>
           </div>
         </form>
