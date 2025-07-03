@@ -18,6 +18,9 @@ export function Repl({ engine }: { engine: WasmEngine }) {
     const input = formData.get("input") as string;
     console.log("input", input);
     handleInput(input);
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: dependency necessary
@@ -25,6 +28,7 @@ export function Repl({ engine }: { engine: WasmEngine }) {
     // scroll to the bottom of the history each time an entry is added
     if (historyRef.current) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
+      historyRef.current.scrollLeft = 0;
     }
     // on mobile, scroll to the top of the window to gracefully handle the virtual keyboard appearing - the setTimeout is necessary (layout computing)
     setTimeout(() => {
