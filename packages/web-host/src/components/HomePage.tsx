@@ -15,12 +15,6 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <div className="text-center mb-14">
-        <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-wasi-purple)] to-[var(--color-wasi-violet)] mb-3 drop-shadow">
-          WebAssembly Component Model Experiments
-        </h2>
-        <p className="text-2xl text-gray-600 mb-8 font-medium">
-          A web-based REPL interface for WebAssembly Component Model
-        </p>
         <button
           type="button"
           onClick={onStartRepl}
@@ -33,30 +27,47 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
       <div className="bg-white rounded-2xl p-8 border border-[var(--color-wasi-purple)]/20 shadow-lg mb-12">
         <h3 className="text-2xl font-bold mb-4">What is it?</h3>
         <p className="text-gray-700 mb-4 text-lg">
-          This is a web application that provides a REPL-like interface for
-          interacting with WebAssembly components. The implementation of the
-          REPL logic and plugins are built in any language that can be compiled
-          to WebAssembly.
+          The WebAssembly Component Model enables interoperable WebAssembly
+          libraries, but existing examples are either{" "}
+          <strong>too simple</strong> or <strong>too complex</strong>. This
+          project demonstrates its power with a{" "}
+          <strong>practical implementation</strong> that goes{" "}
+          <strong>beyond "hello world"</strong>.
         </p>
         <p className="text-gray-700 mb-6 text-lg">
-          Built with React, TypeScript, and Tailwind CSS, this project
-          demonstrates the power and flexibility of the WebAssembly Component
-          Model.
+          It's a{" "}
+          <strong>REPL (Read-Eval-Print Loop) with a plugin system</strong>{" "}
+          where plugins can be written in{" "}
+          <strong>any language that compiles to WebAssembly</strong>. The
+          plugins are <strong>sandboxed by default</strong>, and the core logic
+          itself is written in Rust and also compiles to WebAssembly.
         </p>
-        <h4 className="text-xl font-bold mb-3">Features</h4>
+
+        <h3 className="text-2xl font-bold mb-4">This Web Version</h3>
+        <p className="text-gray-700 mb-4 text-lg">
+          You're currently using the <strong>web version</strong> of the REPL,
+          built with React and TypeScript. There's also a corresponding{" "}
+          <strong>Rust CLI version</strong> that runs in the terminal. Both
+          versions load and execute the{" "}
+          <strong>same WebAssembly components</strong> - the REPL logic and
+          plugins are compiled once and run in both environments.
+        </p>
+        <p className="text-gray-700 mb-6 text-lg">
+          This demonstrates how the WebAssembly Component Model enables{" "}
+          <strong>true cross-platform compatibility</strong> - the same code
+          runs in browsers and terminals with different host implementations.
+        </p>
+
+        <h4 className="text-xl font-bold mb-3">Key Features</h4>
         <ul className="text-gray-700 space-y-2 mb-3 text-base pl-4 list-disc">
-          <li>Web-based REPL interface</li>
-          <li>WebAssembly Component Model support</li>
-          <li>Plugin system for extensibility</li>
-          <li>Modern React + TypeScript stack</li>
-          <li>Responsive design</li>
+          <li>WebAssembly Component Model architecture</li>
+          <li>Dual host support (CLI + Web)</li>
+          <li>Plugin system with sandboxed WebAssembly components</li>
+          <li>
+            Language-agnostic plugins (any language that compiles to WASM)
+          </li>
+          <li>Modern React + TypeScript web interface</li>
         </ul>
-        <p className="font-semibold flex items-center gap-2">
-          <strong>
-            <span className="text-xl">🚧</span> This description is still in
-            progress <span className="text-xl">🚧</span>
-          </strong>
-        </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 mb-10">

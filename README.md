@@ -1,12 +1,16 @@
 # WebAssembly Component Model Experiments
 
+> The WebAssembly Component Model is a broad-reaching architecture for building interoperable WebAssembly libraries, applications, and environments.
+
+It is still very early days, but it is a very promising technology. However, the examples out there are either too simple or too complex.
+
 The goal of this project is to demonstrate the power of the WebAssembly Component Model, with more than a simple hello world.
 
 It is a basic REPL, with a plugin system where:
 
 - plugins can be written in any language compiling to WebAssembly
 - plugins are sandboxed by default
-- the REPL logic is written in Rust, it also compiles to WebAssembly
+- the REPL logic is written in Rust, it also compiles to WebAssembly (you could swap it for your implementation in your own language)
 
 There are two kinds of hosts:
 
