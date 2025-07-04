@@ -74,7 +74,8 @@ export function Repl({ engine }: { engine: WasmEngine }) {
         history={replHistory}
       />
       <div>
-        <form ref={formRef} onSubmit={handleSubmit}>
+        {/** biome-ignore lint/a11y/useSemanticElements: no use of <search> */}
+        <form ref={formRef} onSubmit={handleSubmit} role="search" action="">
           <div className="flex items-center gap-2">
             <input
               name="input"
