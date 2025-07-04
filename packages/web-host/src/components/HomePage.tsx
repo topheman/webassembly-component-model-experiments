@@ -105,17 +105,17 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
                 includeMargin={false}
               />
             </div>
-            <p className="text-gray-700 text-[0.8rem] text-center mt-2">
-              <a
-                href={targetUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline break-all text-color-white"
-              >
-                {targetUrl}
-              </a>
-            </p>
           </div>
+          <p className="text-gray-700 text-[0.8rem] text-center mt-2">
+            <a
+              href={targetUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline break-all text-color-white"
+            >
+              {targetUrl}
+            </a>
+          </p>
         </div>
       )}
     </div>
