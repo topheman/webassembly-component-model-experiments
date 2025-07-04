@@ -52,6 +52,7 @@ cargo install --git https://github.com/topheman/webassembly-component-model-expe
 
 ```bash
 ./target/debug/cli-host\
+  --repl-logic https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
@@ -62,19 +63,19 @@ Other flags:
 
 - `--dir`: directory to be preopened (by default, the current directory)
 - `--help`: displays manual
-- `--repl-logic`: path or URL to WebAssembly REPL logic file (if not provided, the one included in the binary will be used)
 - `--debug`: run the host in debug mode (by default, the host runs in release mode)
 
 <details>
 <summary>🚀 Example of running the CLI host</summary>
 <pre>
 cli-host\
+  --repl-logic https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 [Host] Starting REPL host...
-[Host] Loading REPL logic from: ./target/wasm32-wasip1/debug/repl_logic_guest.wasm
+[Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
@@ -150,6 +151,7 @@ This will (see [justfile](./justfile)):
 
 ```bash
 ./target/debug/cli-host\
+  --repl-logic ./target/wasm32-wasip1/debug/repl_logic_guest.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_greet.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
@@ -170,6 +172,7 @@ Other example:
 
 ```bash
 ./target/debug/cli-host\
+  --repl-logic ./target/wasm32-wasip1/debug/repl_logic_guest.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
   --dir /tmp
