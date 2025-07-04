@@ -1,3 +1,4 @@
+import { Github, User } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 
@@ -6,10 +7,11 @@ interface HomePageProps {
 }
 
 export const HomePage = ({ onStartRepl }: HomePageProps) => {
-  const [locationHref, setLocationHref] = useState<string | null>(null);
+  const [targetUrl, setTargetUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    setLocationHref(window.location.href);
+    const [url] = window.location.href.split("#");
+    setTargetUrl(url);
   }, []);
 
   return (
@@ -68,54 +70,54 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
           </li>
           <li>Modern React + TypeScript web interface</li>
         </ul>
+
+        <div className="flex flex-row gap-4 items-center justify-center mt-8">
+          <a
+            href="https://github.com/topheman/webassembly-component-model-experiments"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--color-wasi-purple)] font-medium transition-colors bg-primary-50 p-2 rounded-md flex items-center gap-2"
+          >
+            <Github className="w-4 h-4" />
+            <span>GitHub Repository</span>
+          </a>
+          <a
+            href="https://topheman.github.io/me/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--color-wasi-purple)] font-medium transition-colors bg-primary-50 p-2 rounded-md flex items-center gap-2"
+          >
+            <User className="w-4 h-4" />
+            <span>My Portfolio</span>
+          </a>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8 mb-10">
-        <div className="bg-white rounded-2xl p-8 border border-[var(--color-wasi-violet)]/20 shadow-lg flex flex-col justify-between">
-          <h3 className="text-2xl font-bold mb-4">Links</h3>
-          <div className="space-y-3">
-            <a
-              href="https://github.com/topheman/webassembly-component-model-repl"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-[var(--color-wasi-purple)] font-medium transition-colors"
-            >
-              📦 GitHub Repository
-            </a>
-            <a
-              href="https://topheman.github.io/me/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-[var(--color-wasi-purple)] font-medium transition-colors"
-            >
-              👨‍💻 My Portfolio
-            </a>
-          </div>
-        </div>
-        {locationHref && (
-          <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-8 border border-[var(--color-wasi-violet)]/20 shadow-lg">
+      {targetUrl && (
+        <div className="flex flex-col items-center justify-center">
+          <div className="bg-white rounded-2xl p-8 border border-[var(--color-wasi-violet)]/20 shadow-lg">
             <div className="mb-4">
               <QRCodeSVG
-                value={locationHref}
+                value={targetUrl}
                 size={180}
                 level="M"
                 fgColor="#6C63FF"
                 includeMargin={false}
               />
             </div>
-            <p className="text-gray-700 text-sm text-center mt-2">
+            <p className="text-gray-700 text-[0.8rem] text-center mt-2">
               <a
-                href={locationHref}
+                href={targetUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline break-all text-color-white"
               >
-                {locationHref}
+                {targetUrl}
               </a>
             </p>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

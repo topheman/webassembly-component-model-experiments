@@ -4,8 +4,12 @@ import { useHashNavigation } from "./hooks/navigation";
 import { WasmProvider } from "./hooks/wasm";
 import { cn } from "./utils/css";
 
-const Header = (props: React.HTMLAttributes<HTMLDivElement>) => {
-  const { className, ...rest } = props;
+interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  navigateToHome: () => void;
+}
+
+const Header = (props: HeaderProps) => {
+  const { className, navigateToHome, ...rest } = props;
   return (
     <header
       className={cn(
@@ -15,11 +19,17 @@ const Header = (props: React.HTMLAttributes<HTMLDivElement>) => {
       {...rest}
     >
       <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-        <img
-          src="./wasi.png"
-          alt="WASI Logo"
-          className="h-12 w-auto shadow-md bg-white p-1 object-contain"
-        />
+        <button
+          type="button"
+          onClick={navigateToHome}
+          className="cursor-pointer"
+        >
+          <img
+            src="./wasi.png"
+            alt="WASI Logo"
+            className="h-12 w-auto shadow-md bg-white p-1 object-contain"
+          />
+        </button>
         <h1 className="text-2xl font-extrabold tracking-tight drop-shadow-sm">
           WebAssembly Component Model Experiments
         </h1>
@@ -63,6 +73,7 @@ function App() {
         <Header
           className="data-[page=repl]:md:block data-[page=repl]:hidden"
           data-page={currentPage}
+          navigateToHome={navigateToHome}
         />
         <main className="flex-1">
           {currentPage === "home" ? (
