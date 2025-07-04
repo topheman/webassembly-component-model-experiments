@@ -14,7 +14,7 @@ It is a basic REPL, with a plugin system where:
 
 There are two kinds of hosts:
 
-- a CLI host, written in Rust running in a terminal
+- a CLI host `pluginlab`, written in Rust running in a terminal
 - a web host, written in TypeScript running in a browser
 
 Those hosts then run the same codebase which is compiled to WebAssembly:
@@ -39,19 +39,19 @@ In the last seven years I've done a few projects involving rust and WebAssembly:
 
 ## Usage
 
-### cli-host (rust)
+### pluginlab (rust)
 
 #### Install
 
 ```bash
-# Install the cli-host binary - todo: make it available on crates.io
-cargo install --git https://github.com/topheman/webassembly-component-model-experiments.git --branch main cli-host
+# Install the pluginlab binary
+cargo install pluginlab
 ```
 
 #### Run
 
 ```bash
-./target/debug/cli-host\
+./target/debug/pluginlab\
   --repl-logic https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
@@ -68,7 +68,7 @@ Other flags:
 <details>
 <summary>🚀 Example of running the CLI host</summary>
 <pre>
-cli-host\
+pluginlab\
   --repl-logic https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
@@ -133,7 +133,7 @@ rustup target add wasm32-unknown-unknown wasm32-wasip1
 npm install
 ```
 
-### cli-host (rust)
+### pluginlab (rust)
 
 #### Build
 
@@ -143,14 +143,14 @@ just build
 
 This will (see [justfile](./justfile)):
 
-- compile the cli-host crate from rust to a binary file
+- compile the pluginlab crate from rust to a binary file
 - compile the repl-logic-guest crate from rust to wasm
 - compile the plugin-* crates from rust to wasm
 
 #### Run
 
 ```bash
-./target/debug/cli-host\
+./target/debug/pluginlab\
   --repl-logic ./target/wasm32-wasip1/debug/repl_logic_guest.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_greet.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
@@ -158,7 +158,7 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm
 ```
 
-This will run the `cli-host` binary which will itself:
+This will run the `pluginlab` binary which will itself:
 
 - load and compile the `repl_logic_guest.wasm` file inside the embedded `wasmtime` engine injecting the [`host-api`](./wit/host-api.wit) interface
 - load and compile the `plugin_*.wasm` files into the engine, injecting the [`plugin-api`](./wit/plugin-api.wit) interface
@@ -171,7 +171,7 @@ This will run the `cli-host` binary which will itself:
 Other example:
 
 ```bash
-./target/debug/cli-host\
+./target/debug/pluginlab\
   --repl-logic ./target/wasm32-wasip1/debug/repl_logic_guest.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
@@ -204,7 +204,7 @@ This Will (see [packages/web-host/package.json](./packages/web-host/package.json
 - generate types from the [wit](./wit) files using the [jco](https://github.com/bytecodealliance/jco) tool
 - build the plugins from rust to wasm (so that you don't have to do it manually)
 - build the repl-logic-guest from rust to wasm (so that you don't have to do it manually)
-- copy the wasm files in `target/wasm32-wasip1/release` to the `packages/web-host/public/plugins` directory (to make them available via http for the `cli-host`)
+- copy the wasm files in `target/wasm32-wasip1/release` to the `packages/web-host/public/plugins` directory (to make them available via http for the `pluginlab` binary)
 - transpile the wasm files to javascript using the [jco](https://github.com/bytecodealliance/jco) tool into `packages/web-host/src/wasm/generated/*/transpiled` (this is the glue code wrapping the wasm files which is needed to interact with in the browser or node)
 - start the vite dev server
 

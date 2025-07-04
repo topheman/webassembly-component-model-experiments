@@ -1,8 +1,8 @@
 use anyhow::Result;
 use clap::Parser;
-use cli_host::api::host_api::repl::api::transport;
-use cli_host::helpers::{StatusHandler, StdoutHandler};
-use cli_host::{WasmEngine, WasmHost};
+use pluginlab::api::host_api::repl::api::transport;
+use pluginlab::helpers::{StatusHandler, StdoutHandler};
+use pluginlab::{WasmEngine, WasmHost};
 use std::io::Write;
 use std::path::PathBuf;
 
@@ -122,7 +122,7 @@ async fn main() -> Result<()> {
                 StatusHandler::set_exit_status(
                     &mut host.store.data_mut().repl_vars,
                     plugin_response.status
-                        == cli_host::api::host_api::repl::api::transport::ReplStatus::Success,
+                        == pluginlab::api::host_api::repl::api::transport::ReplStatus::Success,
                 );
             }
             // The repl-logic-guest parses the command and payload (expanded variables)
@@ -183,7 +183,7 @@ async fn main() -> Result<()> {
                             StatusHandler::set_exit_status(
                                 &mut host.store.data_mut().repl_vars,
                                 result.status
-                                    == cli_host::api::plugin_api::repl::api::transport::ReplStatus::Success,
+                                    == pluginlab::api::plugin_api::repl::api::transport::ReplStatus::Success,
                             );
                         } else {
                             eprintln!("Error: {:?}", result);

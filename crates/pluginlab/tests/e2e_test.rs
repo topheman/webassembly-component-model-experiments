@@ -36,10 +36,10 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
-        .expect("Can't launch cli-host with plugin greet");
+        .expect("Can't launch pluginlab with plugin greet");
 
         session
             .exp_string("[Host] Starting REPL host...")
@@ -58,10 +58,10 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
-        .expect("Can't launch cli-host with plugin greet");
+        .expect("Can't launch pluginlab with plugin greet");
 
         session
             .exp_string("[Host] Starting REPL host...")
@@ -90,10 +90,10 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
-        .expect("Can't launch cli-host with plugin greet");
+        .expect("Can't launch pluginlab with plugin greet");
 
         session
             .exp_string("[Host] Starting REPL host...")
@@ -122,10 +122,10 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
-        .expect("Can't launch cli-host with plugin greet");
+        .expect("Can't launch pluginlab with plugin greet");
 
         session
             .exp_string("[Host] Starting REPL host...")
@@ -154,10 +154,10 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
-        .expect("Can't launch cli-host with plugin greet");
+        .expect("Can't launch pluginlab with plugin greet");
 
         session
             .exp_string("[Host] Starting REPL host...")
@@ -196,10 +196,10 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_ls.wasm --dir wit",
+            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_ls.wasm --dir wit",
             Some(TEST_TIMEOUT),
         )
-        .expect("Can't launch cli-host with plugin greet");
+        .expect("Can't launch pluginlab with plugin greet");
 
         session
             .exp_string("[Host] Starting REPL host...")
@@ -222,10 +222,10 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/cli-host --plugins target/wasm32-wasip1/debug/plugin_echo.wasm",
+            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_echo.wasm",
             Some(TEST_TIMEOUT),
         )
-        .expect("Can't launch cli-host with plugin greet");
+        .expect("Can't launch pluginlab with plugin greet");
 
         session
             .exp_string("[Host] Starting REPL host...")

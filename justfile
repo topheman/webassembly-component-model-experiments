@@ -1,13 +1,13 @@
 # Build all crates with appropriate commands
 build:
     just build-repl-logic-guest
-    just build-cli-host
+    just build-pluginlab
     just build-plugins
 
 # Build all crates in release mode
 build-release:
     just build-repl-logic-guest-release
-    just build-cli-host-release
+    just build-pluginlab-release
     just build-plugins-release
 
 # Build all plugins in debug mode
@@ -28,13 +28,13 @@ build-plugin-weather:
 build-plugin-weather-release:
     cargo component build --release -p plugin-weather
 
-# Build the CLI host (normal Rust build)
-build-cli-host:
-    cargo build -p cli-host
+# Build the pluginlab (normal Rust build)
+build-pluginlab:
+    cargo build -p pluginlab
 
-# Build the CLI host in release mode
-build-cli-host-release:
-    cargo build --release -p cli-host
+# Build the pluginlab in release mode
+build-pluginlab-release:
+    cargo build --release -p pluginlab
 
 # Build the plugin-greet component
 build-plugin-echo:
@@ -80,9 +80,9 @@ default:
 test:
     cargo test
 
-# Run the e2e tests for the CLI host
-test-e2e-cli-host:
-    cargo test -p cli-host
+# Run the e2e tests for the pluginlab
+test-e2e-pluginlab:
+    cargo test -p pluginlab
 
-test-e2e-cli-host-nocapture:
-    cargo test -p cli-host -- --nocapture
+test-e2e-pluginlab-nocapture:
+    cargo test -p pluginlab -- --nocapture

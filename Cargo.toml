@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/cli-host",
+    "crates/pluginlab",
     "crates/plugin-greet",
     "crates/plugin-echo",
     "crates/plugin-ls",
