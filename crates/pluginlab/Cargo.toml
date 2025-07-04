@@ -2,7 +2,7 @@
 name = "pluginlab"
 version = "0.1.0"
 edition = "2021"
-publish = false
+publish = true
 description = "Command-line interface host for Terminal REPL with plugin system (using WebAssembly Component Model)"
 keywords = [
   "WebAssembly",
