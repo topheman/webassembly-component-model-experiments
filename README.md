@@ -27,6 +27,16 @@ Those hosts then run the same codebase which is compiled to WebAssembly:
   Check the online demo at<br/><a href="https://topheman.github.io/webassembly-component-model-experiments/">topheman.github.io/webassembly-component-model-experiments</a>
 </p>
 
+## Previous work with WebAssembly
+
+In the last seven years I've done a few projects involving rust and WebAssembly:
+
+- [topheman/bevy-rust-wasm-experiments](https://github.com/topheman/bevy-rust-wasm-experiments): Proof of concept that aims to demonstrate how to code a video game in rust that compiles both to a binary file and a web site (via WebAssembly, binding the accelerometer and gyroscope sensors from the mobile device)
+- [topheman/webassembly-wasi-experiments](https://github.com/topheman/webassembly-wasi-experiments): Discover WebAssembly System Interface (WASI) with C/Rust targetting NodeJS, python, Wasmtime and the browser
+- [topheman/rust-wasm-experiments](https://github.com/topheman/rust-wasm-experiments): Discover how to use Rust to generate WebAssembly, called by JavaScript
+  - [📺🇫🇷 Utiliser WebAssembly, dès aujourd'hui - ParisJS #86](https://www.youtube.com/watch?v=F3wOfWIFzVc&list=PLWhFHBFsRtquZ6hVXVjXmJ-l51ZXuSBtb)
+
+
 ## Usage
 
 ### cli-host (rust)
