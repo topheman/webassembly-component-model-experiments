@@ -191,6 +191,21 @@ just test
 cargo component new --lib crates/plugin-hello
 ```
 
+#### Publish
+
+```bash
+# Dry run
+just publish-pluginlab-dry-run
+```
+
+Once you're happy with the changes, you can publish the pluginlab crate:
+
+```bash
+just publish-pluginlab
+```
+
+Don't use `cargo publish` directly, the `wit` must be copied to the `pluginlab` crate (see [justfile](./justfile) and [crates/pluginlab/wit/README.md](./crates/pluginlab/wit/README.md)).
+
 ### web-host (typescript)
 
 #### Dev

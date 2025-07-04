@@ -9,7 +9,7 @@ fn main() {
 
     // Generate host-api bindings
     let bindings = wasmtime::component::bindgen!({
-        path: "../../wit",
+        path: "./wit",
         world: "host-api",
         async: true,
         stringify: true,
@@ -18,7 +18,7 @@ fn main() {
 
     // Generate plugin-api bindings
     let bindings = wasmtime::component::bindgen!({
-        path: "../../wit",
+        path: "./wit",
         world: "plugin-api",
         async: true,
         stringify: true,

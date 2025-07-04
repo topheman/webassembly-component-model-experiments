@@ -28,13 +28,31 @@ build-plugin-weather:
 build-plugin-weather-release:
     cargo component build --release -p plugin-weather
 
+# Pre-publish the pluginlab crate
+prebuild-pluginlab:
+    #!/usr/bin/env bash
+    rm -f ./crates/pluginlab/wit/*.wit
+    cp ./wit/* ./crates/pluginlab/wit/
+
 # Build the pluginlab (normal Rust build)
 build-pluginlab:
+    just prebuild-pluginlab
     cargo build -p pluginlab
 
 # Build the pluginlab in release mode
 build-pluginlab-release:
+    just prebuild-pluginlab
     cargo build --release -p pluginlab
+
+# Publish the pluginlab crate
+publish-pluginlab:
+    just prebuild-pluginlab
+    cargo publish -p pluginlab
+
+# Publish the pluginlab crate (dry run)
+publish-pluginlab-dry-run:
+    just prebuild-pluginlab
+    cargo publish --dry-run -p pluginlab
 
 # Build the plugin-greet component
 build-plugin-echo:

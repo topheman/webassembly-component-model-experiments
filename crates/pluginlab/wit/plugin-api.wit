@@ -1,0 +1,29 @@
+interface plugin {
+  use transport.{plugin-response};
+
+  name: func() -> string;
+  man: func() -> string;
+  run: func(payload: string) -> result<plugin-response>;
+}
+
+/// Provided by the host, accessible by plugins
+interface http-client {
+  record http-header {
+    name: string,
+    value: string,
+  }
+
+  record http-response {
+    status: u16,
+    ok: bool,
+    headers: list<http-header>,
+    body: string,
+  }
+
+  get: func(url: string, headers: list<http-header>) -> result<http-response, string>;
+}
+
+world plugin-api {
+  import http-client;
+  export plugin;
+}
