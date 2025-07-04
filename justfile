@@ -1,15 +1,11 @@
 # Build all crates with appropriate commands
 build:
-    just build-api
     just build-repl-logic-guest
-    just build-repl-logic-guest-release
     just build-cli-host
     just build-plugins
 
 # Build all crates in release mode
 build-release:
-    just build-api-release
-    just build-repl-logic-guest
     just build-repl-logic-guest-release
     just build-cli-host-release
     just build-plugins-release
@@ -31,14 +27,6 @@ build-plugin-weather:
 # Build the plugin-weather component in release mode
 build-plugin-weather-release:
     cargo component build --release -p plugin-weather
-
-# Build the API crate (normal Rust build)
-build-api:
-    cargo build -p api
-
-# Build the API crate in release mode
-build-api-release:
-    cargo build --release -p api
 
 # Build the CLI host (normal Rust build)
 build-cli-host:
@@ -79,18 +67,6 @@ build-repl-logic-guest:
 # Build the REPL logic guest as a component in release mode
 build-repl-logic-guest-release:
     cargo component build --release -p repl-logic-guest
-
-# Build just the Rust crates (no components)
-build-rust:
-    just build-api
-    just build-cli-host
-    just build-plugins
-
-# Build just the Rust crates in release mode (no components)
-build-rust-release:
-    just build-api-release
-    just build-cli-host-release
-    just build-plugins-release
 
 # Clean all build artifacts
 clean:

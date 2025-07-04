@@ -1,3 +1,4 @@
+pub mod api;
 mod engine;
 pub mod helpers;
 mod store;

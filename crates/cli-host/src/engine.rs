@@ -6,9 +6,9 @@ use wasmtime::{Config, Engine, Store};
 use wasmtime_wasi::p2::{WasiCtx, WasiCtxBuilder};
 
 // Import the generated bindings
+use crate::api::host_api::HostApi;
+use crate::api::plugin_api::PluginApi;
 use crate::store::{PluginHost, WasiState};
-use api::host_api::HostApi;
-use api::plugin_api::PluginApi;
 
 /// A generic WebAssembly engine wrapper that handles component loading and instantiation
 pub struct WasmEngine {
