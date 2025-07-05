@@ -14,8 +14,8 @@ publish = false
 edition = "2024"
 description = "Terminal REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)"
 keywords = [
-    "WebAssembly Component Model",
-    "WIT",
+    "WebAssembly",
+    "Component Model",
     "wasmtime",
     "wit-bindgen",
     "plugin-system",
