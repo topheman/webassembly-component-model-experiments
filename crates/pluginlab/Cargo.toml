@@ -6,11 +6,12 @@ publish = true
 description = "Command-line interface host for Terminal REPL with plugin system (using WebAssembly Component Model)"
 keywords = [
   "WebAssembly",
-  "Component Model",
+  "component-model",
   "wasmtime",
   "wit-bindgen",
   "plugin-system",
 ]
+categories = ["command-line-interface", "wasm"]
 homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
 repository = "https://github.com/topheman/webassembly-component-model-experiments.git"
 license = "MIT"

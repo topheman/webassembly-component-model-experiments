@@ -15,11 +15,12 @@ edition = "2024"
 description = "Terminal REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)"
 keywords = [
     "WebAssembly",
-    "Component Model",
+    "component-model",
     "wasmtime",
     "wit-bindgen",
     "plugin-system",
 ]
+categories = ["command-line-interface", "wasm"]
 homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
 repository = "https://github.com/topheman/webassembly-component-model-experiments.git"
 license = "MIT"
