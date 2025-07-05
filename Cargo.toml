@@ -23,7 +23,7 @@ keywords = [
     "plugin-system",
 ]
 homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
-repository = "git+https://github.com/topheman/webassembly-component-model-experiments.git"
+repository = "https://github.com/topheman/webassembly-component-model-experiments.git"
 
 [workspace.dependencies]
 wasmtime = { version = "33", default-features = false, features = [
