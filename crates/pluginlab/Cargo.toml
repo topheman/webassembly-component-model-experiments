@@ -5,12 +5,10 @@ edition = "2021"
 publish = true
 description = "Command-line interface host for Terminal REPL with plugin system (using WebAssembly Component Model)"
 keywords = [
-  "WebAssembly",
   "WebAssembly Component Model",
   "WIT",
   "wasmtime",
   "wit-bindgen",
-  "repl",
   "plugin-system",
 ]
 homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
