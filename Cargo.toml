@@ -24,6 +24,8 @@ keywords = [
 ]
 homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
 repository = "https://github.com/topheman/webassembly-component-model-experiments.git"
+license = "MIT"
+authors = ["Christophe Rosset <tophe@topheman.com>"]
 
 [workspace.dependencies]
 wasmtime = { version = "33", default-features = false, features = [
