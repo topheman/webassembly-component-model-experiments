@@ -41,6 +41,13 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 ```
 
+Other flags:
+
+- `--dir`: directory to be preopened (by default, the current directory)
+- `--help`: displays manual
+- `--debug`: run the host in debug mode (by default, the host runs in release mode)
+
+
 <details>
 <summary>🚀 Example of running the CLI host</summary>
 <pre>

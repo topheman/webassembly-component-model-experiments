@@ -54,7 +54,7 @@ cargo install pluginlab
 #### Run
 
 ```bash
-./target/debug/pluginlab\
+pluginlab\
   --repl-logic https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
@@ -238,6 +238,25 @@ Will do the same as the dev command, small changes:
 - it doesn't start the vite dev server, it builds the static files in the `dist` directory
 
 You can then run `npm run web-host:preview` to preview the build.
+
+### plugins (TypeScript)
+
+You can write plugins in rust in [`crates/plugin-*`](./crates), you can also write plugins in TypeScript in [`packages/plugin-*`](./packages), thanks to `jco componentize` (based on [componentize-js](https://github.com/bytecodealliance/componentize-js)).
+
+There is a [`packages/plugin-echo`](./packages/plugin-echo/) example plugin in TypeScript.
+
+The downsides of writing plugins in TypeScript is mostly that your `.wasm` file will be **much larger** than the one compiled from rust:
+
+- ~100KB of wasm for the rust plugin
+- 11MB of wasm for the TypeScript plugin
+
+The reason is that a JavaScript runtime needs to be embedded in the `.wasm` file, which is not the case for the rust plugin.
+
+More about the [SpiderMonkey runtime embedding](https://github.com/bytecodealliance/ComponentizeJS?tab=readme-ov-file#explainer).
+
+### plugins (Other languages)
+
+Coming soon.
 
 ## Developer experience
 
