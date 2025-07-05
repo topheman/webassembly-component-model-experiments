@@ -1,20 +1,21 @@
 [package]
-name = "cli-host"
+name = "pluginlab"
 version = "0.1.0"
 edition = "2021"
-publish = false
+publish = true
 description = "Command-line interface host for Terminal REPL with plugin system (using WebAssembly Component Model)"
 keywords = [
   "WebAssembly",
-  "WebAssembly Component Model",
-  "WIT",
+  "component-model",
   "wasmtime",
   "wit-bindgen",
-  "repl",
   "plugin-system",
 ]
+categories = ["command-line-interface", "wasm"]
 homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
-repository = "git+https://github.com/topheman/webassembly-component-model-experiments.git"
+repository = "https://github.com/topheman/webassembly-component-model-experiments.git"
+license = "MIT"
+authors = ["Christophe Rosset <tophe@topheman.com>"]
 
 [dependencies]
 wasmtime = { workspace = true }
@@ -22,8 +23,10 @@ wasmtime-wasi = { workspace = true }
 clap = { workspace = true }
 tokio = { workspace = true }
 anyhow = { workspace = true }
-api = { path = "../api" }
 reqwest = "0.12.20"
+
+[build-dependencies]
+wasmtime = { workspace = true }
 
 [dev-dependencies]
 rexpect = "0.5"

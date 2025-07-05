@@ -13,6 +13,6 @@ crate-type = ["cdylib"]
 
 [package.metadata.component]
 package = "repl:api"
-target = { path = "../../wit", world = "host-api" }
+target = { path = "../pluginlab/wit", world = "host-api" }
 
 [package.metadata.component.dependencies]

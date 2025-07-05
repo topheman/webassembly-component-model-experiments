@@ -6,9 +6,9 @@
   "author": "Christophe Rosset",
   "type": "module",
   "scripts": {
-    "wit-types": "rm -rf ./src/types && jco types --world-name plugin-api --out-dir ./src/types ../../wit",
+    "wit-types": "rm -rf ./src/types && jco types --world-name plugin-api --out-dir ./src/types ../../crates/pluginlab/wit",
     "bundle": "rolldown ./src/component.ts --file ./dist/component.js",
-    "componentize": "jco componentize ./dist/component.js --wit ../../wit --world-name plugin-api --out ./dist/component.wasm --disable http --disable random",
+    "componentize": "jco componentize ./dist/component.js --wit ../../crates/pluginlab/wit --world-name plugin-api --out ./dist/component.wasm --disable http --disable random",
     "build": "npm run wit-types && npm run bundle && npm run componentize",
     "optimize": "jco opt ./dist/component.wasm -o ./dist/component-opt.wasm",
     "typecheck": "tsc --noEmit ./src/component.ts"

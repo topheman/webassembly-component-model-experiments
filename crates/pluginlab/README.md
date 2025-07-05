@@ -1,4 +1,4 @@
-# cli-host
+# pluginlab
 
 Command-line interface host for Terminal REPL with plugin system (using WebAssembly Component Model).
 
@@ -25,7 +25,7 @@ More details on the github repo: [topheman/webassembly-component-model-experimen
 ## Install
 
 ```bash
-cargo install cli-host
+cargo install pluginlab
 ```
 
 ## Usage
@@ -33,7 +33,8 @@ cargo install cli-host
 Run the CLI host, loading the plugins from the web (you can also load them from local files).
 
 ```bash
-cli-host\
+pluginlab\
+  --repl-logic https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
@@ -43,13 +44,14 @@ cli-host\
 <details>
 <summary>🚀 Example of running the CLI host</summary>
 <pre>
-cli-host\
+pluginlab\
+  --repl-logic https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 [Host] Starting REPL host...
-[Host] Loading REPL logic from: ./target/wasm32-wasip1/debug/repl_logic_guest.wasm
+[Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm

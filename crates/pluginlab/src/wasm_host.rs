@@ -1,8 +1,8 @@
+use crate::api::host_api::HostApi;
+use crate::api::plugin_api::PluginApi;
 use crate::engine::WasmEngine;
 use crate::store::WasiState;
 use anyhow::Result;
-use api::host_api::HostApi;
-use api::plugin_api::PluginApi;
 use std::collections::HashMap;
 use wasmtime::Store;
 use wasmtime_wasi::p2::WasiCtx;

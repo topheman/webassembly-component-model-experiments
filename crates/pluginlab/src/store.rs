@@ -38,12 +38,12 @@ pub struct WasiState {
 /// --- Host implementation for plugin API ---
 pub struct PluginHost {}
 
-impl api::plugin_api::repl::api::http_client::Host for PluginHost {
+impl crate::api::plugin_api::repl::api::http_client::Host for PluginHost {
     async fn get(
         &mut self,
         url: String,
-        _headers: Vec<api::plugin_api::repl::api::http_client::HttpHeader>, // todo: handle headers
-    ) -> Result<api::plugin_api::repl::api::http_client::HttpResponse, String> {
+        _headers: Vec<crate::api::plugin_api::repl::api::http_client::HttpHeader>, // todo: handle headers
+    ) -> Result<crate::api::plugin_api::repl::api::http_client::HttpResponse, String> {
         let response = reqwest::Client::new()
             .get(url)
             // .headers(header_map)
@@ -51,30 +51,32 @@ impl api::plugin_api::repl::api::http_client::Host for PluginHost {
             .await
             .map_err(|e| e.to_string())?;
         // let response = reqwest::get(_url).await.map_err(|e| e.to_string())?;
-        Ok(api::plugin_api::repl::api::http_client::HttpResponse {
-            status: response.status().as_u16(),
-            ok: response.status().is_success(),
-            headers: response
-                .headers()
-                .iter()
-                .map(
-                    |(k, v)| api::plugin_api::repl::api::http_client::HttpHeader {
-                        name: k.to_string(),
-                        value: v.to_str().unwrap().to_string(),
-                    },
-                )
-                .collect(),
-            body: response.text().await.map_err(|e| e.to_string())?,
-        })
+        Ok(
+            crate::api::plugin_api::repl::api::http_client::HttpResponse {
+                status: response.status().as_u16(),
+                ok: response.status().is_success(),
+                headers: response
+                    .headers()
+                    .iter()
+                    .map(
+                        |(k, v)| crate::api::plugin_api::repl::api::http_client::HttpHeader {
+                            name: k.to_string(),
+                            value: v.to_str().unwrap().to_string(),
+                        },
+                    )
+                    .collect(),
+                body: response.text().await.map_err(|e| e.to_string())?,
+            },
+        )
     }
 }
 
 /// It is necessary to implement this trait on PluginHost because other parts rely on it.
-impl api::plugin_api::repl::api::transport::Host for PluginHost {
+impl crate::api::plugin_api::repl::api::transport::Host for PluginHost {
     // This trait has no methods, so no implementation needed
 }
 
-impl api::host_api::repl::api::transport::Host for WasiState {
+impl crate::api::host_api::repl::api::transport::Host for WasiState {
     // This trait has no methods, so no implementation needed
 }
 
@@ -106,14 +108,16 @@ impl WasiView for WasiState {
     }
 }
 
-impl api::host_api::repl::api::host_state::Host for WasiState {
+impl crate::api::host_api::repl::api::host_state::Host for WasiState {
     async fn get_plugins_names(&mut self) -> wasmtime::component::__internal::Vec<String> {
         self.plugins_names.clone()
     }
 
     async fn set_repl_vars(
         &mut self,
-        vars: wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar>,
+        vars: wasmtime::component::__internal::Vec<
+            crate::api::host_api::repl::api::transport::ReplVar,
+        >,
     ) {
         // Store environment variables in the WasiState
         for var in vars {
@@ -124,12 +128,13 @@ impl api::host_api::repl::api::host_state::Host for WasiState {
 
     async fn get_repl_vars(
         &mut self,
-    ) -> wasmtime::component::__internal::Vec<api::host_api::repl::api::transport::ReplVar> {
+    ) -> wasmtime::component::__internal::Vec<crate::api::host_api::repl::api::transport::ReplVar>
+    {
         // Return the stored environment variables
         self.repl_vars
             .iter()
             .map(
-                |(key, value)| api::host_api::repl::api::transport::ReplVar {
+                |(key, value)| crate::api::host_api::repl::api::transport::ReplVar {
                     key: key.clone(),
                     value: value.clone(),
                 },
@@ -137,7 +142,7 @@ impl api::host_api::repl::api::host_state::Host for WasiState {
             .collect()
     }
 
-    async fn set_repl_var(&mut self, var: api::host_api::repl::api::transport::ReplVar) {
+    async fn set_repl_var(&mut self, var: crate::api::host_api::repl::api::transport::ReplVar) {
         // Set a single environment variable
         self.repl_vars.insert(var.key.clone(), var.value.clone());
     }

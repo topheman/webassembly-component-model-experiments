@@ -1,15 +1,12 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/api",
-    "crates/cli-host",
+    "crates/pluginlab",
     "crates/plugin-greet",
     "crates/plugin-echo",
     "crates/plugin-ls",
-    "crates/repl-logic-guest",
     "crates/plugin-weather",
-    # "crates/repl-guest",
-    # "crates/plugin-hello"
+    "crates/repl-logic-guest",
 ]
 
 [workspace.package]
@@ -18,15 +15,16 @@ edition = "2024"
 description = "Terminal REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)"
 keywords = [
     "WebAssembly",
-    "WebAssembly Component Model",
-    "WIT",
+    "component-model",
     "wasmtime",
     "wit-bindgen",
-    "repl",
     "plugin-system",
 ]
+categories = ["command-line-interface", "wasm"]
 homepage = "https://github.com/topheman/webassembly-component-model-experiments#readme"
-repository = "git+https://github.com/topheman/webassembly-component-model-experiments.git"
+repository = "https://github.com/topheman/webassembly-component-model-experiments.git"
+license = "MIT"
+authors = ["Christophe Rosset <tophe@topheman.com>"]
 
 [workspace.dependencies]
 wasmtime = { version = "33", default-features = false, features = [

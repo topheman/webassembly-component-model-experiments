@@ -6,6 +6,7 @@ export interface HttpHeader {
 }
 export interface HttpResponse {
   status: number;
+  ok: boolean;
   headers: Array<HttpHeader>;
   body: string;
 }

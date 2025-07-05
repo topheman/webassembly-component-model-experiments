@@ -23,8 +23,8 @@
 		"wasm:transpile:plugin-ls": "jco transpile --no-nodejs-compat --no-namespaced-exports public/plugins/plugin_ls.wasm -o ./src/wasm/generated/plugin_ls/transpiled",
 		"wasm:transpile:repl-logic-guest": "jco transpile --no-nodejs-compat --no-namespaced-exports public/plugins/repl_logic_guest.wasm -o ./src/wasm/generated/repl_logic_guest/transpiled",
 		"wasm:transpile": "npm run wasm:transpile:plugin-echo && npm run wasm:transpile:plugin-weather && npm run wasm:transpile:plugin-greet && npm run wasm:transpile:plugin-ls && npm run wasm:transpile:repl-logic-guest",
-		"wit-types:host-api": "jco types --world-name host-api --out-dir ./src/types/generated ../../wit",
-		"wit-types:plugin-api": "jco types --world-name plugin-api --out-dir ./src/types/generated ../../wit",
+		"wit-types:host-api": "jco types --world-name host-api --out-dir ./src/types/generated ../../crates/pluginlab/wit",
+		"wit-types:plugin-api": "jco types --world-name plugin-api --out-dir ./src/types/generated ../../crates/pluginlab/wit",
 		"wit-types": "npm run wit-types:clean && npm run wit-types:host-api && npm run wit-types:plugin-api && biome format --write ./src/types/generated",
 		"wit-types:clean": "rm -rf ./src/types/generated"
 	},
