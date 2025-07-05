@@ -204,8 +204,6 @@ Once you're happy with the changes, you can publish the pluginlab crate:
 just publish-pluginlab
 ```
 
-Don't use `cargo publish` directly, the `wit` must be copied to the `pluginlab` crate (see [justfile](./justfile) and [crates/pluginlab/wit/README.md](./crates/pluginlab/wit/README.md)).
-
 ### web-host (typescript)
 
 #### Dev
