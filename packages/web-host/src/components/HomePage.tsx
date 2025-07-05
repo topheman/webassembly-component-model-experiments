@@ -74,7 +74,6 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
         <div className="flex flex-row gap-4 items-center justify-center mt-8">
           <a
             href="https://github.com/topheman/webassembly-component-model-experiments"
-            target="_blank"
             rel="noopener noreferrer"
             className="text-[var(--color-wasi-purple)] font-medium transition-colors bg-primary-50 p-2 rounded-md flex items-center gap-2"
           >
@@ -83,7 +82,6 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
           </a>
           <a
             href="https://topheman.github.io/me/"
-            target="_blank"
             rel="noopener noreferrer"
             className="text-[var(--color-wasi-purple)] font-medium transition-colors bg-primary-50 p-2 rounded-md flex items-center gap-2"
           >
@@ -109,7 +107,6 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
           <p className="text-gray-700 text-[0.8rem] text-center mt-2">
             <a
               href={targetUrl}
-              target="_blank"
               rel="noopener noreferrer"
               className="underline break-all text-color-white"
             >

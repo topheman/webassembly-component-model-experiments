@@ -52,7 +52,6 @@ const Footer = (props: React.HTMLAttributes<HTMLDivElement>) => {
         <p className="text-sm opacity-80">
           <a
             href="https://topheman.github.io/me/"
-            target="_blank"
             rel="noopener noreferrer"
             className="no-underline text-md hover:underline text-primary"
           >
