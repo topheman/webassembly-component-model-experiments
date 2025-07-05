@@ -1,5 +1,8 @@
 # WebAssembly Component Model Experiments
 
+[![Crates.io](https://img.shields.io/crates/v/pluginlab.svg)](https://crates.io/crates/pluginlab)
+[![Demo](https://img.shields.io/badge/demo-online-blue.svg)](https://topheman.github.io/webassembly-component-model-experiments/)
+
 > The WebAssembly Component Model is a broad-reaching architecture for building interoperable WebAssembly libraries, applications, and environments.
 
 It is still very early days, but it is a very promising technology. However, the examples out there are either too simple or too complex.
