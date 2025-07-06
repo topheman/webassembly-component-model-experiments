@@ -2,7 +2,6 @@ import { Play, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReplLogic } from "../hooks/replLogic";
 import type { WasmEngine } from "../hooks/wasm";
-import { cn } from "../utils/css";
 import { ReplHistory } from "./ReplHistory";
 
 function getRandomCommand() {
@@ -22,7 +21,13 @@ function getRandomCommand() {
   return commands[Math.floor(Math.random() * commands.length)]();
 }
 
-export function Repl({ engine }: { engine: WasmEngine }) {
+export function Repl({
+  engine,
+  className,
+}: {
+  engine: WasmEngine;
+  className?: string;
+}) {
   console.log("Repl", engine);
   const historyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -55,25 +60,25 @@ export function Repl({ engine }: { engine: WasmEngine }) {
     // scroll to the bottom of the history each time an entry is added
     if (historyRef.current) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
+      console.log("scrollHeight", historyRef.current.scrollHeight);
       historyRef.current.scrollLeft = 0;
     }
-    // on mobile, scroll to the top of the window to gracefully handle the virtual keyboard appearing - the setTimeout is necessary (layout computing)
-    setTimeout(() => {
+  }, [replHistory]);
+
+  useEffect(() => {
+    if (!inputFocus) {
       window.scrollTo(0, 0);
-    }, 100);
-  }, [replHistory, inputFocus]);
+    }
+  }, [inputFocus]);
 
   return (
-    <div>
+    <div className={className}>
       <ReplHistory
         ref={historyRef}
-        className={cn(
-          "static overflow-y-scroll md:max-h-[60vh] max-h-[75vh]",
-          inputFocus && "max-h-[40vh]",
-        )}
+        className="fixed top-[80px] bottom-[100px] overflow-y-scroll max-w-4xl w-full pr-8"
         history={replHistory}
       />
-      <div>
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 md:max-w-4xl mx-auto md:border">
         {/** biome-ignore lint/a11y/useSemanticElements: no use of <search> */}
         <form ref={formRef} onSubmit={handleSubmit} role="search" action="">
           <div className="flex items-center gap-2">

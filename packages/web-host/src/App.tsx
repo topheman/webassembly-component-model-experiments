@@ -70,7 +70,7 @@ function App() {
     <WasmProvider>
       <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
         <Header
-          className="data-[page=repl]:md:block data-[page=repl]:hidden"
+          className="data-[page=repl]:hidden"
           data-page={currentPage}
           navigateToHome={navigateToHome}
         />
@@ -81,7 +81,7 @@ function App() {
             <ReplPage onBackToHome={navigateToHome} />
           )}
         </main>
-        <Footer />
+        <Footer className="data-[page=repl]:hidden" data-page={currentPage} />
       </div>
     </WasmProvider>
   );
