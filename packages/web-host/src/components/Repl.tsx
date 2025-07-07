@@ -33,7 +33,7 @@ export function Repl({
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [input, setInput] = useState("");
-  const { handleInput, replHistory } = useReplLogic({ engine });
+  const { handleInput, replHistory, commandRunning } = useReplLogic({ engine });
   const [inputFocus, setInputFocus] = useState(false);
 
   function handleSubmit(
@@ -43,6 +43,9 @@ export function Repl({
     >,
   ) {
     event.preventDefault();
+    if (commandRunning) {
+      return;
+    }
     const formData = new FormData(event.currentTarget);
     const input = formData.get("input") as string;
     if (input.trim() === "") {
@@ -101,6 +104,9 @@ export function Repl({
             </button>
             <button
               onClick={() => {
+                if (commandRunning) {
+                  return;
+                }
                 setInput(getRandomCommand());
                 // trigger the onSubmit event
                 setTimeout(() => {

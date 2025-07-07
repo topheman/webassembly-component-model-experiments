@@ -1,5 +1,5 @@
 import { setReplVar } from "repl:api/host-state";
-import { useMemo, useReducer } from "react";
+import { useMemo, useReducer, useState } from "react";
 import type { ReplStatus } from "../types";
 import type { WasmEngine } from "./wasm";
 
@@ -29,9 +29,11 @@ function setExitStatusAnd$0(status: ReplStatus, stdout?: string) {
 function makeReplLogicHandler({
   engine,
   updateReplHistory,
+  setCommandRunning,
 }: {
   engine: WasmEngine;
   updateReplHistory: (payload: ReplHistoryEntry) => void;
+  setCommandRunning: (running: boolean) => void;
 }) {
   return function handleInput(input: string) {
     updateReplHistory({ stdin: input });
@@ -73,21 +75,36 @@ function makeReplLogicHandler({
         setExitStatusAnd$0("error");
         return;
       }
-      try {
-        const pluginResult = plugin.run(result.val.payload);
-        updateReplHistory({
-          stdout: pluginResult.stdout,
-          stderr: pluginResult.stderr,
-          status: pluginResult.status,
-        });
-        setExitStatusAnd$0(pluginResult.status, pluginResult.stdout);
-      } catch (error) {
-        updateReplHistory({
-          stderr: `Error: ${error}`,
-          status: "error",
-        });
-        setExitStatusAnd$0("error");
-      }
+      // we run the plugin command in a double requestAnimationFrame to defer
+      // its execution to the next frame and let the user see `stdin` appear
+      // in the history (the command output may take a while to appear)
+      //
+      // Didn't make it work with react transitions
+      //
+      // Note: all actions are sync for the moment.
+      setCommandRunning(true);
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          try {
+            const pluginResult = plugin.run(result.val.payload);
+            updateReplHistory({
+              stdout: pluginResult.stdout,
+              stderr: pluginResult.stderr,
+              status: pluginResult.status,
+            });
+            setExitStatusAnd$0(pluginResult.status, pluginResult.stdout);
+          } catch (error) {
+            console.error(error);
+            updateReplHistory({
+              stderr: `Error: ${error}`,
+              status: "error",
+            });
+            setExitStatusAnd$0("error");
+          } finally {
+            setCommandRunning(false);
+          }
+        }),
+      );
       return;
     }
 
@@ -122,10 +139,12 @@ function replStateReducer(
 
 export function useReplLogic({ engine }: { engine: WasmEngine }) {
   const [replHistory, updateReplHistory] = useReducer(replStateReducer, []);
+  const [commandRunning, setCommandRunning] = useState(false);
   const handleInput = useMemo(
-    () => makeReplLogicHandler({ engine, updateReplHistory }),
+    () =>
+      makeReplLogicHandler({ engine, updateReplHistory, setCommandRunning }),
     [engine],
   );
 
-  return { handleInput, replHistory };
+  return { handleInput, replHistory, commandRunning };
 }
