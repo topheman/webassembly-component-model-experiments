@@ -1,6 +1,6 @@
 import { setReplVar } from "repl:api/host-state";
 import { createContext, useContext, useEffect, useState } from "react";
-import { prepareEngine } from "../wasm/engine";
+import { prepareEngine, type WasmEngine } from "../wasm/engine";
 import { useReplHistory } from "./replHistory";
 
 type WasmContext =
@@ -20,8 +20,6 @@ type WasmContext =
       engine: null;
     };
 
-export type WasmEngine = Awaited<ReturnType<typeof prepareEngine>>;
-
 const WasmContext = createContext<WasmContext>({
   status: "loading",
   error: null,
@@ -38,9 +36,13 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     console.log("useEffect prepareEngine");
-    prepareEngine({ addReplHistoryEntry })
+    const abortController = new AbortController();
+    prepareEngine({ addReplHistoryEntry, abortSignal: abortController.signal })
       .then(async (engine) => {
-        // await sleep(1000);
+        if (!engine) {
+          console.log("prepareEngine aborted");
+          return;
+        }
         console.log("useEffect prepareEngine success", engine);
         setReplVar({ key: "ROOT", value: "/Users" });
         setReplVar({ key: "USER", value: "Tophe" });
@@ -59,6 +61,10 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
           engine: null,
         });
       });
+    return () => {
+      console.log("useEffect prepareEngine abort");
+      abortController.abort("Avoid react useEffect re-run");
+    };
   }, [addReplHistoryEntry]);
 
   return (

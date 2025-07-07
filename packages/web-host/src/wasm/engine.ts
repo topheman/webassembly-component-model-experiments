@@ -5,6 +5,8 @@ type AddReplHistoryEntryProp = {
   addReplHistoryEntry: (entry: ReplHistoryEntry) => void;
 };
 
+export type WasmEngine = ReturnType<typeof makeEngine>;
+
 function makeEngine() {
   const plugins = new Map<string, PluginApi["plugin"]>();
   let replLogicGuest: HostApi | undefined;
@@ -60,7 +62,17 @@ async function loadReplLogicGuest(): Promise<HostApi> {
 
 export async function prepareEngine({
   addReplHistoryEntry,
-}: AddReplHistoryEntryProp): Promise<ReturnType<typeof makeEngine>> {
+  abortSignal,
+}: AddReplHistoryEntryProp & {
+  abortSignal?: AbortSignal;
+}): Promise<WasmEngine | undefined> {
+  // The abort signal will only be marked as aborted after the next tick
+  await Promise.resolve(() => setTimeout(() => {}, 0));
+  // We receive an abort signal from the useEffect hook
+  // it is only useful in development to avoid the useEffect to re-run
+  if (abortSignal?.aborted) {
+    return;
+  }
   addReplHistoryEntry({ stdin: `[Host] Starting REPL host...` });
   addReplHistoryEntry({ stdin: `[Host] Loading REPL logic` });
   const [replLogicGuest, plugins] = await Promise.all([

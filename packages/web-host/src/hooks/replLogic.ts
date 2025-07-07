@@ -1,8 +1,8 @@
 import { setReplVar } from "repl:api/host-state";
 import { useMemo, useState } from "react";
 import type { ReplHistoryEntry, ReplStatus } from "../types";
+import type { WasmEngine } from "../wasm/engine";
 import { useReplHistory } from "./replHistory";
-import type { WasmEngine } from "./wasm";
 
 function setExitStatusAnd$0(status: ReplStatus, stdout?: string) {
   if (status === "success") {

@@ -2,7 +2,7 @@ import { Play, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReplHistory } from "../hooks/replHistory";
 import { useReplLogic } from "../hooks/replLogic";
-import type { WasmEngine } from "../hooks/wasm";
+import type { WasmEngine } from "../wasm/engine";
 import { ReplHistory } from "./ReplHistory";
 
 function getRandomCommand() {
