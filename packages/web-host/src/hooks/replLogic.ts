@@ -5,12 +5,15 @@ import type { WasmEngine } from "./wasm";
 
 const MAX_HISTORY_LENGTH = 50;
 
-export type ReplHistoryEntry = {
-  stdin: string;
-  stdout?: string;
-  stderr?: string;
-  status: ReplStatus;
-};
+export type ReplHistoryEntry =
+  | {
+      stdout?: string;
+      stderr?: string;
+      status: ReplStatus;
+    }
+  | {
+      stdin: string;
+    };
 
 function setExitStatusAnd$0(status: ReplStatus, stdout?: string) {
   if (status === "success") {
@@ -31,6 +34,7 @@ function makeReplLogicHandler({
   updateReplHistory: (payload: ReplHistoryEntry) => void;
 }) {
   return function handleInput(input: string) {
+    updateReplHistory({ stdin: input });
     const result = engine.getReplLogicGuest().replLogic.readline(input);
 
     // the result of the command is only parsed, it must be run
@@ -44,7 +48,6 @@ function makeReplLogicHandler({
         const plugin = engine.getPlugin(result.val.payload);
         if (!plugin) {
           updateReplHistory({
-            stdin: input,
             stderr: `Unknown command: ${result.val.payload}. Try \`help\` to see available commands.`,
             status: "error",
           });
@@ -53,7 +56,6 @@ function makeReplLogicHandler({
         }
         const man = plugin.man();
         updateReplHistory({
-          stdin: input,
           stdout: man,
           status: "success",
         });
@@ -65,7 +67,6 @@ function makeReplLogicHandler({
       const plugin = engine.getPlugin(result.val.command);
       if (!plugin) {
         updateReplHistory({
-          stdin: input,
           stderr: `Unknown command: ${result.val.command}. Try \`help\` to see available commands.`,
           status: "error",
         });
@@ -75,7 +76,6 @@ function makeReplLogicHandler({
       try {
         const pluginResult = plugin.run(result.val.payload);
         updateReplHistory({
-          stdin: input,
           stdout: pluginResult.stdout,
           stderr: pluginResult.stderr,
           status: pluginResult.status,
@@ -83,7 +83,6 @@ function makeReplLogicHandler({
         setExitStatusAnd$0(pluginResult.status, pluginResult.stdout);
       } catch (error) {
         updateReplHistory({
-          stdin: input,
           stderr: `Error: ${error}`,
           status: "error",
         });
@@ -95,7 +94,6 @@ function makeReplLogicHandler({
     // the result of the command is ready
     if (result.tag === "ready") {
       updateReplHistory({
-        stdin: input,
         stdout: result.val.stdout,
         stderr: result.val.stderr,
         status: result.val.status,

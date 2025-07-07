@@ -17,19 +17,24 @@ export function ReplHistory({
       {history.map((entry, index) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: no unique key
         <div key={index}>
-          <pre
-            className="bg-gray-50 before:content-[attr(data-status)] whitespace-pre-wrap"
-            data-status={entry.status === "success" ? "✅ " : "❌ "}
-          >
-            {entry.stdin}
-          </pre>
-          {entry.stdout && (
-            <pre className="bg-green-100 whitespace-pre-wrap">
+          {"stdin" in entry && entry.stdin && (
+            <pre className="bg-gray-50 whitespace-pre-wrap">{entry.stdin}</pre>
+          )}
+          {"stdout" in entry && entry.stdout && (
+            <pre
+              className="bg-green-100 whitespace-pre-wrap before:content-[attr(data-status)]"
+              data-status={entry.status === "success" ? "✅ " : "❌ "}
+            >
               {entry.stdout}
             </pre>
           )}
-          {entry.stderr && (
-            <pre className="bg-red-100 whitespace-pre-wrap">{entry.stderr}</pre>
+          {"stderr" in entry && entry.stderr && (
+            <pre
+              className="bg-red-100 whitespace-pre-wrap before:content-[attr(data-status)]"
+              data-status={entry.status === "success" ? "✅ " : "❌ "}
+            >
+              {entry.stderr}
+            </pre>
           )}
         </div>
       ))}
