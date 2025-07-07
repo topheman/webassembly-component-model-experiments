@@ -1,3 +1,4 @@
+import { _setPluginsNames as hostStateSetPluginsNames } from "repl:api/host-state";
 import type { HostApi, PluginApi, ReplHistoryEntry } from "../types";
 
 type AddReplHistoryEntryProp = {
@@ -28,22 +29,29 @@ function makeEngine() {
   };
 }
 
-function loadPlugins({
+async function loadPlugins({
   addReplHistoryEntry,
 }: AddReplHistoryEntryProp): Promise<PluginApi["plugin"][]> {
-  return Promise.all([
+  const plugins = await Promise.all([
     import("./generated/plugin_echo/transpiled/plugin_echo.js"),
     import("./generated/plugin_weather/transpiled/plugin_weather.js"),
     import("./generated/plugin_greet/transpiled/plugin_greet.js"),
     import("./generated/plugin_ls/transpiled/plugin_ls.js"),
-  ]).then((plugins) =>
-    plugins.map((plugin) => {
-      addReplHistoryEntry({
-        stdin: `[Host] Loading plugin: ${plugin.plugin.name()}`,
-      });
-      return plugin.plugin;
-    }),
-  );
+  ]).then((plugins) => plugins.map((plugin) => plugin.plugin));
+
+  // log the plugins names
+  const pluginsNames = plugins.map((plugin) => plugin.name());
+  for (const pluginName of pluginsNames) {
+    addReplHistoryEntry({
+      stdin: `[Host] Loading plugin: ${pluginName}`,
+    });
+  }
+
+  // set the plugins names in the host state
+  hostStateSetPluginsNames(pluginsNames);
+
+  // return the plugins instances
+  return plugins;
 }
 
 async function loadReplLogicGuest(): Promise<HostApi> {
