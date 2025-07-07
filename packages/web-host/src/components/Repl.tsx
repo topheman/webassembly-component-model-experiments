@@ -2,25 +2,9 @@ import { Play, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReplHistory } from "../hooks/replHistory";
 import { useReplLogic } from "../hooks/replLogic";
+import { getRandomCommand } from "../utils/randomCommands";
 import type { WasmEngine } from "../wasm/engine";
 import { ReplHistory } from "./ReplHistory";
-
-function getRandomCommand() {
-  const commands = [
-    () => "echo foo",
-    () => "echo $ROOT/$USER",
-    () => `export USER=${Math.random() > 0.5 ? "Tophe" : "Topheman"}`,
-    () => "ls",
-    () => "weather Paris",
-    () => "greet $USER",
-    () => "azertyuiop",
-    () => "echo $0",
-    () => "echo $?",
-    () => "help",
-    () => "man weather",
-  ];
-  return commands[Math.floor(Math.random() * commands.length)]();
-}
 
 export function Repl({
   engine,
@@ -116,11 +100,12 @@ export function Repl({
               <Play />
             </button>
             <button
-              onClick={() => {
+              onClick={(e) => {
                 if (commandRunning) {
                   return;
                 }
-                setInput(getRandomCommand());
+                const random = e.currentTarget.dataset.random === "true";
+                setInput(getRandomCommand(random));
                 // trigger the onSubmit event
                 setTimeout(() => {
                   handleSubmit({
@@ -133,6 +118,7 @@ export function Repl({
               type="button"
               className="cursor-pointer bg-primary text-white px-4 py-2 rounded-md"
               title="Run random command"
+              data-random="true"
             >
               <WandSparkles />
             </button>
