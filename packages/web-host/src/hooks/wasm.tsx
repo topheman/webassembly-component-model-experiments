@@ -1,6 +1,7 @@
 import { setReplVar } from "repl:api/host-state";
 import { createContext, useContext, useEffect, useState } from "react";
 import { prepareEngine } from "../wasm/engine";
+import { useReplHistory } from "./replHistory";
 
 type WasmContext =
   | {
@@ -27,13 +28,8 @@ const WasmContext = createContext<WasmContext>({
   engine: null,
 });
 
-// biome-ignore lint/correctness/noUnusedVariables: only used in debug
-// @ts-ignore
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function WasmProvider({ children }: { children: React.ReactNode }) {
+  const { addEntry: addReplHistoryEntry } = useReplHistory();
   const [context, setContext] = useState<WasmContext>({
     status: "loading",
     error: null,
@@ -42,7 +38,7 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     console.log("useEffect prepareEngine");
-    prepareEngine()
+    prepareEngine({ addReplHistoryEntry })
       .then(async (engine) => {
         // await sleep(1000);
         console.log("useEffect prepareEngine success", engine);
@@ -63,7 +59,7 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
           engine: null,
         });
       });
-  }, []);
+  }, [addReplHistoryEntry]);
 
   return (
     <WasmContext.Provider value={context}>{children}</WasmContext.Provider>

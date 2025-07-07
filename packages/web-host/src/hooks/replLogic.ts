@@ -1,9 +1,8 @@
 import { setReplVar } from "repl:api/host-state";
-import { useMemo, useReducer, useState } from "react";
+import { useMemo, useState } from "react";
 import type { ReplHistoryEntry, ReplStatus } from "../types";
+import { useReplHistory } from "./replHistory";
 import type { WasmEngine } from "./wasm";
-
-const MAX_HISTORY_LENGTH = 50;
 
 function setExitStatusAnd$0(status: ReplStatus, stdout?: string) {
   if (status === "success") {
@@ -18,15 +17,15 @@ function setExitStatusAnd$0(status: ReplStatus, stdout?: string) {
 
 function makeReplLogicHandler({
   engine,
-  updateReplHistory,
   setCommandRunning,
+  addReplHistoryEntry,
 }: {
   engine: WasmEngine;
-  updateReplHistory: (payload: ReplHistoryEntry) => void;
   setCommandRunning: (running: boolean) => void;
+  addReplHistoryEntry: (entry: ReplHistoryEntry) => void;
 }) {
   return function handleInput(input: string) {
-    updateReplHistory({ stdin: input });
+    addReplHistoryEntry({ stdin: input });
     const result = engine.getReplLogicGuest().replLogic.readline(input);
 
     // the result of the command is only parsed, it must be run
@@ -39,7 +38,7 @@ function makeReplLogicHandler({
       if (result.val.command === "man") {
         const plugin = engine.getPlugin(result.val.payload);
         if (!plugin) {
-          updateReplHistory({
+          addReplHistoryEntry({
             stderr: `Unknown command: ${result.val.payload}. Try \`help\` to see available commands.`,
             status: "error",
           });
@@ -47,7 +46,7 @@ function makeReplLogicHandler({
           return;
         }
         const man = plugin.man();
-        updateReplHistory({
+        addReplHistoryEntry({
           stdout: man,
           status: "success",
         });
@@ -58,7 +57,7 @@ function makeReplLogicHandler({
       // a plugin command, we run it from the host
       const plugin = engine.getPlugin(result.val.command);
       if (!plugin) {
-        updateReplHistory({
+        addReplHistoryEntry({
           stderr: `Unknown command: ${result.val.command}. Try \`help\` to see available commands.`,
           status: "error",
         });
@@ -77,7 +76,7 @@ function makeReplLogicHandler({
         requestAnimationFrame(() => {
           try {
             const pluginResult = plugin.run(result.val.payload);
-            updateReplHistory({
+            addReplHistoryEntry({
               stdout: pluginResult.stdout,
               stderr: pluginResult.stderr,
               status: pluginResult.status,
@@ -85,7 +84,7 @@ function makeReplLogicHandler({
             setExitStatusAnd$0(pluginResult.status, pluginResult.stdout);
           } catch (error) {
             console.error(error);
-            updateReplHistory({
+            addReplHistoryEntry({
               stderr: `Error: ${error}`,
               status: "error",
             });
@@ -100,7 +99,7 @@ function makeReplLogicHandler({
 
     // the result of the command is ready
     if (result.tag === "ready") {
-      updateReplHistory({
+      addReplHistoryEntry({
         stdout: result.val.stdout,
         stderr: result.val.stderr,
         status: result.val.status,
@@ -110,31 +109,14 @@ function makeReplLogicHandler({
   };
 }
 
-/**
- * Handles the state of the repl - the history of commands and their results.
- * @param state
- * @param payload
- * @returns
- */
-function replStateReducer(
-  state: Array<ReplHistoryEntry>,
-  payload: ReplHistoryEntry,
-) {
-  if (state.length >= MAX_HISTORY_LENGTH) {
-    // remove the oldest entry
-    return [...state.slice(1), payload];
-  }
-  return [...state, payload];
-}
-
 export function useReplLogic({ engine }: { engine: WasmEngine }) {
-  const [replHistory, updateReplHistory] = useReducer(replStateReducer, []);
   const [commandRunning, setCommandRunning] = useState(false);
+  const { addEntry: addReplHistoryEntry } = useReplHistory();
   const handleInput = useMemo(
     () =>
-      makeReplLogicHandler({ engine, updateReplHistory, setCommandRunning }),
-    [engine],
+      makeReplLogicHandler({ engine, setCommandRunning, addReplHistoryEntry }),
+    [engine, addReplHistoryEntry],
   );
 
-  return { handleInput, replHistory, commandRunning };
+  return { handleInput, commandRunning };
 }
