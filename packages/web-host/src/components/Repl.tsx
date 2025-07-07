@@ -1,5 +1,6 @@
 import { Play, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useReplHistory } from "../hooks/replHistory";
 import { useReplLogic } from "../hooks/replLogic";
 import type { WasmEngine } from "../hooks/wasm";
 import { ReplHistory } from "./ReplHistory";
@@ -33,8 +34,9 @@ export function Repl({
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [input, setInput] = useState("");
-  const { handleInput, replHistory, commandRunning } = useReplLogic({ engine });
+  const { handleInput, commandRunning } = useReplLogic({ engine });
   const [inputFocus, setInputFocus] = useState(false);
+  const { history } = useReplHistory();
 
   function handleSubmit(
     event: Pick<
@@ -66,7 +68,7 @@ export function Repl({
       console.log("scrollHeight", historyRef.current.scrollHeight);
       historyRef.current.scrollLeft = 0;
     }
-  }, [replHistory]);
+  }, [history]);
 
   useEffect(() => {
     if (!inputFocus) {
@@ -79,7 +81,7 @@ export function Repl({
       <ReplHistory
         ref={historyRef}
         className="fixed top-[80px] bottom-[100px] overflow-y-scroll max-w-4xl w-full pr-8"
-        history={replHistory}
+        history={history}
       />
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 md:max-w-4xl mx-auto md:border">
         {/** biome-ignore lint/a11y/useSemanticElements: no use of <search> */}
