@@ -1,4 +1,4 @@
-import type { ReplHistoryEntry } from "../hooks/replLogic";
+import type { ReplHistoryEntry } from "../types";
 import { cn } from "../utils/css";
 
 interface ReplHistoryProps extends React.HTMLAttributes<HTMLDivElement> {

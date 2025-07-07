@@ -1,19 +1,9 @@
 import { setReplVar } from "repl:api/host-state";
 import { useMemo, useReducer, useState } from "react";
-import type { ReplStatus } from "../types";
+import type { ReplHistoryEntry, ReplStatus } from "../types";
 import type { WasmEngine } from "./wasm";
 
 const MAX_HISTORY_LENGTH = 50;
-
-export type ReplHistoryEntry =
-  | {
-      stdout?: string;
-      stderr?: string;
-      status: ReplStatus;
-    }
-  | {
-      stdin: string;
-    };
 
 function setExitStatusAnd$0(status: ReplStatus, stdout?: string) {
   if (status === "success") {
