@@ -85,16 +85,27 @@ export function Repl({
         {/** biome-ignore lint/a11y/useSemanticElements: no use of <search> */}
         <form ref={formRef} onSubmit={handleSubmit} role="search" action="">
           <div className="flex items-center gap-2">
-            <input
-              name="input"
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              ref={inputRef}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              onFocus={() => setInputFocus(true)}
-              onBlur={() => setInputFocus(false)}
-            />
+            <div
+              className={`
+                relative w-full
+                after:content-[''] after:absolute after:right-3 after:top-1/2 after:-translate-y-1/2
+                after:w-5 after:h-5 after:rounded-full after:border-2 after:border-primary after:border-t-transparent
+                after:animate-spin after:hidden
+                data-[running=true]:after:block
+              `}
+              data-running={commandRunning}
+            >
+              <input
+                name="input"
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                ref={inputRef}
+                className="border border-gray-300 rounded-md p-2 w-full pr-10"
+                onFocus={() => setInputFocus(true)}
+                onBlur={() => setInputFocus(false)}
+              />
+            </div>
             <button
               type="submit"
               className="cursor-pointer bg-primary text-white px-4 py-2 rounded-md"

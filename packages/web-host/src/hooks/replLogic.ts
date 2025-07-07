@@ -83,7 +83,7 @@ function makeReplLogicHandler({
       //
       // Note: all actions are sync for the moment.
       setCommandRunning(true);
-      requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           try {
             const pluginResult = plugin.run(result.val.payload);
@@ -103,8 +103,8 @@ function makeReplLogicHandler({
           } finally {
             setCommandRunning(false);
           }
-        }),
-      );
+        });
+      });
       return;
     }
 
