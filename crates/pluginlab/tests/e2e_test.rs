@@ -36,7 +36,7 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --repl-logic target/wasm32-wasip1/debug/repl_logic_guest.wasm --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");
@@ -58,7 +58,7 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --repl-logic target/wasm32-wasip1/debug/repl_logic_guest.wasm --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");
@@ -90,7 +90,7 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --repl-logic target/wasm32-wasip1/debug/repl_logic_guest.wasm --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");
@@ -122,7 +122,7 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --repl-logic target/wasm32-wasip1/debug/repl_logic_guest.wasm --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");
@@ -154,7 +154,7 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
+            "target/debug/pluginlab --repl-logic target/wasm32-wasip1/debug/repl_logic_guest.wasm --plugins target/wasm32-wasip1/debug/plugin_greet.wasm",
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");
@@ -196,7 +196,7 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_ls.wasm --dir wit",
+            "target/debug/pluginlab --repl-logic target/wasm32-wasip1/debug/repl_logic_guest.wasm --plugins target/wasm32-wasip1/debug/plugin_ls.wasm --dir crates/pluginlab/wit",
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");
@@ -222,7 +222,7 @@ mod e2e_test {
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            "target/debug/pluginlab --plugins target/wasm32-wasip1/debug/plugin_echo.wasm",
+            "target/debug/pluginlab --repl-logic target/wasm32-wasip1/debug/repl_logic_guest.wasm --plugins target/wasm32-wasip1/debug/plugin_echo.wasm",
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");

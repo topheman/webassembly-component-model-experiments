@@ -86,11 +86,17 @@ default:
     @just --list
 
 test:
+    just build-repl-logic-guest
+    just build-plugins
     cargo test
 
 # Run the e2e tests for the pluginlab
 test-e2e-pluginlab:
+    just build-repl-logic-guest
+    just build-plugins
     cargo test -p pluginlab
 
 test-e2e-pluginlab-nocapture:
+    just build-repl-logic-guest
+    just build-plugins
     cargo test -p pluginlab -- --nocapture
