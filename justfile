@@ -100,3 +100,15 @@ test-e2e-pluginlab-nocapture:
     just build-repl-logic-guest
     just build-plugins
     cargo test -p pluginlab -- --nocapture
+
+# Run the e2e tests for the pluginlab retrieving the plugins from the HTTP server
+test-e2e-pluginlab-http:
+    just build-repl-logic-guest
+    just build-plugins
+    WASM_TARGET_DIR=https://topheman.github.io/webassembly-component-model-experiments/plugins cargo test -p pluginlab
+
+# Run the e2e tests for the pluginlab retrieving the plugins from the HTTP server
+test-e2e-pluginlab-http-nocapture:
+    just build-repl-logic-guest
+    just build-plugins
+    WASM_TARGET_DIR=https://topheman.github.io/webassembly-component-model-experiments/plugins cargo test -p pluginlab -- --nocapture

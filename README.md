@@ -188,6 +188,11 @@ Other example:
 just test
 ```
 
+```bash
+# Runs e2e tests on the REPL using the plugins from the http server
+just test-e2e-pluginlab-http
+```
+
 #### Make a rust plugin
 
 ```bash
