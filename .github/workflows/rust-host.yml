@@ -1,0 +1,23 @@
+name: rust-host
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          override: true
+      - uses: cargo-bins/cargo-binstall@main
+      - uses: extractions/setup-just@v3
+      - name: Install cargo-component
+        run: cargo binstall cargo-component@0.21.1
+      - name: Build
+        run: just build
+      - name: Test
+        run: just test
+      - name: Test with wasm from http server (if it fails, you need to publish a new version of pluginlab)
+        run: just test-e2e-pluginlab-http
