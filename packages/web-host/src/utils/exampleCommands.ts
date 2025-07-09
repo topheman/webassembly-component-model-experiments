@@ -46,8 +46,18 @@ function man_weather() {
   return "man weather";
 }
 
-function ls() {
+function ls(path?: string) {
+  if (path) {
+    return `ls ${path}`;
+  }
   return "ls";
+}
+
+function cat(path?: string) {
+  if (path) {
+    return `cat ${path}`;
+  }
+  return "cat";
 }
 
 function weather_Paris() {
@@ -87,6 +97,13 @@ export function getExampleCommand() {
     echo_$ROOT_$USER,
     weather_Paris,
     ls,
+    () => cat("README.md"),
+    ls,
+    () => ls("data"),
+    () => ls("data/processed"),
+    () => ls("data/processed/2024"),
+    () => ls("documents"),
+    () => cat("documents/config.json"),
     man_weather,
     help,
   ];
