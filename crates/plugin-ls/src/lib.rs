@@ -74,9 +74,9 @@ Cargo.toml
                     };
                 } else if metadata.is_file() {
                     return Ok(transport::PluginResponse {
-                        status: transport::ReplStatus::Error,
-                        stdout: None,
-                        stderr: Some(format!("F\t{}", &payload)),
+                        status: transport::ReplStatus::Success,
+                        stdout: Some(format!("F\t{}", &payload)),
+                        stderr: None,
                     });
                 } else {
                     return Ok(transport::PluginResponse {
