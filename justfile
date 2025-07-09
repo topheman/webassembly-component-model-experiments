@@ -96,27 +96,39 @@ default:
 test:
     just build-repl-logic-guest
     just build-plugins
+    just prepare-fixtures
     cargo test
 
 # Run the e2e tests for the pluginlab
 test-e2e-pluginlab:
     just build-repl-logic-guest
     just build-plugins
+    just prepare-fixtures
     cargo test -p pluginlab
 
 test-e2e-pluginlab-nocapture:
     just build-repl-logic-guest
     just build-plugins
+    just prepare-fixtures
     cargo test -p pluginlab -- --nocapture
 
 # Run the e2e tests for the pluginlab retrieving the plugins from the HTTP server
 test-e2e-pluginlab-http:
     just build-repl-logic-guest
     just build-plugins
+    just prepare-fixtures
     WASM_TARGET_DIR=https://topheman.github.io/webassembly-component-model-experiments/plugins cargo test -p pluginlab
 
 # Run the e2e tests for the pluginlab retrieving the plugins from the HTTP server
 test-e2e-pluginlab-http-nocapture:
     just build-repl-logic-guest
     just build-plugins
+    just prepare-fixtures
     WASM_TARGET_DIR=https://topheman.github.io/webassembly-component-model-experiments/plugins cargo test -p pluginlab -- --nocapture
+
+prepare-fixtures:
+    mkdir -p tmp/filesystem
+    rm -rf tmp/filesystem/*
+    cp -r fixtures/filesystem tmp
+    mv tmp/filesystem/README.rust.md tmp/filesystem/README.md
+    rm tmp/filesystem/README.browser.md

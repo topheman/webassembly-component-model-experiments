@@ -1,0 +1,18 @@
+{
+  "app": {
+    "name": "Test Application",
+    "version": "1.0.0",
+    "debug": true
+  },
+  "filesystem": {
+    "root": "/tmp/filesystem",
+    "max_file_size": 1048576,
+    "allowed_extensions": [".txt", ".md", ".json", ".yaml", ".yml"]
+  },
+  "features": {
+    "read": true,
+    "write": true,
+    "delete": false,
+    "create_directories": true
+  }
+}

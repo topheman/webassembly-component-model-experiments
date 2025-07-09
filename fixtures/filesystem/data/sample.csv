@@ -1,0 +1,6 @@
+id,name,age,city,active
+1,Alice,28,New York,true
+2,Bob,32,San Francisco,true
+3,Charlie,25,Chicago,false
+4,Diana,29,Boston,true
+5,Eve,35,Seattle,true

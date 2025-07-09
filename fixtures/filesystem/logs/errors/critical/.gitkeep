@@ -1,0 +1,2 @@
+# This file ensures the critical directory is tracked in git
+# Critical error logs nested directory for testing

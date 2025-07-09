@@ -1,0 +1,31 @@
+users:
+  - id: 1
+    name: Alice
+    email: alice@example.com
+    role: admin
+    permissions:
+      - read
+      - write
+      - delete
+  - id: 2
+    name: Bob
+    email: bob@example.com
+    role: user
+    permissions:
+      - read
+      - write
+  - id: 3
+    name: Charlie
+    email: charlie@example.com
+    role: guest
+    permissions:
+      - read
+
+settings:
+  max_file_size: 1048576
+  allowed_extensions:
+    - .txt
+    - .md
+    - .json
+    - .yaml
+    - .csv

@@ -12,6 +12,7 @@ target/
 
 # Local files
 /local
+/tmp
 
 ### JavaScript ###
 node_modules/

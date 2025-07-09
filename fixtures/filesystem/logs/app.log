@@ -1,0 +1,11 @@
+2024-01-15 10:30:15 INFO Application started
+2024-01-15 10:30:16 INFO Loading configuration from config.json
+2024-01-15 10:30:17 INFO Filesystem initialized with root: /tmp/filesystem
+2024-01-15 10:30:18 INFO User authentication successful
+2024-01-15 10:30:19 INFO File read operation: documents/notes.txt
+2024-01-15 10:30:20 INFO File write operation: temp/test.txt
+2024-01-15 10:30:21 WARN Large file detected: backup/archive.tar.gz
+2024-01-15 10:30:22 INFO Directory listing: documents/
+2024-01-15 10:30:23 INFO File delete operation: temp/old_file.txt
+2024-01-15 10:30:24 ERROR Permission denied: /etc/passwd
+2024-01-15 10:30:25 INFO Application shutdown
