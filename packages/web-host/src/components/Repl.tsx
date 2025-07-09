@@ -2,6 +2,7 @@ import { Play, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReplHistory } from "../hooks/replHistory";
 import { useReplLogic } from "../hooks/replLogic";
+import { cn } from "../utils/css";
 import { getExampleCommand } from "../utils/exampleCommands";
 import type { WasmEngine } from "../wasm/engine";
 import { ReplHistory } from "./ReplHistory";
@@ -21,6 +22,7 @@ export function Repl({
   const { handleInput, commandRunning } = useReplLogic({ engine });
   const [inputFocus, setInputFocus] = useState(false);
   const { history } = useReplHistory();
+  const [wandButtonUsed, setWandButtonUsed] = useState(false);
 
   function handleSubmit(
     event: Pick<
@@ -101,6 +103,7 @@ export function Repl({
             </button>
             <button
               onClick={() => {
+                setWandButtonUsed(true);
                 if (commandRunning) {
                   return;
                 }
@@ -115,7 +118,10 @@ export function Repl({
                 }, 0);
               }}
               type="button"
-              className="cursor-pointer bg-primary text-white px-4 py-2 rounded-md"
+              className={cn(
+                "cursor-pointer bg-primary text-white px-4 py-2 rounded-md",
+                !wandButtonUsed && "animate-bounce",
+              )}
               title="Run example command"
             >
               <WandSparkles />
