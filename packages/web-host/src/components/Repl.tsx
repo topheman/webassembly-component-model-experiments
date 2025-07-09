@@ -2,7 +2,7 @@ import { Play, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReplHistory } from "../hooks/replHistory";
 import { useReplLogic } from "../hooks/replLogic";
-import { getRandomCommand } from "../utils/randomCommands";
+import { getExampleCommand } from "../utils/exampleCommands";
 import type { WasmEngine } from "../wasm/engine";
 import { ReplHistory } from "./ReplHistory";
 
@@ -100,12 +100,11 @@ export function Repl({
               <Play />
             </button>
             <button
-              onClick={(e) => {
+              onClick={() => {
                 if (commandRunning) {
                   return;
                 }
-                const random = e.currentTarget.dataset.random === "true";
-                setInput(getRandomCommand(random));
+                setInput(getExampleCommand());
                 // trigger the onSubmit event
                 setTimeout(() => {
                   handleSubmit({
@@ -117,8 +116,7 @@ export function Repl({
               }}
               type="button"
               className="cursor-pointer bg-primary text-white px-4 py-2 rounded-md"
-              title="Run random command"
-              data-random="true"
+              title="Run example command"
             >
               <WandSparkles />
             </button>
