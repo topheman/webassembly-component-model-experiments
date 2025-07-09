@@ -214,7 +214,7 @@ mod e2e_test {
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
             &format!(
-                "{} --dir crates/pluginlab",
+                "{} --dir tmp/filesystem",
                 &build_command(&["plugin_ls.wasm"], "repl_logic_guest.wasm")
             ),
             Some(TEST_TIMEOUT),
@@ -233,19 +233,27 @@ mod e2e_test {
         session.send_line("ls").expect("Failed to send command");
         session
             .exp_string(
-                "D\tsrc\r\nD\ttests\r\nD\twit\r\nF\tCargo.toml\r\nF\tREADME.md\r\nF\tbuild.rs\r\n",
+                "D\tdata\r\nD\tdocuments\r\nD\tlogs\r\nF\t.config\r\nF\t.hidden_file\r\nF\tREADME.md\r\n",
             )
             .expect("Didn't get listing of current directory");
-        session.send_line("ls wit").expect("Failed to send command");
         session
-            .exp_string("F\twit/host-api.wit\r\nF\twit/plugin-api.wit\r\nF\twit/shared.wit\r\n")
-            .expect("Didn't get listing of wit directory");
-        session
-            .send_line("ls wit/host-api.wit")
+            .send_line("ls documents")
             .expect("Failed to send command");
         session
-            .exp_string("F\twit/host-api.wit\r\n")
-            .expect("Didn't get listing of host-api.wit");
+            .exp_string("D\tdocuments/work\r\nF\tdocuments/README.md\r\nF\tdocuments/config.json\r\nF\tdocuments/notes.txt\r\n")
+            .expect("Didn't get listing of documents directory");
+        session
+            .send_line("ls documents/work/projects")
+            .expect("Failed to send command");
+        session
+            .exp_string("D\tdocuments/work/projects/alpha\r\nD\tdocuments/work/projects/beta\r\nF\tdocuments/work/projects/.gitkeep\r\n")
+            .expect("Didn't get listing of projects directory");
+        session
+            .send_line("ls data/sample.csv")
+            .expect("Failed to send command");
+        session
+            .exp_string("F\tdata/sample.csv\r\n")
+            .expect("Didn't get listing for a single file");
     }
 
     #[test]
@@ -255,7 +263,7 @@ mod e2e_test {
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
             &format!(
-                "{} --dir crates/pluginlab",
+                "{} --dir tmp/filesystem",
                 &build_command(&["plugin_cat.wasm"], "repl_logic_guest.wasm")
             ),
             Some(TEST_TIMEOUT),
@@ -272,17 +280,17 @@ mod e2e_test {
             .exp_string("repl(0)>")
             .expect("Didn't see REPL prompt");
         session
-            .send_line("cat wit")
+            .send_line("cat documents")
             .expect("Failed to send command");
         session
-            .exp_string("cat: wit: Is a directory")
+            .exp_string("cat: documents: Is a directory")
             .expect("Didn't get expected error output for trying to cat a directory");
         session
-            .send_line("cat wit/host-api.wit")
+            .send_line("cat documents/README.md")
             .expect("Failed to send command");
         session
-            .exp_string("package repl:api;")
-            .expect("Didn't get expected contents of host-api.wit");
+            .exp_string("# Documents")
+            .expect("Didn't get expected contents of README.md");
     }
 
     #[test]
