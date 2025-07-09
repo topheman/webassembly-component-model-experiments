@@ -1,8 +1,12 @@
+// @ts-ignore -- private API
+import { _setFileData } from "@bytecodealliance/preview2-shim/filesystem";
+import { useEffect } from "react";
 import { HomePage } from "./components/HomePage";
 import { ReplPage } from "./components/ReplPage";
 import { useHashNavigation } from "./hooks/navigation";
 import { WasmProvider } from "./hooks/wasm";
 import { cn } from "./utils/css";
+import { makeVirtualFs } from "./wasm/virtualFs";
 
 interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   navigateToHome: () => void;
@@ -65,6 +69,10 @@ const Footer = (props: React.HTMLAttributes<HTMLDivElement>) => {
 
 function App() {
   const { currentPage, navigateToRepl, navigateToHome } = useHashNavigation();
+
+  useEffect(() => {
+    _setFileData(makeVirtualFs());
+  }, []);
 
   return (
     <WasmProvider>

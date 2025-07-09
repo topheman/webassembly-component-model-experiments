@@ -39,6 +39,7 @@ async function loadPlugins({
     import("./generated/plugin_weather/transpiled/plugin_weather.js"),
     import("./generated/plugin_greet/transpiled/plugin_greet.js"),
     import("./generated/plugin_ls/transpiled/plugin_ls.js"),
+    import("./generated/plugin_cat/transpiled/plugin_cat.js"),
   ]).then((plugins) => plugins.map((plugin) => plugin.plugin));
 
   // log the plugins names

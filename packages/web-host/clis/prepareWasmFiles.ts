@@ -17,6 +17,10 @@ const wasmFiles: Array<{ debug: string; release: string }> = [
     release: "target/wasm32-wasip1/release/plugin_ls.wasm",
   },
   {
+    debug: "target/wasm32-wasip1/debug/plugin_cat.wasm",
+    release: "target/wasm32-wasip1/release/plugin_cat.wasm",
+  },
+  {
     debug: "target/wasm32-wasip1/debug/plugin_weather.wasm",
     release: "target/wasm32-wasip1/release/plugin_weather.wasm",
   },
