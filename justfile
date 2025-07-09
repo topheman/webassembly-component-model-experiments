@@ -28,6 +28,14 @@ build-plugin-weather:
 build-plugin-weather-release:
     cargo component build --release -p plugin-weather
 
+# Build the plugin-cat component
+build-plugin-cat:
+    cargo component build -p plugin-cat
+
+# Build the plugin-cat component in release mode
+build-plugin-cat-release:
+    cargo component build --release -p plugin-cat
+
 # Build the pluginlab (normal Rust build)
 build-pluginlab:
     cargo build -p pluginlab

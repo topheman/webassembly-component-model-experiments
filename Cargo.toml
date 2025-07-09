@@ -5,6 +5,7 @@ members = [
     "crates/plugin-greet",
     "crates/plugin-echo",
     "crates/plugin-ls",
+    "crates/plugin-cat",
     "crates/plugin-weather",
     "crates/repl-logic-guest",
 ]
