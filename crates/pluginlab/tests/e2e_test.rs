@@ -214,7 +214,7 @@ mod e2e_test {
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
             &format!(
-                "{} --dir crates/pluginlab/wit",
+                "{} --dir crates/pluginlab",
                 &build_command(&["plugin_ls.wasm"], "repl_logic_guest.wasm")
             ),
             Some(TEST_TIMEOUT),
@@ -232,8 +232,57 @@ mod e2e_test {
             .expect("Didn't see REPL prompt");
         session.send_line("ls").expect("Failed to send command");
         session
-            .exp_string("host-api.wit\r\nplugin-api.wit\r\nshared.wit\r\n")
+            .exp_string(
+                "D\tsrc\r\nD\ttests\r\nD\twit\r\nF\tCargo.toml\r\nF\tREADME.md\r\nF\tbuild.rs\r\n",
+            )
             .expect("Didn't get listing of current directory");
+        session.send_line("ls wit").expect("Failed to send command");
+        session
+            .exp_string("F\twit/host-api.wit\r\nF\twit/plugin-api.wit\r\nF\twit/shared.wit\r\n")
+            .expect("Didn't get listing of wit directory");
+        session
+            .send_line("ls wit/host-api.wit")
+            .expect("Failed to send command");
+        session
+            .exp_string("F\twit/host-api.wit\r\n")
+            .expect("Didn't get listing of host-api.wit");
+    }
+
+    #[test]
+    fn test_cat_plugin() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &format!(
+                "{} --dir crates/pluginlab",
+                &build_command(&["plugin_cat.wasm"], "repl_logic_guest.wasm")
+            ),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("cat wit")
+            .expect("Failed to send command");
+        session
+            .exp_string("cat: wit: Is a directory")
+            .expect("Didn't get expected error output for trying to cat a directory");
+        session
+            .send_line("cat wit/host-api.wit")
+            .expect("Failed to send command");
+        session
+            .exp_string("package repl:api;")
+            .expect("Didn't get expected contents of host-api.wit");
     }
 
     #[test]
