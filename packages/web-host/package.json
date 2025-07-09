@@ -9,7 +9,7 @@
 		"predev:debug": "npm run wit-types && just build-plugins && just build-repl-logic-guest && npm run prepareWasmFiles:debug && npm run wasm:transpile",
 		"dev": "vite --host",
 		"dev:debug": "vite --host",
-		"prebuild": "npm run wit-types && just build-plugins-release && just build-repl-logic-guest-release && npm run prepareWasmFiles:release && npm run wasm:transpile",
+		"prebuild": "npm run wit-types && just build-plugins-release && just build-repl-logic-guest-release && npm run prepareWasmFiles:release && npm run wasm:transpile && npm run prepareVirtualFs",
 		"build": "tsc -b && vite build",
 		"preview": "vite preview --host",
 		"lint": "biome check .",
