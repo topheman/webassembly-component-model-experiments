@@ -59,6 +59,12 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
           <strong>true cross-platform compatibility</strong> - the same code
           runs in browsers and terminals with different host implementations.
         </p>
+        <p className="text-gray-700 mb-6 text-lg">
+          Plugins like <code>cat</code> or <code>ls</code> can interact with a
+          virtual filesystem using the primitives of the languages they are
+          written in (like <code>std::fs::read_dir</code> or{" "}
+          <code>std::fs::read_to_string</code>).
+        </p>
 
         <h4 className="text-xl font-bold mb-3">Key Features</h4>
         <ul className="text-gray-700 space-y-2 mb-3 text-base pl-4 list-disc">
@@ -67,6 +73,11 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
           <li>Plugin system with sandboxed WebAssembly components</li>
           <li>
             Language-agnostic plugins (any language that compiles to WASM)
+          </li>
+          <li>
+            Virtual filesystem: the I/O operations are forwarded via the{" "}
+            <code>@bytecodealliance/preview2-shim/filesystem</code> shim, which
+            shims <code>wasi:filesystem</code>
           </li>
           <li>Modern React + TypeScript web interface</li>
         </ul>

@@ -64,6 +64,12 @@ button:focus-visible {
   a:hover {
     text-decoration-line: none;
   }
+  code {
+    background-color: #f0f0f0;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.2rem;
+    font-size: 0.85em;
+  }
 }
 
 @utility word-break-word {
