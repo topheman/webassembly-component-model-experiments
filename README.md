@@ -25,6 +25,11 @@ Those hosts then run the same codebase which is compiled to WebAssembly:
 - the REPL logic
 - the plugins
 
+The plugins like `ls` or `cat` can interact with the filesystem using the primitives of the languages they are written in.
+
+- on the CLI, a folder from the disk is mounted via the `--dir` flag
+- on the browser, a virtual filesystem is mounted, the I/O operations are forwarded via the `@bytecodealliance/preview2-shim/filesystem` shim, which shims the `wasi:filesystem` filesystem interface
+
 <p align="center"><a href="https://topheman.github.io/webassembly-component-model-experiments/"><img src="./packages/web-host/public/wasi.png" alt="Demo" /></a></p>
 <p align="center">
   Check the online demo at<br/><a href="https://topheman.github.io/webassembly-component-model-experiments/">topheman.github.io/webassembly-component-model-experiments</a>
@@ -59,7 +64,8 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
 ```
 
 Other flags:
@@ -76,13 +82,15 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
 repl(0)> echo foo
 foo
 repl(0)> echo $ROOT/$USER
@@ -158,7 +166,8 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_greet.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
-  --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm
+  --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm\
+  --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm
 ```
 
 This will run the `pluginlab` binary which will itself:
