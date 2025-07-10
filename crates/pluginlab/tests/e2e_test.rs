@@ -214,7 +214,7 @@ mod e2e_test {
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
             &format!(
-                "{} --dir tmp/filesystem",
+                "{} --dir tmp/filesystem --allow-read",
                 &build_command(&["plugin_ls.wasm"], "repl_logic_guest.wasm")
             ),
             Some(TEST_TIMEOUT),
@@ -263,7 +263,7 @@ mod e2e_test {
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
             &format!(
-                "{} --dir tmp/filesystem",
+                "{} --dir tmp/filesystem --allow-read",
                 &build_command(&["plugin_cat.wasm"], "repl_logic_guest.wasm")
             ),
             Some(TEST_TIMEOUT),
