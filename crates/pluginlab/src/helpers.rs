@@ -19,3 +19,81 @@ impl StdoutHandler {
         repl_vars.insert("0".to_string(), result);
     }
 }
+
+pub fn extract_hostname(url: &str) -> String {
+    let url = url.trim();
+    let url = url.trim_start_matches("http://");
+    let url = url.trim_start_matches("https://");
+
+    // Find the first occurrence of '/', '?', or '#' to get just the hostname
+    let hostname = if let Some(pos) = url.find(|c| c == '/' || c == '?' || c == '#') {
+        &url[..pos]
+    } else {
+        url
+    };
+
+    // Remove trailing slash if present
+    let hostname = hostname.trim_end_matches('/');
+
+    hostname.to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_extract_hostname() {
+        assert_eq!(extract_hostname("https://google.com"), "google.com");
+        assert_eq!(extract_hostname("https://google.com/"), "google.com");
+        assert_eq!(extract_hostname("https://google.com/test"), "google.com");
+        assert_eq!(extract_hostname("https://google.com/test/"), "google.com");
+        assert_eq!(
+            extract_hostname("https://google.com/test/test"),
+            "google.com"
+        );
+        assert_eq!(
+            extract_hostname("https://google.com/test/test/"),
+            "google.com"
+        );
+        assert_eq!(
+            extract_hostname("https://google.com/test/test/test"),
+            "google.com"
+        );
+        assert_eq!(
+            extract_hostname("https://google.com/test/test/test/"),
+            "google.com"
+        );
+        assert_eq!(
+            extract_hostname("https://google.com/test/test/test/test"),
+            "google.com"
+        );
+        assert_eq!(
+            extract_hostname("https://google.com?test=test"),
+            "google.com"
+        );
+        assert_eq!(extract_hostname("https://google.com#test"), "google.com");
+        assert_eq!(extract_hostname("https://192.168.1.10"), "192.168.1.10");
+        assert_eq!(extract_hostname("https://192.168.1.10/"), "192.168.1.10");
+        assert_eq!(
+            extract_hostname("https://192.168.1.10/test"),
+            "192.168.1.10"
+        );
+        assert_eq!(
+            extract_hostname("https://192.168.1.10/test/"),
+            "192.168.1.10"
+        );
+        assert_eq!(
+            extract_hostname("https://192.168.1.10/test/"),
+            "192.168.1.10"
+        );
+        assert_eq!(
+            extract_hostname("https://192.168.1.10?test=test"),
+            "192.168.1.10"
+        );
+        assert_eq!(
+            extract_hostname("https://192.168.1.10#test"),
+            "192.168.1.10"
+        );
+    }
+}

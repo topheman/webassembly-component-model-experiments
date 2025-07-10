@@ -1,3 +1,4 @@
+use crate::permissions::NetworkPermissions;
 use std::collections::HashMap;
 use wasmtime::component::ResourceTable;
 use wasmtime_wasi::p2::{IoView, WasiCtx, WasiView};
@@ -36,7 +37,10 @@ pub struct WasiState {
 }
 
 /// --- Host implementation for plugin API ---
-pub struct PluginHost {}
+pub struct PluginHost {
+    /// Network permissions
+    pub network_permissions: NetworkPermissions,
+}
 
 impl crate::api::plugin_api::repl::api::http_client::Host for PluginHost {
     async fn get(
@@ -44,6 +48,13 @@ impl crate::api::plugin_api::repl::api::http_client::Host for PluginHost {
         url: String,
         _headers: Vec<crate::api::plugin_api::repl::api::http_client::HttpHeader>, // todo: handle headers
     ) -> Result<crate::api::plugin_api::repl::api::http_client::HttpResponse, String> {
+        let hostname = crate::helpers::extract_hostname(&url);
+        if !self.network_permissions.is_allowed(&hostname) {
+            return Err(format!(
+                "PermissionDenied: network access to {} is not allowed",
+                hostname
+            ));
+        }
         let response = reqwest::Client::new()
             .get(url)
             // .headers(header_map)

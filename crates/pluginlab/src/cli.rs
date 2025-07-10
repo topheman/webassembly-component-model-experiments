@@ -20,7 +20,11 @@ pub struct Cli {
     pub dir: PathBuf,
 
     /// Allow network access
-    #[arg(long, num_args = 0..=1, default_missing_value = "true")]
+    #[arg(long, num_args = 0..=1, default_missing_value = "@")]
+    // How it works:
+    // no flag -> None
+    // --allow-net -> Some("@") - because "@" is not a valid value for a domain nor an IP address
+    // --allow-net google.com,example.com -> Some("google.com,example.com")
     pub allow_net: Option<String>,
 
     /// Allow file system read access

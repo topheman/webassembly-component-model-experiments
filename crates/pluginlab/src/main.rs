@@ -10,6 +10,7 @@ use std::io::Write;
 async fn main() -> Result<()> {
     // Parse command line arguments
     let cli = Cli::parse();
+    println!("[Host] allow_net: {:?}", cli.allow_net);
     let debug = cli.debug;
     println!("[Host] Starting REPL host...");
 
@@ -21,7 +22,7 @@ async fn main() -> Result<()> {
     let engine = WasmEngine::new()?;
 
     // Create the host
-    let mut host = WasmHost::new(&engine, wasi_ctx);
+    let mut host = WasmHost::new(&engine, wasi_ctx, &cli);
 
     println!("[Host] Loading REPL logic from: {}", cli.repl_logic);
     // Override the REPL logic in the binary with the one passed by params
