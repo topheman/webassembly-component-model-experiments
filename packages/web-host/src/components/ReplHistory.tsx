@@ -19,7 +19,7 @@ export function ReplHistory({
         <div key={index}>
           {"stdin" in entry && entry.stdin && (
             <pre
-              className="bg-gray-50 whitespace-pre-wrap"
+              className="bg-gray-50 whitespace-pre-wrap word-break-word"
               data-stdtype="stdin"
             >
               {entry.stdin}
@@ -27,7 +27,7 @@ export function ReplHistory({
           )}
           {"stdout" in entry && entry.stdout && (
             <pre
-              className="bg-green-100 whitespace-pre-wrap before:content-[attr(data-status)] relative before:absolute before:right-0 before:top-0"
+              className="bg-green-100 whitespace-pre-wrap before:content-[attr(data-status)] relative before:absolute before:right-0 before:top-0 word-break-word"
               data-status={entry.status === "success" ? "✅" : "❌"}
               data-stdtype="stdout"
             >
@@ -36,7 +36,7 @@ export function ReplHistory({
           )}
           {"stderr" in entry && entry.stderr && (
             <pre
-              className="bg-red-100 whitespace-pre-wrap before:content-[attr(data-status)] relative before:absolute before:right-0 before:top-0"
+              className="bg-red-100 whitespace-pre-wrap before:content-[attr(data-status)] relative before:absolute before:right-0 before:top-0 word-break-word"
               data-status={entry.status === "success" ? "✅" : "❌"}
               data-stdtype="stderr"
             >

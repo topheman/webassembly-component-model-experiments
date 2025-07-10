@@ -66,6 +66,14 @@ button:focus-visible {
   }
 }
 
+@utility word-break-word {
+  word-break: break-word;
+}
+
+@utility word-break-all {
+  word-break: break-all;
+}
+
 @keyframes pulse110 {
   0%,
   100% {
