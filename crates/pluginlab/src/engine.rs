@@ -81,9 +81,9 @@ impl WasmEngine {
 
     pub fn build_wasi_ctx(cli: &Cli) -> Result<WasiCtx> {
         let wasi_ctx = WasiCtxBuilder::new()
-            .inherit_stdio()
-            .inherit_args()
-            .inherit_env()
+            // .inherit_stdio()
+            // .inherit_args()
+            // .inherit_env()
             .preopened_dir(
                 cli.dir.clone(),
                 ".",
