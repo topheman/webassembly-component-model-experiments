@@ -80,17 +80,38 @@ impl WasmEngine {
     }
 
     pub fn build_wasi_ctx(cli: &Cli) -> Result<WasiCtx> {
-        let wasi_ctx = WasiCtxBuilder::new()
-            // .inherit_stdio()
-            // .inherit_args()
-            // .inherit_env()
-            .preopened_dir(
-                cli.dir.clone(),
-                ".",
+        let host_path = cli.dir.clone();
+        let guest_path = ".";
+
+        let (dir_perms, file_perms) = if cli.allow_all || cli.allow_read && cli.allow_write {
+            (
+                wasmtime_wasi::DirPerms::all(),
+                wasmtime_wasi::FilePerms::all(),
+            )
+        } else if cli.allow_read {
+            (
                 wasmtime_wasi::DirPerms::READ,
                 wasmtime_wasi::FilePerms::READ,
-            )?
-            .build();
+            )
+        } else if cli.allow_write {
+            (
+                wasmtime_wasi::DirPerms::MUTATE,
+                wasmtime_wasi::FilePerms::WRITE,
+            )
+        } else {
+            (
+                wasmtime_wasi::DirPerms::empty(),
+                wasmtime_wasi::FilePerms::empty(),
+            )
+        };
+
+        let mut wasi_builder = WasiCtxBuilder::new();
+        // .inherit_stdio()
+        // .inherit_args()
+        // .inherit_env()
+        wasi_builder.preopened_dir(host_path, guest_path, dir_perms, file_perms)?;
+
+        let wasi_ctx = wasi_builder.build();
         Ok(wasi_ctx)
     }
 
