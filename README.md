@@ -30,6 +30,15 @@ The plugins like `ls` or `cat` can interact with the filesystem using the primit
 - on the CLI, a folder from the disk is mounted via the `--dir` flag
 - on the browser, a virtual filesystem is mounted, the I/O operations are forwarded via the `@bytecodealliance/preview2-shim/filesystem` shim, which shims the `wasi:filesystem` filesystem interface
 
+The CLI host `pluginlab` supports the same kinds of permissions deno introduced:
+
+- `--allow-net`: allows network access to the plugins, you can specify a list of domains comma separated (by default, no network access is allowed)
+- `--allow-read`: allows read access to the filesystem
+- `--allow-write`: allows write access to the filesystem
+- `--allow-all`: allows all permissions (same as all the flags above), short: `-A`
+
+This is what it means by plugins being "sandboxed by default" - you can take any plugin from anywhere, if you don't allow any access, it won't be able to make any network request or read/write to your filesystem and it will be constrained to its own part of the memory.
+
 <p align="center"><a href="https://topheman.github.io/webassembly-component-model-experiments/"><img src="./packages/web-host/public/wasi.png" alt="Demo" /></a></p>
 <p align="center">
   Check the online demo at<br/><a href="https://topheman.github.io/webassembly-component-model-experiments/">topheman.github.io/webassembly-component-model-experiments</a>
@@ -65,12 +74,17 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --allow-all
 ```
 
 Other flags:
 
 - `--dir`: directory to be preopened (by default, the current directory)
+- `--allow-net`: allows network access to the plugins, you can specify a list of domains comma separated (by default, no network access is allowed)
+- `--allow-read`: allows read access to the filesystem
+- `--allow-write`: allows write access to the filesystem
+- `--allow-all`: allows all permissions (same as all the flags above), short: `-A`
 - `--help`: displays manual
 - `--debug`: run the host in debug mode (by default, the host runs in release mode)
 
@@ -83,7 +97,8 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --allow-all
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm
@@ -167,7 +182,8 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm\
-  --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm
+  --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm\
+  --allow-all
 ```
 
 This will run the `pluginlab` binary which will itself:
@@ -187,7 +203,8 @@ Other example:
   --repl-logic ./target/wasm32-wasip1/debug/repl_logic_guest.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
-  --dir /tmp
+  --dir /tmp\
+  --allow-all
 ```
 
 #### Test
