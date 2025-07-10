@@ -20,8 +20,32 @@ struct Cli {
     #[arg(long, default_value_t = false)]
     debug: bool,
 
+    /// Path to the directory to mount (the runtime will only have access to this directory) - default is the current directory
     #[arg(long, default_value = ".")]
     dir: PathBuf,
+
+    /// Allow network access
+    #[arg(long, num_args = 0..=1, default_missing_value = "true")]
+    allow_net: Option<String>,
+
+    /// Allow file system read access
+    #[arg(long, default_value_t = false)]
+    allow_read: bool,
+
+    /// Allow file system write access
+    #[arg(long, default_value_t = false)]
+    allow_write: bool,
+
+    /// Allow all permissions
+    #[arg(
+        short = 'A',
+        long,
+        default_value_t = false,
+        conflicts_with = "allow_net",
+        conflicts_with = "allow_read",
+        conflicts_with = "allow_write"
+    )]
+    allow_all: bool,
 }
 
 #[tokio::main]
