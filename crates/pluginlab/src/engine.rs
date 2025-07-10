@@ -1,6 +1,7 @@
+use crate::cli::Cli;
 use anyhow::Result;
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use wasmtime::component::{Component, Linker as ComponentLinker, ResourceTable};
 use wasmtime::{Config, Engine, Store};
 use wasmtime_wasi::p2::{WasiCtx, WasiCtxBuilder};
@@ -78,13 +79,13 @@ impl WasmEngine {
         Ok(component)
     }
 
-    pub fn build_wasi_ctx(path: &PathBuf) -> Result<WasiCtx> {
+    pub fn build_wasi_ctx(cli: &Cli) -> Result<WasiCtx> {
         let wasi_ctx = WasiCtxBuilder::new()
             .inherit_stdio()
             .inherit_args()
             .inherit_env()
             .preopened_dir(
-                path,
+                cli.dir.clone(),
                 ".",
                 wasmtime_wasi::DirPerms::READ,
                 wasmtime_wasi::FilePerms::READ,
