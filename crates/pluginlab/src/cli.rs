@@ -15,7 +15,7 @@ pub struct Cli {
     #[arg(long, default_value_t = false)]
     pub debug: bool,
 
-    /// Path to the directory to mount (the runtime will only have access to this directory) - default is the current directory
+    /// Path to the directory to mount (the runtime will only have access to this directory)
     #[arg(long, default_value = ".")]
     pub dir: PathBuf,
 
