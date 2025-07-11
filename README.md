@@ -44,6 +44,11 @@ This is what it means by plugins being "sandboxed by default" - you can take any
   Check the online demo at<br/><a href="https://topheman.github.io/webassembly-component-model-experiments/">topheman.github.io/webassembly-component-model-experiments</a>
 </p>
 
+<p align="center">
+  Example of running the CLI <code>pluginlab</code>
+  <img src="./crates/pluginlab/demo.gif" alt="pluginlab demo" />
+</p>
+
 ## Previous work with WebAssembly
 
 In the last seven years I've done a few projects involving rust and WebAssembly:

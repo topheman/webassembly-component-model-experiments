@@ -36,6 +36,11 @@ This is what it means by plugins being "sandboxed by default" - you can take any
 
 More details on the github repo: [topheman/webassembly-component-model-experiments](https://github.com/topheman/webassembly-component-model-experiments).
 
+<p align="center">
+  Example of running the CLI <code>pluginlab</code>
+  <img src="./demo.gif" alt="pluginlab demo" />
+</p>
+
 ## Install
 
 ```bash
