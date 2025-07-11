@@ -195,12 +195,12 @@ This will (see [justfile](./justfile)):
 
 This will run the `pluginlab` binary which will itself:
 
-- load and compile the `repl_logic_guest.wasm` file inside the embedded `wasmtime` engine injecting the [`host-api`](./wit/host-api.wit) interface
-- load and compile the `plugin_*.wasm` files into the engine, injecting the [`plugin-api`](./wit/plugin-api.wit) interface
+- load and compile the `repl_logic_guest.wasm` file inside the embedded `wasmtime` engine injecting the [`host-api`](./crates/pluginlab/wit/host-api.wit) interface
+- load and compile the `plugin_*.wasm` files into the engine, injecting the [`plugin-api`](./crates/pluginlab/wit/plugin-api.wit) interface
 - launch the REPL loop executing the code from the `repl_logic_guest.wasm` file which will:
   - readline from the user
   - parse the command
-  - dispatch the command to the plugin(s) if needed (run the `run`, `man` functions of the plugins via the [`host-api`](./wit/host-api.wit) interface)
+  - dispatch the command to the plugin(s) if needed (run the `run`, `man` functions of the plugins via the [`host-api`](./crates/pluginlab/wit/host-api.wit) interface)
   - display the result
 
 Other example:
