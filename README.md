@@ -46,7 +46,9 @@ This is what it means by plugins being "sandboxed by default" - you can take any
 
 <p align="center">
   Example of running the CLI <code>pluginlab</code>
-  <img src="./crates/pluginlab/demo.gif" alt="pluginlab demo" />
+  <a href="https://asciinema.org/a/DWYAgrjSpwlejvRJQY8AHCEfD?speed=1.5" title="Click to watch the demo">
+    <img src="./crates/pluginlab/demo-preview.png" alt="pluginlab demo" />
+  </a>
 </p>
 
 ## Previous work with WebAssembly
