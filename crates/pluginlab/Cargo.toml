@@ -1,6 +1,6 @@
 [package]
 name = "pluginlab"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 publish = true
 description = "Command-line interface host for Terminal REPL with plugin system (using WebAssembly Component Model)"
