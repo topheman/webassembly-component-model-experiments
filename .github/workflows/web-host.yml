@@ -19,7 +19,7 @@ jobs:
       - name: Install cargo-component
         run: cargo binstall cargo-component@0.21.1
       - name: Install JavaScript dependencies
-        run: npm install
+        run: npm ci
       - name: Build
         run: npm run web-host:build
       - name: Cache build artifacts
