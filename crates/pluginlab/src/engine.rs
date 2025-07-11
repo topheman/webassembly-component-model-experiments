@@ -1,6 +1,8 @@
+use crate::cli::Cli;
+use crate::permissions::NetworkPermissions;
 use anyhow::Result;
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use wasmtime::component::{Component, Linker as ComponentLinker, ResourceTable};
 use wasmtime::{Config, Engine, Store};
 use wasmtime_wasi::p2::{WasiCtx, WasiCtxBuilder};
@@ -78,29 +80,52 @@ impl WasmEngine {
         Ok(component)
     }
 
-    pub fn build_wasi_ctx(path: &PathBuf) -> Result<WasiCtx> {
-        let wasi_ctx = WasiCtxBuilder::new()
-            .inherit_stdio()
-            .inherit_args()
-            .inherit_env()
-            .preopened_dir(
-                path,
-                ".",
+    pub fn build_wasi_ctx(cli: &Cli) -> Result<WasiCtx> {
+        let host_path = cli.dir.clone();
+        let guest_path = ".";
+
+        let (dir_perms, file_perms) = if cli.allow_all || cli.allow_read && cli.allow_write {
+            (
+                wasmtime_wasi::DirPerms::all(),
+                wasmtime_wasi::FilePerms::all(),
+            )
+        } else if cli.allow_read {
+            (
                 wasmtime_wasi::DirPerms::READ,
                 wasmtime_wasi::FilePerms::READ,
-            )?
-            .build();
+            )
+        } else if cli.allow_write {
+            (
+                wasmtime_wasi::DirPerms::MUTATE,
+                wasmtime_wasi::FilePerms::WRITE,
+            )
+        } else {
+            (
+                wasmtime_wasi::DirPerms::empty(),
+                wasmtime_wasi::FilePerms::empty(),
+            )
+        };
+
+        let mut wasi_builder = WasiCtxBuilder::new();
+        // .inherit_stdio()
+        // .inherit_args()
+        // .inherit_env()
+        wasi_builder.preopened_dir(host_path, guest_path, dir_perms, file_perms)?;
+
+        let wasi_ctx = wasi_builder.build();
         Ok(wasi_ctx)
     }
 
     /// Create a new store with WASI context
-    pub fn create_store(&self, wasi_ctx: WasiCtx) -> Store<WasiState> {
+    pub fn create_store(&self, wasi_ctx: WasiCtx, cli: &Cli) -> Store<WasiState> {
         Store::new(
             &self.engine,
             WasiState {
                 ctx: wasi_ctx,
                 table: ResourceTable::new(),
-                plugin_host: PluginHost {},
+                plugin_host: PluginHost {
+                    network_permissions: NetworkPermissions::from(cli),
+                },
                 repl_vars: HashMap::new(),
                 plugins_names: Vec::new(),
             },

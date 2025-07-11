@@ -1,5 +1,6 @@
 use crate::api::host_api::HostApi;
 use crate::api::plugin_api::PluginApi;
+use crate::cli::Cli;
 use crate::engine::WasmEngine;
 use crate::store::WasiState;
 use anyhow::Result;
@@ -20,9 +21,9 @@ pub struct WasmHost {
 }
 
 impl WasmHost {
-    pub fn new(engine: &WasmEngine, wasi_ctx: WasiCtx) -> Self {
+    pub fn new(engine: &WasmEngine, wasi_ctx: WasiCtx, cli: &Cli) -> Self {
         Self {
-            store: engine.create_store(wasi_ctx),
+            store: engine.create_store(wasi_ctx, &cli),
             plugins: HashMap::new(),
             repl_logic: None,
         }

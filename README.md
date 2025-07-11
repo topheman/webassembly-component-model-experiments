@@ -25,7 +25,16 @@ Those hosts then run the same codebase which is compiled to WebAssembly:
 - the REPL logic
 - the plugins
 
-The plugins like `ls` or `cat` can interact with the filesystem using the primitives of the languages they are written in.
+Security model: the REPL cli implements a security model inspired by [deno](https://docs.deno.com/runtime/fundamentals/security/#permissions):
+
+- `--allow-net`: allows network access to the plugins, you can specify a list of domains comma separated (by default, no network access is allowed)
+- `--allow-read`: allows read access to the filesystem
+- `--allow-write`: allows write access to the filesystem
+- `--allow-all`: allows all permissions (same as all the flags above), short: `-A`
+
+Plugins are sandboxed by default - they cannot access the filesystem or network unless explicitly permitted. This allows safe execution of untrusted plugins while maintaining the flexibility to grant specific permissions when needed.
+
+Plugins like `ls` or `cat` can interact with the filesystem using the primitives of the languages they are written in.
 
 - on the CLI, a folder from the disk is mounted via the `--dir` flag
 - on the browser, a virtual filesystem is mounted, the I/O operations are forwarded via the `@bytecodealliance/preview2-shim/filesystem` shim, which shims the `wasi:filesystem` filesystem interface
@@ -33,6 +42,13 @@ The plugins like `ls` or `cat` can interact with the filesystem using the primit
 <p align="center"><a href="https://topheman.github.io/webassembly-component-model-experiments/"><img src="./packages/web-host/public/wasi.png" alt="Demo" /></a></p>
 <p align="center">
   Check the online demo at<br/><a href="https://topheman.github.io/webassembly-component-model-experiments/">topheman.github.io/webassembly-component-model-experiments</a>
+</p>
+
+<p align="center">
+  Example of running the CLI <code>pluginlab</code>
+  <a href="https://asciinema.org/a/DWYAgrjSpwlejvRJQY8AHCEfD?speed=1.5" title="Click to watch the demo">
+    <img src="./crates/pluginlab/demo-preview.png" alt="pluginlab demo" />
+  </a>
 </p>
 
 ## Previous work with WebAssembly
@@ -65,12 +81,17 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --allow-all
 ```
 
 Other flags:
 
 - `--dir`: directory to be preopened (by default, the current directory)
+- `--allow-net`: allows network access to the plugins, you can specify a list of domains comma separated (by default, no network access is allowed)
+- `--allow-read`: allows read access to the filesystem
+- `--allow-write`: allows write access to the filesystem
+- `--allow-all`: allows all permissions (same as all the flags above), short: `-A`
 - `--help`: displays manual
 - `--debug`: run the host in debug mode (by default, the host runs in release mode)
 
@@ -83,7 +104,8 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_ls.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --allow-all
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_greet.wasm
@@ -167,7 +189,8 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm\
-  --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm
+  --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm\
+  --allow-all
 ```
 
 This will run the `pluginlab` binary which will itself:
@@ -187,7 +210,8 @@ Other example:
   --repl-logic ./target/wasm32-wasip1/debug/repl_logic_guest.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_ls.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
-  --dir /tmp
+  --dir /tmp\
+  --allow-all
 ```
 
 #### Test

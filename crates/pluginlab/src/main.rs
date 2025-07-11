@@ -1,28 +1,10 @@
 use anyhow::Result;
 use clap::Parser;
 use pluginlab::api::host_api::repl::api::transport;
+use pluginlab::cli::Cli;
 use pluginlab::helpers::{StatusHandler, StdoutHandler};
 use pluginlab::{WasmEngine, WasmHost};
 use std::io::Write;
-use std::path::PathBuf;
-
-#[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
-struct Cli {
-    /// Paths or URLs to WebAssembly plugin files
-    #[arg(long)]
-    plugins: Vec<String>,
-
-    /// Path or URL to WebAssembly REPL logic file
-    #[arg(long)]
-    repl_logic: String,
-
-    #[arg(long, default_value_t = false)]
-    debug: bool,
-
-    #[arg(long, default_value = ".")]
-    dir: PathBuf,
-}
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -33,13 +15,13 @@ async fn main() -> Result<()> {
 
     // Create a WASI context for the host
     // Binding stdio, args, env, preopened dir ...
-    let wasi_ctx = WasmEngine::build_wasi_ctx(&cli.dir)?;
+    let wasi_ctx = WasmEngine::build_wasi_ctx(&cli)?;
 
     // Create the WebAssembly engine
     let engine = WasmEngine::new()?;
 
     // Create the host
-    let mut host = WasmHost::new(&engine, wasi_ctx);
+    let mut host = WasmHost::new(&engine, wasi_ctx, &cli);
 
     println!("[Host] Loading REPL logic from: {}", cli.repl_logic);
     // Override the REPL logic in the binary with the one passed by params
