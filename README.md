@@ -25,19 +25,19 @@ Those hosts then run the same codebase which is compiled to WebAssembly:
 - the REPL logic
 - the plugins
 
-The plugins like `ls` or `cat` can interact with the filesystem using the primitives of the languages they are written in.
-
-- on the CLI, a folder from the disk is mounted via the `--dir` flag
-- on the browser, a virtual filesystem is mounted, the I/O operations are forwarded via the `@bytecodealliance/preview2-shim/filesystem` shim, which shims the `wasi:filesystem` filesystem interface
-
-The CLI host `pluginlab` supports the same kinds of permissions deno introduced:
+Security model: the REPL cli implements a security model inspired by [deno](https://docs.deno.com/runtime/fundamentals/security/#permissions):
 
 - `--allow-net`: allows network access to the plugins, you can specify a list of domains comma separated (by default, no network access is allowed)
 - `--allow-read`: allows read access to the filesystem
 - `--allow-write`: allows write access to the filesystem
 - `--allow-all`: allows all permissions (same as all the flags above), short: `-A`
 
-This is what it means by plugins being "sandboxed by default" - you can take any plugin from anywhere, if you don't allow any access, it won't be able to make any network request or read/write to your filesystem and it will be constrained to its own part of the memory.
+Plugins are sandboxed by default - they cannot access the filesystem or network unless explicitly permitted. This allows safe execution of untrusted plugins while maintaining the flexibility to grant specific permissions when needed.
+
+Plugins like `ls` or `cat` can interact with the filesystem using the primitives of the languages they are written in.
+
+- on the CLI, a folder from the disk is mounted via the `--dir` flag
+- on the browser, a virtual filesystem is mounted, the I/O operations are forwarded via the `@bytecodealliance/preview2-shim/filesystem` shim, which shims the `wasi:filesystem` filesystem interface
 
 <p align="center"><a href="https://topheman.github.io/webassembly-component-model-experiments/"><img src="./packages/web-host/public/wasi.png" alt="Demo" /></a></p>
 <p align="center">
