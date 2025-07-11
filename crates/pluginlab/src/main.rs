@@ -10,7 +10,6 @@ use std::io::Write;
 async fn main() -> Result<()> {
     // Parse command line arguments
     let cli = Cli::parse();
-    println!("[Host] allow_net: {:?}", cli.allow_net);
     let debug = cli.debug;
     println!("[Host] Starting REPL host...");
 
