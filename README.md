@@ -163,7 +163,10 @@ rustup target add wasm32-unknown-unknown wasm32-wasip1
 ```
 
 ```bash
+# Install project dependencies (web part)
 npm install
+# Install Playwright browsers (e2e tests for web-host)
+npx playwright install
 ```
 
 ### pluginlab (rust)

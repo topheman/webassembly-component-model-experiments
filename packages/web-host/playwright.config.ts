@@ -28,11 +28,20 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL:
       process.env.BASE_URL ||
-      "http://localhost:5173/webassembly-component-model-experiments",
+      "http://localhost:5173/webassembly-component-model-experiments/",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
+  ...(process.env.WAIT_FOR_SERVER_AT_URL
+    ? {
+        webServer: {
+          command: "npm run preview -- --strictPort",
+          url: process.env.WAIT_FOR_SERVER_AT_URL,
+          reuseExistingServer: !process.env.CI,
+        },
+      }
+    : {}),
 
   /* Configure projects for major browsers */
   projects: [

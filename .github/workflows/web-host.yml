@@ -22,6 +22,17 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run web-host:build
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+        working-directory: ./packages/web-host
+      - name: e2e tests (playwright)
+        run: WAIT_FOR_SERVER_AT_URL=http://localhost:4173/webassembly-component-model-experiments/ npm run test:e2e:all:preview
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: ./packages/web-host/playwright-report/
+          retention-days: 30
       - name: Cache build artifacts
         id: cache-build-www-host
         uses: actions/cache@v4
