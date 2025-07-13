@@ -92,6 +92,7 @@ export function Repl({
                 className="border border-gray-300 rounded-md p-2 w-full pr-10"
                 onFocus={() => setInputFocus(true)}
                 onBlur={() => setInputFocus(false)}
+                placeholder="Type a command..."
               />
             </div>
             <button
