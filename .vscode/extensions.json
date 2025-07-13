@@ -4,6 +4,7 @@
     "bytecodealliance.wit-idl",
     "skellock.just",
     "biomejs.biome",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "ms-playwright.playwright"
   ]
 }

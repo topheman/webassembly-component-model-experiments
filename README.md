@@ -163,7 +163,10 @@ rustup target add wasm32-unknown-unknown wasm32-wasip1
 ```
 
 ```bash
+# Install project dependencies (web part)
 npm install
+# Install Playwright browsers (e2e tests for web-host)
+npx playwright install
 ```
 
 ### pluginlab (rust)
@@ -276,6 +279,27 @@ Will do the same as the dev command, small changes:
 - it doesn't start the vite dev server, it builds the static files in the `dist` directory
 
 You can then run `npm run web-host:preview` to preview the build.
+
+#### Test
+
+The project is configured to run e2e tests on the `web-host` using [playwright](./packages/web-host/playwright.config.ts), the test files are in [`packages/web-host/tests`](./packages/web-host/tests).
+
+To run the tests against your local dev server (launched with `npm run dev`)
+
+- `npm run test:e2e:all`: will run all the tests in headless mode
+- `npm run test:e2e:ui`: will open the playwright ui to run the tests
+
+To run the tests against a preview server (build with `npm run build` and launched with `npm run preview`):
+
+- `npm run test:e2e:all:preview`: will run all the tests in headless mode
+- `npm run test:e2e:ui:preview`: will open the playwright ui to run the tests
+
+Specific to github actions:
+
+In [`.github/workflows/web-host.yml`](./.github/workflows/web-host.yml), after the build step, the tests are run against the preview server.
+
+To be sure that the preview server is up and running before running the tests, we use the [`webServer.command` option](https://playwright.dev/docs/test-webserver) of [playwright.config.ts](./packages/web-host/playwright.config.ts) to run `WAIT_FOR_SERVER_AT_URL=http://localhost:4173/webassembly-component-model-experiments/ npm run test:e2e:all:preview`
+
 
 ### plugins (TypeScript)
 

@@ -26,7 +26,9 @@ export const ReplPage = ({ onBackToHome }: ReplPageProps) => {
       </div>
       {wasm.status === "loading" && <div>Loading...</div>}
       {wasm.status === "ready" && <Repl engine={wasm.engine} />}
-      {wasm.status === "error" && <div>Error</div>}
+      {wasm.status === "error" && (
+        <div>An error occurred, please try again.</div>
+      )}
     </div>
   );
 };

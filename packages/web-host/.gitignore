@@ -26,3 +26,9 @@ dist-ssr
 # Project specific
 public/plugins/*.wasm
 src/wasm/generated
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

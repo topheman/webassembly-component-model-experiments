@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import type { ReplHistoryEntry } from "../types";
 import { cn } from "../utils/css";
 
@@ -16,7 +18,7 @@ export function ReplHistory({
     <div ref={ref} className={cn(className)} {...props}>
       {history.map((entry, index) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: no unique key
-        <div key={index}>
+        <Fragment key={index}>
           {"stdin" in entry && entry.stdin && (
             <pre
               className="bg-gray-50 whitespace-pre-wrap word-break-word"
@@ -43,7 +45,7 @@ export function ReplHistory({
               {entry.stderr}
             </pre>
           )}
-        </div>
+        </Fragment>
       ))}
     </div>
   );
