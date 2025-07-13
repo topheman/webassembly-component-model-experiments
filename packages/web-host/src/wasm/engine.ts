@@ -40,25 +40,33 @@ async function loadPlugins({
     import("./generated/plugin_greet/transpiled/plugin_greet.js"),
     import("./generated/plugin_ls/transpiled/plugin_ls.js"),
     import("./generated/plugin_cat/transpiled/plugin_cat.js"),
-  ]).then((plugins) => plugins.map((plugin) => plugin.plugin));
-
-  // log the plugins names
-  const pluginsNames = plugins.map((plugin) => plugin.name());
-  for (const pluginName of pluginsNames) {
-    addReplHistoryEntry({
-      stdin: `[Host] Loading plugin: ${pluginName}`,
-    });
-  }
+  ]).then((plugins) =>
+    plugins.map((plugin) => {
+      addReplHistoryEntry({
+        stdin: `[Host] Loaded plugin: ${plugin.plugin.name()}`,
+      });
+      return plugin.plugin;
+    }),
+  );
 
   // set the plugins names in the host state
+  const pluginsNames = plugins.map((plugin) => plugin.name());
   hostStateSetPluginsNames(pluginsNames);
 
   // return the plugins instances
   return plugins;
 }
 
-async function loadReplLogicGuest(): Promise<HostApi> {
-  return import("./generated/repl_logic_guest/transpiled/repl_logic_guest.js");
+async function loadReplLogicGuest({
+  addReplHistoryEntry,
+}: AddReplHistoryEntryProp): Promise<HostApi> {
+  const replLogicGuest = await import(
+    "./generated/repl_logic_guest/transpiled/repl_logic_guest.js"
+  );
+  addReplHistoryEntry({
+    stdin: `[Host] Loaded REPL logic`,
+  });
+  return replLogicGuest;
 }
 
 export async function prepareEngine({
@@ -75,9 +83,8 @@ export async function prepareEngine({
     return;
   }
   addReplHistoryEntry({ stdin: `[Host] Starting REPL host...` });
-  addReplHistoryEntry({ stdin: `[Host] Loading REPL logic` });
   const [replLogicGuest, plugins] = await Promise.all([
-    loadReplLogicGuest(),
+    loadReplLogicGuest({ addReplHistoryEntry }),
     loadPlugins({ addReplHistoryEntry }),
   ]);
   const engine = makeEngine();
