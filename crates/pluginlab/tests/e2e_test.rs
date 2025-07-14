@@ -166,12 +166,12 @@ mod e2e_test {
     }
 
     #[test]
-    fn test_empty_line() {
+    fn test_empty_line_and_dollar_question_mark() {
         let project_root = find_project_root();
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            &build_command(&["plugin_greet.wasm"], "repl_logic_guest.wasm"),
+            &build_command(&["plugin_echo.wasm"], "repl_logic_guest.wasm"),
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");
@@ -205,6 +205,18 @@ mod e2e_test {
         session
             .exp_string("repl(1)>")
             .expect("Empty command should lead to a new prompt, without changing $?");
+        session
+            .send_line("echo $?")
+            .expect("Failed to send command");
+        session
+            .exp_string("1")
+            .expect("Didn't get expected echo output for $? after previous command failed");
+        session
+            .send_line("echo $?")
+            .expect("Failed to send command");
+        session
+            .exp_string("0")
+            .expect("Didn't get expected echo output for $? after previous command succeeded");
     }
 
     #[test]
