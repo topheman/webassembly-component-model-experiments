@@ -1,3 +1,7 @@
+# Show help
+default:
+    @just --list
+
 # Build all crates with appropriate commands
 build:
     just build-repl-logic-guest
@@ -13,28 +17,20 @@ build-release:
 # Build all plugins in debug mode
 build-plugins:
     #!/usr/bin/env bash
-    just --list|grep build-plugin-|awk '{print $1}'|grep -v release|xargs just
+    just list-rust-plugins|xargs -I {} cargo component build -p {}
 
 # Build all plugins in release mode
 build-plugins-release:
     #!/usr/bin/env bash
-    just --list|grep build-plugin-|awk '{print $1}'|grep release|xargs just
+    just list-rust-plugins|xargs -I {} cargo component build --release -p {}
 
-# Build the plugin-weather component
-build-plugin-weather:
-    cargo component build -p plugin-weather
+# Build a specific plugin
+build-plugin plugin:
+    cargo component build -p {{plugin}}
 
-# Build the plugin-weather component in release mode
-build-plugin-weather-release:
-    cargo component build --release -p plugin-weather
-
-# Build the plugin-cat component
-build-plugin-cat:
-    cargo component build -p plugin-cat
-
-# Build the plugin-cat component in release mode
-build-plugin-cat-release:
-    cargo component build --release -p plugin-cat
+# Build a specific plugin in release mode
+build-plugin-release plugin:
+    cargo component build --release -p {{plugin}}
 
 # Build the pluginlab (normal Rust build)
 build-pluginlab:
@@ -52,30 +48,6 @@ publish-pluginlab:
 publish-pluginlab-dry-run:
     cargo publish --dry-run -p pluginlab
 
-# Build the plugin-greet component
-build-plugin-echo:
-    cargo component build -p plugin-echo
-
-# Build the plugin-greet component in release mode
-build-plugin-echo-release:
-    cargo component build --release -p plugin-echo
-
-# Build the plugin-greet component
-build-plugin-greet:
-    cargo component build -p plugin-greet
-
-# Build the plugin-greet component in release mode
-build-plugin-greet-release:
-    cargo component build --release -p plugin-greet
-
-# Build the plugin-ls component
-build-plugin-ls:
-    cargo component build -p plugin-ls
-
-# Build the plugin-ls component in release mode
-build-plugin-ls-release:
-    cargo component build --release -p plugin-ls
-
 # Build the REPL logic guest as a component
 build-repl-logic-guest:
     cargo component build -p repl-logic-guest
@@ -89,10 +61,12 @@ clean:
     cargo clean
     cargo component clean
 
-# Show help
-default:
-    @just --list
+# List all the rust plugins
+list-rust-plugins:
+    #!/usr/bin/env bash
+    ls -1 crates|grep plugin-
 
+# Run the tests for the pluginlab
 test:
     just build-repl-logic-guest
     just build-plugins
@@ -106,6 +80,7 @@ test-e2e-pluginlab:
     just prepare-fixtures
     cargo test -p pluginlab
 
+# Run the e2e tests for the pluginlab with no capture
 test-e2e-pluginlab-nocapture:
     just build-repl-logic-guest
     just build-plugins
@@ -126,6 +101,7 @@ test-e2e-pluginlab-http-nocapture:
     just prepare-fixtures
     WASM_TARGET_DIR=https://topheman.github.io/webassembly-component-model-experiments/plugins cargo test -p pluginlab -- --nocapture
 
+# Prepare the fixtures for the e2e tests
 prepare-fixtures:
     mkdir -p tmp/filesystem
     rm -rf tmp/filesystem/*
