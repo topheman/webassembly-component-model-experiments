@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { clickWandButton } from "./utils";
 
 test("start REPL link", async ({ page }) => {
   await page.goto("/");
@@ -49,5 +50,33 @@ test("back button", async ({ page }) => {
     page.getByRole("heading", {
       name: "WebAssembly Component Model Experiments",
     }),
+  ).toBeVisible();
+});
+
+test("history should be preserved + wand button", async ({ page }) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "✨ Start REPL ✨" })
+    .click({ force: true });
+  await expect(page).toHaveURL(
+    "/webassembly-component-model-experiments/#repl",
+  );
+  await clickWandButton(page, "echo foo", { expectStdout: "foo" });
+  await clickWandButton(page, "echo bar", { expectStdout: "bar" });
+  await clickWandButton(page, "echo baz", { expectStdout: "baz" });
+  await page.goBack();
+  await expect(
+    page.getByRole("heading", {
+      name: "WebAssembly Component Model Experiments",
+    }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "✨ Start REPL ✨" })
+    .click({ force: true });
+  await expect(page).toHaveURL(
+    "/webassembly-component-model-experiments/#repl",
+  );
+  await expect(
+    page.getByText("echo foofooecho barbarecho bazbaz"),
   ).toBeVisible();
 });
