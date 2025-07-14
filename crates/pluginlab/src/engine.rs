@@ -27,6 +27,7 @@ impl WasmEngine {
         Ok(Self { engine })
     }
 
+    #[allow(unused)]
     pub fn engine(&self) -> &Engine {
         &self.engine
     }
@@ -75,6 +76,7 @@ impl WasmEngine {
     }
 
     /// Load a WebAssembly component from bytes
+    #[allow(unused)]
     pub fn load_component_from_bytes(&self, bytes: &[u8]) -> Result<Component> {
         let component = Component::from_binary(&self.engine, bytes)?;
         Ok(component)

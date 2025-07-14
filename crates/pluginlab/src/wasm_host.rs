@@ -52,6 +52,7 @@ impl WasmHost {
         Ok(())
     }
 
+    #[allow(unused)]
     pub async fn load_repl_logic_from_bytes(
         &mut self,
         engine: &WasmEngine,
