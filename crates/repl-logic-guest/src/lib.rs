@@ -23,8 +23,13 @@ impl ReplLogicGuest for Component {
         if let Some(response) = reserved::run(&parsed_line.command, &parsed_line.payload) {
             return transport::ReadlineResponse::Ready(response);
         }
-        if let Some(response) = reserved::man(&parsed_line.command) {
-            return transport::ReadlineResponse::Ready(response);
+
+        if parsed_line.command == "man"
+            && (parsed_line.payload.is_empty() || parsed_line.payload == "man")
+        {
+            if let Some(response) = reserved::man(&parsed_line.command) {
+                return transport::ReadlineResponse::Ready(response);
+            }
         }
 
         // if no reserved command was run return the parsed line to be passed to the plugin to run from the host

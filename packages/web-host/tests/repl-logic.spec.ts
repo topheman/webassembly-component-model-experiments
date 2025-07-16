@@ -92,3 +92,10 @@ test("man", async ({ page }) => {
   const stdout2 = await getLastStd(page, "stdout");
   await expect(stdout2).toContainText("man - Show the manual for a command");
 });
+
+test("man echo", async ({ page }) => {
+  await page.goto("/#repl");
+  await fillAndSubmitCommand(page, "man echo");
+  const stdout = await getLastStd(page, "stdout");
+  await expect(stdout).toContainText("echo - Echo a message (built with Rust");
+});

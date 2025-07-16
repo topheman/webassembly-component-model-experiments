@@ -471,4 +471,32 @@ mod e2e_test {
             .exp_string("man - Show the manual for a command")
             .expect("Didn't get expected manual output");
     }
+
+    #[test]
+    fn test_man_echo() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &build_command(&["plugin_echo.wasm"], "repl_logic_guest.wasm"),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("man echo")
+            .expect("Failed to send command");
+        session
+            .exp_string("echo - Echo a message (built with Rust")
+            .expect("Didn't get expected manual output");
+    }
 }
