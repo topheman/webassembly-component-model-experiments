@@ -22,6 +22,9 @@ impl From<&Cli> for NetworkPermissions {
                 return NetworkPermissions::Custom(domains);
             }
         }
+        if cli.allow_all {
+            return NetworkPermissions::All;
+        }
         return NetworkPermissions::None;
     }
 }
