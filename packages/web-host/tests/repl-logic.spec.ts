@@ -56,6 +56,7 @@ test("man for reserved commands", async ({ page }) => {
       "list-commands",
       "list-commands - List the plugins loaded in the host and the reserved commands (not overridable by plugins) included in the REPL logic.",
     ],
+    ["man", "man - Show the manual for a command"],
   ];
   await page.goto("/#repl");
   for (const [command, partialManpage] of reservedCommands) {
@@ -63,4 +64,21 @@ test("man for reserved commands", async ({ page }) => {
     const stdout = await getLastStd(page, "stdout");
     await expect(stdout).toContainText(partialManpage);
   }
+});
+
+test("list-commands", async ({ page }) => {
+  await page.goto("/#repl");
+  await fillAndSubmitCommand(page, "list-commands");
+  const stdout = await getLastStd(page, "stdout");
+  await expect(stdout).toContainText(
+    `cat	plugin
+echo	plugin
+export	reserved
+greet	plugin
+help	reserved
+list-commands	reserved
+ls	plugin
+man	reserved
+weather	plugin`,
+  );
 });

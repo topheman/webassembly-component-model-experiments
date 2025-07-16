@@ -410,12 +410,15 @@ mod e2e_test {
     }
 
     #[test]
-    fn test_man_command() {
+    fn test_list_commands() {
         let project_root = find_project_root();
         println!("Setting current directory to: {:?}", project_root);
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
-            &build_command(&["plugin_greet.wasm"], "repl_logic_guest.wasm"),
+            &build_command(
+                &["plugin_echo.wasm", "plugin_greet.wasm", "plugin_cat.wasm"],
+                "repl_logic_guest.wasm",
+            ),
             Some(TEST_TIMEOUT),
         )
         .expect("Can't launch pluginlab with plugin greet");
@@ -426,15 +429,14 @@ mod e2e_test {
         session
             .exp_string("[Host] Loading plugin:")
             .expect("Didn't see plugin loading message");
-        session.send_line("man").expect("Failed to send command");
         session
-            .exp_string(" man - Show the manual for a command")
-            .expect("Didn't see man command name");
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
         session
-            .send_line("man man")
+            .send_line("list-commands")
             .expect("Failed to send command");
         session
-            .exp_string(" man - Show the manual for a command")
-            .expect("Didn't see man command name");
+            .exp_string("cat\tplugin\r\necho\tplugin\r\nexport\treserved\r\ngreet\tplugin\r\nhelp\treserved\r\nlist-commands\treserved\r\nman\treserved\r\n")
+            .expect("Didn't get expected list of commands");
     }
 }

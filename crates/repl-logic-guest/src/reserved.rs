@@ -114,13 +114,21 @@ EXAMPLES
         run: Some(|_payload| {
             let plugins = host_state::get_plugins_names();
             let reserved_commands = get_reserved_commands();
+            let mut commands: Vec<(String, String)> = Vec::new();
+            for plugin in plugins {
+                commands.push(("plugin".to_string(), plugin.to_string()));
+            }
+            for reserved_command in reserved_commands {
+                commands.push(("reserved".to_string(), reserved_command.to_string()));
+            }
+            commands.sort_by(|a, b| a.1.cmp(&b.1));
+            let mut output = String::new();
+            for (category, command) in commands {
+                output.push_str(&format!("{}\t{}\n", command, category));
+            }
             transport::PluginResponse {
                 status: transport::ReplStatus::Success,
-                stdout: Some(format!(
-                    "Plugins: {} - Reserved commands: {}",
-                    plugins.join(", "),
-                    reserved_commands.join(", ")
-                )),
+                stdout: Some(output),
                 stderr: None,
             }
         }),
