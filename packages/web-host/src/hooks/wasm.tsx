@@ -52,6 +52,9 @@ export function WasmProvider({ children }: { children: React.ReactNode }) {
           error: null,
           engine,
         });
+        addReplHistoryEntry({
+          stdin: "[Host] REPL host ready",
+        });
       })
       .catch((error) => {
         console.log("useEffect prepareEngine error", error);
