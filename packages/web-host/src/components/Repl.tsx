@@ -93,6 +93,9 @@ export function Repl({
                 onFocus={() => setInputFocus(true)}
                 onBlur={() => setInputFocus(false)}
                 placeholder="Type a command..."
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
               />
             </div>
             <button
