@@ -82,3 +82,13 @@ man	reserved
 weather	plugin`,
   );
 });
+
+test("man", async ({ page }) => {
+  await page.goto("/#repl");
+  await fillAndSubmitCommand(page, "man");
+  const stdout = await getLastStd(page, "stdout");
+  await expect(stdout).toContainText("man - Show the manual for a command");
+  await fillAndSubmitCommand(page, "man man");
+  const stdout2 = await getLastStd(page, "stdout");
+  await expect(stdout2).toContainText("man - Show the manual for a command");
+});
