@@ -1,9 +1,9 @@
 import { Play, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useGetExampleCommand } from "../hooks/exampleCommands";
 import { useReplHistory } from "../hooks/replHistory";
 import { useReplLogic } from "../hooks/replLogic";
 import { cn } from "../utils/css";
-import { getExampleCommand } from "../utils/exampleCommands";
 import type { WasmEngine } from "../wasm/engine";
 import { ReplHistory } from "./ReplHistory";
 
@@ -23,6 +23,8 @@ export function Repl({
   const [inputFocus, setInputFocus] = useState(false);
   const { history } = useReplHistory();
   const [wandButtonUsed, setWandButtonUsed] = useState(false);
+  const { getExampleCommand, remainingExampleCommands, doneExampleCommands } =
+    useGetExampleCommand();
 
   function handleSubmit(
     event: Pick<
@@ -123,12 +125,22 @@ export function Repl({
               }}
               type="button"
               className={cn(
-                "cursor-pointer bg-primary text-white px-4 py-2 rounded-md",
+                "cursor-pointer bg-primary text-white px-4 py-2 rounded-md relative",
                 !wandButtonUsed && "animate-bounce",
               )}
               title="Run example command"
             >
               <WandSparkles />
+              {(() => {
+                if (!doneExampleCommands) {
+                  return (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                      {remainingExampleCommands}
+                    </span>
+                  );
+                }
+                return null;
+              })()}
             </button>
           </div>
         </form>

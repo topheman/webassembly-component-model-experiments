@@ -59,9 +59,7 @@ export async function clickWandButton(
     expectStderr?: string;
   } = {},
 ) {
-  await page
-    .getByRole("button", { name: "Run example command" })
-    .click({ force: true });
+  await page.getByTitle("Run example command").click({ force: true });
   const input = await page.getByPlaceholder("Type a command...");
   await expect(input).toHaveValue(expectStdin);
   const stdin = await getLastStd(page, "stdin");
