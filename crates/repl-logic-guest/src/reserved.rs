@@ -72,6 +72,26 @@ DESCRIPTION
         run: None,
     },
     ReservedCommand {
+        name: "man",
+        man: || transport::PluginResponse {
+            status: transport::ReplStatus::Success,
+            stdout: Some(format!(
+                r#"
+NAME
+    man - Show the manual for a command
+
+SYNOPSIS
+    man <command>
+
+DESCRIPTION
+    Show the manual for a command.
+      "#,
+            )),
+            stderr: None,
+        },
+        run: None,
+    },
+    ReservedCommand {
         name: "list-commands",
         man: || transport::PluginResponse {
             status: transport::ReplStatus::Success,

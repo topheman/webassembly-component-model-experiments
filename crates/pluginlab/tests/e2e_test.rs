@@ -408,4 +408,33 @@ mod e2e_test {
             .exp_string("ls: : Operation not permitted")
             .expect("Didn't get expected error output");
     }
+
+    #[test]
+    fn test_man_command() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &build_command(&["plugin_greet.wasm"], "repl_logic_guest.wasm"),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session.send_line("man").expect("Failed to send command");
+        session
+            .exp_string(" man - Show the manual for a command")
+            .expect("Didn't see man command name");
+        session
+            .send_line("man man")
+            .expect("Failed to send command");
+        session
+            .exp_string(" man - Show the manual for a command")
+            .expect("Didn't see man command name");
+    }
 }
