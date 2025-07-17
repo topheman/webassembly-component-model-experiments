@@ -17,3 +17,6 @@ target/
 ### JavaScript ###
 node_modules/
 dist/
+
+# C
+.env

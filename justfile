@@ -1,6 +1,18 @@
+set dotenv-load
+
 # Show help
 default:
     @just --list
+
+# Initialize the .env file tracking the WASI SDK version
+init-env-file:
+    cp .env.original .env
+    cat .env
+    @echo ""
+    @echo "Currently, in .env file, WASI_OS=$WASI_OS and WASI_ARCH=$WASI_ARCH, please update them if needed."
+
+wasi-sdk-name:
+    @echo wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
 
 # Build all crates with appropriate commands
 build: build-repl-logic-guest build-plugins

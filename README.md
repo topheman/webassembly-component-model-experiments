@@ -169,6 +169,25 @@ npm install
 npx playwright install
 ```
 
+#### C tooling
+
+[From the WebAssembly Component Model section for C tooling](https://component-model.bytecodealliance.org/language-support/c.html)
+
+```bash
+# Initialize the .env file tracking the WASI SDK version for C development
+# You will be asked to update the WASI_OS and WASI_ARCH variables if needed
+just init-env-file
+```
+
+```bash
+cargo install wit-bindgen-cli@0.43.0
+```
+
+```bash
+# Install the wasm-tools tool - you can also use cargo install wasm-tools@1.235.0 if you don't have cargo-binstall
+cargo binstall wasm-tools@1.235.0
+```
+
 ### pluginlab (rust)
 
 #### Build
@@ -346,6 +365,7 @@ Those are **optional** tools that are handy for WebAssembly development:
 - [cargo component 0.21.1+](https://github.com/bytecodealliance/cargo-component?tab=readme-ov-file#installation)
 - [wasm-tools 1.235.0](https://github.com/bytecodealliance/wasm-tools?tab=readme-ov-file#installation)
 - [wasm-opt 116](https://github.com/WebAssembly/binaryen?tab=readme-ov-file#installation)
+- [wit-bindgen-cli 0.43.0](https://github.com/bytecodealliance/wit-bindgen)
 
 ```bash
 # latest versions
@@ -356,3 +376,9 @@ cargo binstall cargo-component wasm-tools wasm-opt
 # specific versions I used for this project
 cargo binstall cargo-component@0.21.1 wasm-tools@1.235.0 wasm-opt@116
 ```
+
+### C tooling
+
+- [From the WebAssembly Component Model section for C tooling](https://component-model.bytecodealliance.org/language-support/c.html)
+- [WASI SDK](https://github.com/WebAssembly/wasi-sdk)
+- [WIT Bindgen](https://github.com/bytecodealliance/wit-bindgen)
