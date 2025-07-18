@@ -27,6 +27,68 @@ mod e2e_rust_plugins {
     }
 
     #[test]
+    fn test_echo_plugin() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &format!(
+                "{} --dir tmp/filesystem --allow-read",
+                &build_command(&["plugin_echo.wasm"], "repl_logic_guest.wasm")
+            ),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("echo hello")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\n")
+            .expect("Didn't get expected output from echo plugin");
+    }
+
+    #[test]
+    fn test_greet_plugin() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &format!(
+                "{} --dir tmp/filesystem --allow-read",
+                &build_command(&["plugin_greet.wasm"], "repl_logic_guest.wasm")
+            ),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("greet World")
+            .expect("Failed to send command");
+        session
+            .exp_string("Hello, World!\r\n")
+            .expect("Didn't get expected output from greet plugin");
+    }
+
+    #[test]
     fn test_ls_plugin() {
         let project_root = find_project_root();
         println!("Setting current directory to: {:?}", project_root);
