@@ -63,7 +63,7 @@ In the last seven years I've done a few projects involving rust and WebAssembly:
 
 ## Usage
 
-### pluginlab (rust)
+### pluginlab (rust) - REPL cli host
 
 #### Install
 
@@ -195,7 +195,7 @@ cargo binstall wasm-tools@1.235.0
 just dl-wasi-sdk
 ```
 
-### pluginlab (rust)
+### pluginlab (rust) - REPL cli host
 
 #### Build
 
@@ -328,14 +328,23 @@ In [`.github/workflows/web-host.yml`](./.github/workflows/web-host.yml), after t
 
 To be sure that the preview server is up and running before running the tests, we use the [`webServer.command` option](https://playwright.dev/docs/test-webserver) of [playwright.config.ts](./packages/web-host/playwright.config.ts) to run `WAIT_FOR_SERVER_AT_URL=http://localhost:4173/webassembly-component-model-experiments/ npm run test:e2e:all:preview`
 
+### plugins
 
-### plugins (TypeScript)
+There are currently plugins implemented in 3 languages (most of them are in rust):
 
-You can write plugins in rust in [`crates/plugin-*`](./crates), you can also write plugins in TypeScript in [`packages/plugin-*`](./packages), thanks to `jco componentize` (based on [componentize-js](https://github.com/bytecodealliance/componentize-js)).
+#### Rust
 
-There is a [`packages/plugin-echo`](./packages/plugin-echo/) example plugin in TypeScript.
+You can write plugins in rust in [`crates/plugin-*`](./crates).
 
-The downsides of writing plugins in TypeScript is mostly that your `.wasm` file will be **much larger** than the one compiled from rust:
+#### C
+
+You can write plugins in C in [`c_modules/plugin-*`](./c_modules), thanks to `wit-bindgen` (based on [wit-bindgen](https://github.com/bytecodealliance/wit-bindgen)).
+
+#### TypeScript
+
+You can also write plugins in TypeScript in [`packages/plugin-*`](./packages), thanks to `jco componentize` (based on [componentize-js](https://github.com/bytecodealliance/componentize-js)).
+
+The downsides of writing plugins in TypeScript is mostly that your `.wasm` file will be **much larger** than the one compiled from rust or C:
 
 - ~100KB of wasm for the rust plugin
 - 11MB of wasm for the TypeScript plugin
@@ -344,9 +353,10 @@ The reason is that a JavaScript runtime needs to be embedded in the `.wasm` file
 
 More about the [SpiderMonkey runtime embedding](https://github.com/bytecodealliance/ComponentizeJS?tab=readme-ov-file#explainer).
 
-### plugins (Other languages)
+#### Other languages
 
-Coming soon.
+Coming.
+
 
 ## Developer experience
 
