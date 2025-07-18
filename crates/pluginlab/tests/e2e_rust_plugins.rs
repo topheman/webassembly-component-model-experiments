@@ -53,7 +53,7 @@ mod e2e_rust_plugins {
             .send_line("echo hello")
             .expect("Failed to send command");
         session
-            .exp_string("hello\r\n")
+            .exp_string("hello\r\nrepl(0)>")
             .expect("Didn't get expected output from echo plugin");
     }
 
@@ -84,7 +84,7 @@ mod e2e_rust_plugins {
             .send_line("greet World")
             .expect("Failed to send command");
         session
-            .exp_string("Hello, World!\r\n")
+            .exp_string("Hello, World!\r\nrepl(0)>")
             .expect("Didn't get expected output from greet plugin");
     }
 

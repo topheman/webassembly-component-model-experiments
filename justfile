@@ -32,6 +32,7 @@ c-wit-bindgen-plugins:
 # Build a specific C plugin
 build-c-plugin plugin:
     #!/usr/bin/env bash
+    just c-wit-bindgen-plugin {{plugin}}
     ./c_deps/wasi-sdk/bin/clang ./c_modules/{{plugin}}/component.c ./c_modules/{{plugin}}/plugin_api.c ./c_modules/{{plugin}}/plugin_api_component_type.o -o ./c_modules/{{plugin}}/{{plugin}}-c.wasm -mexec-model=reactor
     wasm-tools component new ./c_modules/{{plugin}}/{{plugin}}-c.wasm -o ./c_modules/{{plugin}}/{{plugin}}-c.component.wasm
 
@@ -44,11 +45,11 @@ wasi-sdk-name:
     @echo wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
 
 # Build all crates with appropriate commands
-build: build-repl-logic-guest build-plugins
+build: build-repl-logic-guest build-plugins build-c-plugins
     just build-pluginlab
 
 # Build all crates in release mode
-build-release: build-repl-logic-guest-release build-plugins-release
+build-release: build-repl-logic-guest-release build-plugins-release build-c-plugins
     just build-pluginlab-release
 
 # Build all plugins in debug mode
