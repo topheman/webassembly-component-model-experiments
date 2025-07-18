@@ -121,7 +121,7 @@ list-rust-plugins:
 # List all the C plugins
 list-c-plugins:
     #!/usr/bin/env bash
-    ls -1 c_modules
+    ls -1 c_modules|grep plugin-
 
 # Run the tests for the pluginlab
 test: build-repl-logic-guest build-plugins prepare-fixtures
