@@ -27,7 +27,6 @@ mod e2e_c_plugins {
     }
 
     #[test]
-    #[ignore = "C echo plugin is still failing the test"]
     fn test_echo_plugin() {
         let project_root = find_project_root();
         println!("Setting current directory to: {:?}", project_root);

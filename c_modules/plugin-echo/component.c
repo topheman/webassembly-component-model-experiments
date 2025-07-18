@@ -54,9 +54,27 @@ bool exports_repl_api_plugin_run(plugin_api_string_t *payload, exports_repl_api_
     // Set stdout to contain the payload
     // is_some = true means the optional string has a value
     ret->stdout.is_some = true;
-    // plugin_api_string_dup() creates a new copy of payload->ptr in ret->stdout.val
-    // This allocates new memory and copies the string content
-    plugin_api_string_dup(&ret->stdout.val, (const char *)payload->ptr);
+
+    // Create a properly null-terminated string from the payload
+    // The payload has ptr and len, we need to ensure it's null-terminated
+    char *temp_str = malloc(payload->len + 1);
+    if (temp_str == NULL)
+    {
+        // Handle allocation failure
+        ret->stdout.is_some = false;
+        ret->stderr.is_some = false;
+        return false;
+    }
+
+    // Copy the payload data and null-terminate it
+    memcpy(temp_str, payload->ptr, payload->len);
+    temp_str[payload->len] = '\0';
+
+    // Use plugin_api_string_dup to create the output string
+    plugin_api_string_dup(&ret->stdout.val, temp_str);
+
+    // Free our temporary string
+    free(temp_str);
 
     // Set stderr to none (no error output)
     ret->stderr.is_some = false;
