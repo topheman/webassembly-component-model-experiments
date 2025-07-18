@@ -82,7 +82,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo-c.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
   --allow-all
 ```
 
@@ -106,7 +106,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
-  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo-c.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
   --allow-all
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
