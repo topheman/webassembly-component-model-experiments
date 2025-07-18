@@ -23,6 +23,7 @@
     "test:e2e:all:preview": "BASE_URL=http://localhost:4173/webassembly-component-model-experiments npm run test:e2e:all",
     "test:e2e:ui:preview": "BASE_URL=http://localhost:4173/webassembly-component-model-experiments npm run test:e2e:ui",
     "test:e2e:report": "playwright show-report",
+    "test:e2e:like-in-ci": "CI=true GITHUB_ACTIONS=true WAIT_FOR_SERVER_AT_URL=http://localhost:4173/webassembly-component-model-experiments/ npm run test:e2e:all:preview",
     "wasm:transpile:plugin-echo": "jco transpile --no-nodejs-compat --no-namespaced-exports public/plugins/plugin_echo.wasm -o ./src/wasm/generated/plugin_echo/transpiled",
     "wasm:transpile:plugin-weather": "jco transpile --no-nodejs-compat --no-namespaced-exports public/plugins/plugin_weather.wasm -o ./src/wasm/generated/plugin_weather/transpiled",
     "wasm:transpile:plugin-greet": "jco transpile --no-nodejs-compat --no-namespaced-exports public/plugins/plugin_greet.wasm -o ./src/wasm/generated/plugin_greet/transpiled",
