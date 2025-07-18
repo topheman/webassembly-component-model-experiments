@@ -5,6 +5,7 @@
     "skellock.just",
     "biomejs.biome",
     "bradlc.vscode-tailwindcss",
-    "ms-playwright.playwright"
+    "ms-playwright.playwright",
+    "ms-vscode.cpptools"
   ]
 }

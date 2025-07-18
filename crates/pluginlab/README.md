@@ -18,7 +18,7 @@ There are two kinds of hosts:
 Those hosts then run the same codebase which is compiled to WebAssembly:
 
 - the REPL logic
-- the plugins
+- the plugins (made a few in rust, C and TypeScript)
 
 Security model: the REPL cli implements a security model inspired by [deno](https://docs.deno.com/runtime/fundamentals/security/#permissions):
 
@@ -61,6 +61,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo-c.wasm\
   --allow-all
 ```
 
@@ -85,6 +86,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo-c.wasm\
   --allow-all
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm

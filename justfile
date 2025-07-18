@@ -33,13 +33,25 @@ c-wit-bindgen-plugins:
 build-c-plugin plugin:
     #!/usr/bin/env bash
     just c-wit-bindgen-plugin {{plugin}}
-    ./c_deps/wasi-sdk/bin/clang ./c_modules/{{plugin}}/component.c ./c_modules/{{plugin}}/plugin_api.c ./c_modules/{{plugin}}/plugin_api_component_type.o -o ./c_modules/{{plugin}}/{{plugin}}-c.wasm -mexec-model=reactor
-    wasm-tools component new ./c_modules/{{plugin}}/{{plugin}}-c.wasm -o ./c_modules/{{plugin}}/{{plugin}}-c.component.wasm
+    # Compile a WebAssmbly module (P1)
+    ./c_deps/wasi-sdk/bin/clang ./c_modules/{{plugin}}/component.c ./c_modules/{{plugin}}/plugin_api.c ./c_modules/{{plugin}}/plugin_api_component_type.o -o ./c_modules/{{plugin}}/{{plugin}}-c.module.p1.wasm -mexec-model=reactor
+    # Convert the WebAssembly module (P1) to a WebAssembly component (P2)
+    wasm-tools component new ./c_modules/{{plugin}}/{{plugin}}-c.module.p1.wasm -o ./c_modules/{{plugin}}/{{plugin}}-c.wasm
 
 # Build all C plugins
 build-c-plugins:
     #!/usr/bin/env bash
     just list-c-plugins|xargs -I {} just build-c-plugin {}
+
+# Build all rust plugins in debug mode
+build-rust-plugins:
+    #!/usr/bin/env bash
+    just list-rust-plugins|xargs -I {} cargo component build -p {}
+
+# Build all rust plugins in release mode
+build-rust-plugins-release:
+    #!/usr/bin/env bash
+    just list-rust-plugins|xargs -I {} cargo component build --release -p {}
 
 wasi-sdk-name:
     @echo wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
@@ -55,12 +67,14 @@ build-release: build-repl-logic-guest-release build-plugins-release build-c-plug
 # Build all plugins in debug mode
 build-plugins:
     #!/usr/bin/env bash
-    just list-rust-plugins|xargs -I {} cargo component build -p {}
+    just build-rust-plugins
+    just build-c-plugins
 
 # Build all plugins in release mode
 build-plugins-release:
     #!/usr/bin/env bash
-    just list-rust-plugins|xargs -I {} cargo component build --release -p {}
+    just build-rust-plugins-release
+    just build-c-plugins
 
 # Build a specific plugin
 build-plugin plugin:

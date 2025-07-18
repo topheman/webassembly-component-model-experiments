@@ -23,7 +23,7 @@ There are two kinds of hosts:
 Those hosts then run the same codebase which is compiled to WebAssembly:
 
 - the REPL logic
-- the plugins
+- the plugins (made a few in rust, C and TypeScript)
 
 Security model: the REPL cli implements a security model inspired by [deno](https://docs.deno.com/runtime/fundamentals/security/#permissions):
 
@@ -82,6 +82,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo-c.wasm\
   --allow-all
 ```
 
@@ -105,6 +106,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo-c.wasm\
   --allow-all
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
@@ -206,6 +208,7 @@ This will (see [justfile](./justfile)):
 - compile the pluginlab crate from rust to a binary file
 - compile the repl-logic-guest crate from rust to wasm
 - compile the plugin-* crates from rust to wasm
+- compile the c_modules/plugin-* C plugins to wasm
 
 #### Run
 
@@ -217,6 +220,7 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm\
+  --plugins ./c_modules/plugin-echo/plugin-echo-c.wasm\
   --allow-all
 ```
 

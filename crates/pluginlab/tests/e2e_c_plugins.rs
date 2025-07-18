@@ -35,7 +35,7 @@ mod e2e_c_plugins {
             &format!(
                 "{} --dir tmp/filesystem --allow-read",
                 &build_command(
-                    &["c_modules/plugin-echo/plugin-echo-c.component.wasm"],
+                    &["c_modules/plugin-echo/plugin-echo-c.wasm"],
                     "repl_logic_guest.wasm"
                 )
             ),
