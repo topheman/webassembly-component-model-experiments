@@ -20,6 +20,15 @@ dl-wasi-sdk:
     tar -C c_deps -xvf c_deps/${FILENAME}
     mv c_deps/wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS} c_deps/wasi-sdk
 
+# Generate the C bindings for the plugin
+c-wit-bindgen-plugin plugin:
+    wit-bindgen c ./crates/pluginlab/wit --world plugin-api --out-dir ./c_modules/{{plugin}}
+
+# Generate the C bindings for all plugins
+c-wit-bindgen-plugins:
+    #!/usr/bin/env bash
+    just list-c-plugins|xargs -I {} just c-wit-bindgen-plugin {}
+
 wasi-sdk-name:
     @echo wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
 
@@ -82,6 +91,11 @@ clean:
 list-rust-plugins:
     #!/usr/bin/env bash
     ls -1 crates|grep plugin-
+
+# List all the C plugins
+list-c-plugins:
+    #!/usr/bin/env bash
+    ls -1 c_modules
 
 # Run the tests for the pluginlab
 test: build-repl-logic-guest build-plugins prepare-fixtures
