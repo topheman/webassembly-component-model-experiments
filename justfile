@@ -11,6 +11,15 @@ init-env-file:
     @echo ""
     @echo "Currently, in .env file, WASI_OS=$WASI_OS and WASI_ARCH=$WASI_ARCH, please update them if needed."
 
+#Download the WASI SDK into ./c_deps/wasi-sdk folder - run `just init-env-file` before
+dl-wasi-sdk:
+    #!/usr/bin/env bash
+    mkdir -p c_deps
+    FILENAME=wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
+    curl -L -o c_deps/${FILENAME} https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_VERSION}/${FILENAME}
+    tar -C c_deps -xvf c_deps/${FILENAME}
+    mv c_deps/wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS} c_deps/wasi-sdk
+
 wasi-sdk-name:
     @echo wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
 

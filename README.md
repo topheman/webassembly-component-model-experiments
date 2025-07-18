@@ -188,6 +188,11 @@ cargo install wit-bindgen-cli@0.43.0
 cargo binstall wasm-tools@1.235.0
 ```
 
+```bash
+# Download the WASI SDK into ./c_deps/wasi-sdk folder
+just dl-wasi-sdk
+```
+
 ### pluginlab (rust)
 
 #### Build

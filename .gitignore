@@ -20,3 +20,4 @@ dist/
 
 # C
 .env
+c_deps/
