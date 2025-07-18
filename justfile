@@ -1,24 +1,80 @@
+set dotenv-load
+
 # Show help
 default:
     @just --list
 
+# Initialize the .env file tracking the WASI SDK version
+init-env-file:
+    cp .env.original .env
+    cat .env
+    @echo ""
+    @echo "Currently, in .env file, WASI_OS=$WASI_OS and WASI_ARCH=$WASI_ARCH, please update them if needed."
+
+#Download the WASI SDK into ./c_deps/wasi-sdk folder - run `just init-env-file` before
+dl-wasi-sdk:
+    #!/usr/bin/env bash
+    mkdir -p c_deps
+    FILENAME=wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
+    curl -L -o c_deps/${FILENAME} https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_VERSION}/${FILENAME}
+    tar -C c_deps -xvf c_deps/${FILENAME}
+    mv c_deps/wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS} c_deps/wasi-sdk
+
+# Generate the C bindings for the plugin
+c-wit-bindgen-plugin plugin:
+    wit-bindgen c ./crates/pluginlab/wit --world plugin-api --out-dir ./c_modules/{{plugin}}
+
+# Generate the C bindings for all plugins
+c-wit-bindgen-plugins:
+    #!/usr/bin/env bash
+    just list-c-plugins|xargs -I {} just c-wit-bindgen-plugin {}
+
+# Build a specific C plugin
+build-c-plugin plugin:
+    #!/usr/bin/env bash
+    just c-wit-bindgen-plugin {{plugin}}
+    # Compile a WebAssmbly module (P1)
+    ./c_deps/wasi-sdk/bin/clang ./c_modules/{{plugin}}/component.c ./c_modules/{{plugin}}/plugin_api.c ./c_modules/{{plugin}}/plugin_api_component_type.o -o ./c_modules/{{plugin}}/{{plugin}}-c.module.p1.wasm -mexec-model=reactor
+    # Convert the WebAssembly module (P1) to a WebAssembly component (P2)
+    wasm-tools component new ./c_modules/{{plugin}}/{{plugin}}-c.module.p1.wasm -o ./c_modules/{{plugin}}/{{plugin}}-c.wasm
+
+# Build all C plugins
+build-c-plugins:
+    #!/usr/bin/env bash
+    just list-c-plugins|xargs -I {} just build-c-plugin {}
+
+# Build all rust plugins in debug mode
+build-rust-plugins:
+    #!/usr/bin/env bash
+    just list-rust-plugins|xargs -I {} cargo component build -p {}
+
+# Build all rust plugins in release mode
+build-rust-plugins-release:
+    #!/usr/bin/env bash
+    just list-rust-plugins|xargs -I {} cargo component build --release -p {}
+
+wasi-sdk-name:
+    @echo wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
+
 # Build all crates with appropriate commands
-build: build-repl-logic-guest build-plugins
+build: build-repl-logic-guest build-plugins build-c-plugins
     just build-pluginlab
 
 # Build all crates in release mode
-build-release: build-repl-logic-guest-release build-plugins-release
+build-release: build-repl-logic-guest-release build-plugins-release build-c-plugins
     just build-pluginlab-release
 
 # Build all plugins in debug mode
 build-plugins:
     #!/usr/bin/env bash
-    just list-rust-plugins|xargs -I {} cargo component build -p {}
+    just build-rust-plugins
+    just build-c-plugins
 
 # Build all plugins in release mode
 build-plugins-release:
     #!/usr/bin/env bash
-    just list-rust-plugins|xargs -I {} cargo component build --release -p {}
+    just build-rust-plugins-release
+    just build-c-plugins
 
 # Build a specific plugin
 build-plugin plugin:
@@ -61,6 +117,11 @@ clean:
 list-rust-plugins:
     #!/usr/bin/env bash
     ls -1 crates|grep plugin-
+
+# List all the C plugins
+list-c-plugins:
+    #!/usr/bin/env bash
+    ls -1 c_modules|grep plugin-
 
 # Run the tests for the pluginlab
 test: build-repl-logic-guest build-plugins prepare-fixtures

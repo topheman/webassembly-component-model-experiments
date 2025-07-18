@@ -23,7 +23,7 @@ There are two kinds of hosts:
 Those hosts then run the same codebase which is compiled to WebAssembly:
 
 - the REPL logic
-- the plugins
+- the plugins (made a few in rust, C and TypeScript)
 
 Security model: the REPL cli implements a security model inspired by [deno](https://docs.deno.com/runtime/fundamentals/security/#permissions):
 
@@ -63,7 +63,7 @@ In the last seven years I've done a few projects involving rust and WebAssembly:
 
 ## Usage
 
-### pluginlab (rust)
+### pluginlab (rust) - REPL cli host
 
 #### Install
 
@@ -82,6 +82,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
   --allow-all
 ```
 
@@ -105,6 +106,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
   --allow-all
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
@@ -169,7 +171,31 @@ npm install
 npx playwright install
 ```
 
-### pluginlab (rust)
+#### C tooling
+
+[From the WebAssembly Component Model section for C tooling](https://component-model.bytecodealliance.org/language-support/c.html)
+
+```bash
+# Initialize the .env file tracking the WASI SDK version for C development
+# You will be asked to update the WASI_OS and WASI_ARCH variables if needed
+just init-env-file
+```
+
+```bash
+cargo install wit-bindgen-cli@0.43.0
+```
+
+```bash
+# Install the wasm-tools tool - you can also use cargo install wasm-tools@1.235.0 if you don't have cargo-binstall
+cargo binstall wasm-tools@1.235.0
+```
+
+```bash
+# Download the WASI SDK into ./c_deps/wasi-sdk folder
+just dl-wasi-sdk
+```
+
+### pluginlab (rust) - REPL cli host
 
 #### Build
 
@@ -182,6 +208,7 @@ This will (see [justfile](./justfile)):
 - compile the pluginlab crate from rust to a binary file
 - compile the repl-logic-guest crate from rust to wasm
 - compile the plugin-* crates from rust to wasm
+- compile the c_modules/plugin-* C plugins to wasm
 
 #### Run
 
@@ -193,6 +220,7 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm\
+  --plugins ./c_modules/plugin-echo/plugin-echo-c.wasm\
   --allow-all
 ```
 
@@ -300,14 +328,23 @@ In [`.github/workflows/web-host.yml`](./.github/workflows/web-host.yml), after t
 
 To be sure that the preview server is up and running before running the tests, we use the [`webServer.command` option](https://playwright.dev/docs/test-webserver) of [playwright.config.ts](./packages/web-host/playwright.config.ts) to run `WAIT_FOR_SERVER_AT_URL=http://localhost:4173/webassembly-component-model-experiments/ npm run test:e2e:all:preview`
 
+### plugins
 
-### plugins (TypeScript)
+There are currently plugins implemented in 3 languages (most of them are in rust):
 
-You can write plugins in rust in [`crates/plugin-*`](./crates), you can also write plugins in TypeScript in [`packages/plugin-*`](./packages), thanks to `jco componentize` (based on [componentize-js](https://github.com/bytecodealliance/componentize-js)).
+#### Rust
 
-There is a [`packages/plugin-echo`](./packages/plugin-echo/) example plugin in TypeScript.
+You can write plugins in rust in [`crates/plugin-*`](./crates).
 
-The downsides of writing plugins in TypeScript is mostly that your `.wasm` file will be **much larger** than the one compiled from rust:
+#### C
+
+You can write plugins in C in [`c_modules/plugin-*`](./c_modules), thanks to `wit-bindgen` (based on [wit-bindgen](https://github.com/bytecodealliance/wit-bindgen)).
+
+#### TypeScript
+
+You can also write plugins in TypeScript in [`packages/plugin-*`](./packages), thanks to `jco componentize` (based on [componentize-js](https://github.com/bytecodealliance/componentize-js)).
+
+The downsides of writing plugins in TypeScript is mostly that your `.wasm` file will be **much larger** than the one compiled from rust or C:
 
 - ~100KB of wasm for the rust plugin
 - 11MB of wasm for the TypeScript plugin
@@ -316,9 +353,10 @@ The reason is that a JavaScript runtime needs to be embedded in the `.wasm` file
 
 More about the [SpiderMonkey runtime embedding](https://github.com/bytecodealliance/ComponentizeJS?tab=readme-ov-file#explainer).
 
-### plugins (Other languages)
+#### Other languages
 
-Coming soon.
+Coming.
+
 
 ## Developer experience
 
@@ -346,6 +384,7 @@ Those are **optional** tools that are handy for WebAssembly development:
 - [cargo component 0.21.1+](https://github.com/bytecodealliance/cargo-component?tab=readme-ov-file#installation)
 - [wasm-tools 1.235.0](https://github.com/bytecodealliance/wasm-tools?tab=readme-ov-file#installation)
 - [wasm-opt 116](https://github.com/WebAssembly/binaryen?tab=readme-ov-file#installation)
+- [wit-bindgen-cli 0.43.0](https://github.com/bytecodealliance/wit-bindgen)
 
 ```bash
 # latest versions
@@ -356,3 +395,9 @@ cargo binstall cargo-component wasm-tools wasm-opt
 # specific versions I used for this project
 cargo binstall cargo-component@0.21.1 wasm-tools@1.235.0 wasm-opt@116
 ```
+
+### C tooling
+
+- [From the WebAssembly Component Model section for C tooling](https://component-model.bytecodealliance.org/language-support/c.html)
+- [WASI SDK](https://github.com/WebAssembly/wasi-sdk)
+- [WIT Bindgen](https://github.com/bytecodealliance/wit-bindgen)

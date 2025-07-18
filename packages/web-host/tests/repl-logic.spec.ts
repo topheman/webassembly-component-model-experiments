@@ -73,6 +73,7 @@ test("list-commands", async ({ page }) => {
   await expect(stdout).toContainText(
     `cat	plugin
 echo	plugin
+echoc	plugin
 export	reserved
 greet	plugin
 help	reserved

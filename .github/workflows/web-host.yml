@@ -5,6 +5,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Set variables based on OS and architecture for just dl-wasi-sdk
+        run: |
+          if [ "${{ runner.arch }}" = "X64" ]; then
+            echo "WASI_ARCH=x86_64" >> $GITHUB_ENV
+          else
+            echo "WASI_ARCH=arm64" >> $GITHUB_ENV
+          fi
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "WASI_OS=windows" >> $GITHUB_ENV
+          else
+            echo "WASI_OS=linux" >> $GITHUB_ENV
+          fi
+          echo "WASI_VERSION_FULL=25.0" >> $GITHUB_ENV
+          echo "WASI_VERSION=25" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
         with:
@@ -18,6 +32,14 @@ jobs:
       - uses: extractions/setup-just@v3
       - name: Install cargo-component
         run: cargo binstall cargo-component@0.21.1
+      - name: Install wasm-tools
+        run: cargo binstall wasm-tools@1.235.0
+      - name: Install wit-bindgen
+        run: cargo install wit-bindgen-cli@0.43.0
+      - name: Install wasi-sdk
+        run: |
+          mkdir c_deps
+          just dl-wasi-sdk
       - name: Install JavaScript dependencies
         run: npm ci
       - name: Build
