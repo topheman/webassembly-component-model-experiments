@@ -29,6 +29,17 @@ c-wit-bindgen-plugins:
     #!/usr/bin/env bash
     just list-c-plugins|xargs -I {} just c-wit-bindgen-plugin {}
 
+# Build a specific C plugin
+build-c-plugin plugin:
+    #!/usr/bin/env bash
+    ./c_deps/wasi-sdk/bin/clang ./c_modules/{{plugin}}/component.c ./c_modules/{{plugin}}/plugin_api.c ./c_modules/{{plugin}}/plugin_api_component_type.o -o ./c_modules/{{plugin}}/{{plugin}}-c.wasm -mexec-model=reactor
+    wasm-tools component new ./c_modules/{{plugin}}/{{plugin}}-c.wasm -o ./c_modules/{{plugin}}/{{plugin}}-c.component.wasm
+
+# Build all C plugins
+build-c-plugins:
+    #!/usr/bin/env bash
+    just list-c-plugins|xargs -I {} just build-c-plugin {}
+
 wasi-sdk-name:
     @echo wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
 

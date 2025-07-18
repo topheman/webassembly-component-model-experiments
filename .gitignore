@@ -21,8 +21,3 @@ dist/
 # C
 .env
 c_deps/
-
-# wit-bindgen generated files for C plugins
-c_modules/*/plugin_api.h
-c_modules/*/plugin_api.c
-c_modules/*/plugin_api_component_type.o
