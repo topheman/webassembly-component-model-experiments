@@ -51,7 +51,7 @@ cargo install pluginlab
 
 ## Usage
 
-Run the CLI host, loading the plugins from the web (you can also load them from local files).
+Run the CLI host, loading the latest versions of the plugins from the web (you can also load them from local files).
 
 ```bash
 pluginlab\
@@ -74,7 +74,6 @@ Other flags:
 - `--allow-all`: allows all permissions (same as all the flags above), short: `-A`
 - `--help`: displays manual
 - `--debug`: run the host in debug mode (by default, the host runs in release mode)
-
 
 <details>
 <summary>🚀 Example of running the CLI host</summary>
@@ -124,3 +123,23 @@ Hello, Tophe!
 repl(0)>
 </pre>
 </details>
+
+### Versioning
+
+The plugins are also versioned in [github releases](https://github.com/topheman/webassembly-component-model-experiments/releases), you can use them if you want to use an old version of the plugins.
+
+<summary>
+  <details>
+    <summary>Example of running the CLI host with old versions of the plugins (if you have an old version of <code>pluginlab</code></summary>
+    <pre>
+pluginlab\
+  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/repl_logic_guest.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_greet.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_ls.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_echo.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_weather.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_cat.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin-echo-c.wasm\
+  --allow-all
+    </pre>
+</summary>
