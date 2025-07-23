@@ -67,12 +67,14 @@ build-release: build-repl-logic-guest-release build-plugins-release build-c-plug
 # Build all plugins in debug mode
 build-plugins:
     #!/usr/bin/env bash
+    just build-repl-logic-guest
     just build-rust-plugins
     just build-c-plugins
 
 # Build all plugins in release mode
 build-plugins-release:
     #!/usr/bin/env bash
+    just build-repl-logic-guest-release
     just build-rust-plugins-release
     just build-c-plugins
 

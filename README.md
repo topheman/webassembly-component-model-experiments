@@ -357,6 +357,35 @@ More about the [SpiderMonkey runtime embedding](https://github.com/bytecodeallia
 
 Coming.
 
+## CI
+
+### Testing
+
+The `pluginlab` binary is built and tested e2e (using `rexpect` library).
+
+The `web-host` is built and tested e2e (using [playwright](https://playwright.dev/)).
+
+### Deployment
+
+The `web-host` is automatically deployed to github pages when pushed on the `master` branch, containing the latest `wasm` versions of the plugins available at https://topheman.github.io/webassembly-component-model-experiments/plugins.
+
+### Pre-release
+
+https://github.com/topheman/webassembly-component-model-experiments/releases
+
+When a git tag is pushed, a pre-release is prepared on github, linked to the tag, containing the `wasm` files for the plugins and the repl-logic, in order to version those. That way, you can use an old binary of `pluginlab` against the correct versions of the plugins:
+
+```sh
+pluginlab\
+  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/repl_logic_guest.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_greet.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_ls.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_echo.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_weather.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_cat.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin-echo-c.wasm\
+  --allow-all
+```
 
 ## Developer experience
 
