@@ -129,6 +129,10 @@ list-c-plugins:
 test: build-repl-logic-guest build-plugins prepare-fixtures
     cargo test
 
+# Run the tests for the pluginlab with no parallelism
+test-mono: build-repl-logic-guest build-plugins prepare-fixtures
+    cargo test --jobs 1
+
 # Run the e2e tests for the pluginlab
 test-e2e-pluginlab: build-repl-logic-guest build-plugins prepare-fixtures
     cargo test -p pluginlab
