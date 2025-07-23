@@ -2,7 +2,26 @@ name: rust-host
 on: [push, pull_request]
 
 jobs:
+  # https://github.com/marketplace/actions/skip-duplicate-actions
+  pre_job:
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          # Skip a workflow run if the same workflow is already running
+          concurrent_skipping: 'same_content_newer'
+          skip_after_successful_duplicate: 'true'
+          paths_ignore: '["**/README.md"]'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
   build-and-test:
+    needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Set variables based on OS and architecture for just dl-wasi-sdk
@@ -43,3 +62,35 @@ jobs:
         run: just test
       - name: Test with wasm from http server (if it fails, you need to publish a new version of pluginlab)
         run: just test-e2e-pluginlab-http
+
+      - name: Build plugins in release mode (for pre-release)
+        if: github.ref_type == 'tag'
+        run: just build-plugins-release
+      - name: Prepare wasm files (for pre-release)
+        if: github.ref_type == 'tag'
+        run: ./scripts/prepare-wasm-files.sh --mode release --target-dir ./tmp/plugins
+      - name: Cache wasm files (for pre-release)
+        if: github.ref_type == 'tag'
+        id: cache-wasm-files
+        uses: actions/cache@v4
+        with:
+          path: ./tmp/plugins
+          key: ${{ runner.os }}-wasm-files-${{ github.sha }}
+
+  pre-release:
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Restore cached wasm files
+        id: cache-wasm-files-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ./tmp/plugins
+          key: ${{ runner.os }}-wasm-files-${{ github.sha }}
+      - name: Pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./tmp/plugins/*.wasm
