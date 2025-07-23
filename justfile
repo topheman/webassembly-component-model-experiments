@@ -57,11 +57,11 @@ wasi-sdk-name:
     @echo wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
 
 # Build all crates with appropriate commands
-build: build-repl-logic-guest build-plugins build-c-plugins
+build: build-plugins
     just build-pluginlab
 
 # Build all crates in release mode
-build-release: build-repl-logic-guest-release build-plugins-release build-c-plugins
+build-release: build-plugins-release
     just build-pluginlab-release
 
 # Build all plugins in debug mode
