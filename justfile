@@ -150,3 +150,11 @@ prepare-fixtures:
     cp -r fixtures/filesystem tmp
     mv tmp/filesystem/README.rust.md tmp/filesystem/README.md
     rm tmp/filesystem/README.browser.md
+
+# Copy wasm files into /public/plugins of the web host - debug mode
+web-host-prepare-wasm-files-debug:
+    ./scripts/prepare-wasm-files.sh --mode debug
+
+# Copy wasm files into /public/plugins of the web host - release mode
+web-host-prepare-wasm-files-release:
+    ./scripts/prepare-wasm-files.sh --mode release
