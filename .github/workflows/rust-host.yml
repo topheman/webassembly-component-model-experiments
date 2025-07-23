@@ -63,13 +63,13 @@ jobs:
       - name: Test with wasm from http server (if it fails, you need to publish a new version of pluginlab)
         run: just test-e2e-pluginlab-http
 
-      - name: Build plugins in release mode (for pre-release)
+      - name: Build plugins in release mode (for release-draft)
         if: github.ref_type == 'tag'
         run: just build-plugins-release
-      - name: Prepare wasm files (for pre-release)
+      - name: Prepare wasm files (for release-draft)
         if: github.ref_type == 'tag'
         run: ./scripts/prepare-wasm-files.sh --mode release --target-dir ./tmp/plugins
-      - name: Cache wasm files (for pre-release)
+      - name: Cache wasm files (for release-draft)
         if: github.ref_type == 'tag'
         id: cache-wasm-files
         uses: actions/cache@v4
@@ -77,7 +77,7 @@ jobs:
           path: ./tmp/plugins
           key: ${{ runner.os }}-wasm-files-${{ github.sha }}
 
-  pre-release:
+  release-draft:
     if: github.ref_type == 'tag'
     permissions:
       contents: write
@@ -90,7 +90,8 @@ jobs:
         with:
           path: ./tmp/plugins
           key: ${{ runner.os }}-wasm-files-${{ github.sha }}
-      - name: Pre-release
+      - name: Release draft
         uses: softprops/action-gh-release@v2
         with:
+          draft: true
           files: ./tmp/plugins/*.wasm
