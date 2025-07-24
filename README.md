@@ -253,8 +253,9 @@ just test
 ```
 
 ```bash
-# Runs e2e tests on the REPL using the plugins from the http server
-just test-e2e-pluginlab-http
+# Runs e2e tests on the REPL against the latest version of the plugins available at https://topheman.github.io/webassembly-component-model-experiments/plugins
+# Launch to check for breaking changes with the WIT interface
+just test-e2e-pluginlab-http-latest
 ```
 
 #### Make a rust plugin

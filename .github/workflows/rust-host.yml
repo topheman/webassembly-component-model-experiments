@@ -41,8 +41,6 @@ jobs:
         run: just build
       - name: Test
         run: just test
-      - name: Test with wasm from http server (if it fails, you need to publish a new version of pluginlab)
-        run: just test-e2e-pluginlab-http
 
       - name: Build plugins in release mode (for release-draft)
         if: github.ref_type == 'tag'

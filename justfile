@@ -141,12 +141,12 @@ test-e2e-pluginlab: build-repl-logic-guest build-plugins prepare-fixtures
 test-e2e-pluginlab-nocapture: build-repl-logic-guest build-plugins prepare-fixtures
     cargo test -p pluginlab -- --nocapture
 
-# Run the e2e tests for the pluginlab retrieving the plugins from the HTTP server
-test-e2e-pluginlab-http: build-repl-logic-guest build-plugins prepare-fixtures
+# Run the e2e tests for the pluginlab retrieving the plugins from the HTTP server - launch to check for breaking changes
+test-e2e-pluginlab-http-latest: build-repl-logic-guest build-plugins prepare-fixtures
     WASM_TARGET_DIR=https://topheman.github.io/webassembly-component-model-experiments/plugins cargo test -p pluginlab
 
-# Run the e2e tests for the pluginlab retrieving the plugins from the HTTP server
-test-e2e-pluginlab-http-nocapture: build-repl-logic-guest build-plugins prepare-fixtures
+# Run the e2e tests for the pluginlab retrieving the plugins from the HTTP server - launch to check for breaking changes
+test-e2e-pluginlab-http-latest-nocapture: build-repl-logic-guest build-plugins prepare-fixtures
     WASM_TARGET_DIR=https://topheman.github.io/webassembly-component-model-experiments/plugins cargo test -p pluginlab -- --nocapture
 
 # Prepare the fixtures for the e2e tests
