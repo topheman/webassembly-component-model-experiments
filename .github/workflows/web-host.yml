@@ -2,26 +2,7 @@ name: web-host
 on: [push, pull_request]
 
 jobs:
-  # https://github.com/marketplace/actions/skip-duplicate-actions
-  pre_job:
-    # continue-on-error: true # Uncomment once integration is finished
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          # All of these options are optional, so you can remove them if you are happy with the defaults
-          # Skip a workflow run if the same workflow is already running
-          concurrent_skipping: 'same_content_newer'
-          skip_after_successful_duplicate: 'true'
-          paths_ignore: '["**/README.md"]'
-          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
   build:
-    needs: pre_job
-    if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Set variables based on OS and architecture for just dl-wasi-sdk
