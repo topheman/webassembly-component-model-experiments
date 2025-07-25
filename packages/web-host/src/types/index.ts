@@ -19,4 +19,5 @@ export type ReplHistoryEntry =
     }
   | {
       stdin: string;
+      allowHtml?: boolean;
     };

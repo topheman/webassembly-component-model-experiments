@@ -1,5 +1,6 @@
 import { _setPluginsNames as hostStateSetPluginsNames } from "repl:api/host-state";
 import type { HostApi, PluginApi, ReplHistoryEntry } from "../types";
+import { getPluginSourceUrl } from "../utils/github";
 
 type AddReplHistoryEntryProp = {
   addReplHistoryEntry: (entry: ReplHistoryEntry) => void;
@@ -43,8 +44,18 @@ async function loadPlugins({
     import("./generated/plugin-echo-c/transpiled/plugin-echo-c.js"),
   ]).then((plugins) =>
     plugins.map((plugin) => {
+      // Since we `allowHtml`, which will `dangerouslySetInnerHTML`, we need to sanitize the plugin name
+      // (a plugin author could attack by injecting a script tag)
+      const sanitizedPluginName = plugin.plugin
+        .name()
+        .replace(/[^a-zA-Z0-9_-]/g, "");
+      const sourceUrl = getPluginSourceUrl(sanitizedPluginName);
+      const stdin = sourceUrl
+        ? `[Host] Loaded plugin: <a href="${sourceUrl}" title="View source of the plugin on GitHub">${sanitizedPluginName}</a>`
+        : `[Host] Loaded plugin: ${sanitizedPluginName}`;
       addReplHistoryEntry({
-        stdin: `[Host] Loaded plugin: ${plugin.plugin.name()}`,
+        stdin,
+        allowHtml: !!sourceUrl,
       });
       return plugin.plugin;
     }),
