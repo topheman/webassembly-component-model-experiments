@@ -31,16 +31,36 @@ impl WasmHost {
 
     pub async fn load_plugin(&mut self, engine: &WasmEngine, source: &str) -> Result<()> {
         let component = engine.load_component(source).await?;
-        let plugin = engine
-            .instantiate_plugin(&mut self.store, component)
-            .await?;
-
-        // Get the plugin name from the plugin itself
-        let plugin_name = plugin.repl_api_plugin().call_name(&mut self.store).await?;
-
-        self.plugins.insert(plugin_name, PluginInstance { plugin });
-
-        Ok(())
+        match engine.instantiate_plugin(&mut self.store, component).await {
+            Ok(plugin) => {
+                // Get the plugin name from the plugin itself
+                let plugin_name = plugin.repl_api_plugin().call_name(&mut self.store).await?;
+                self.plugins.insert(plugin_name, PluginInstance { plugin });
+                return Ok(());
+            }
+            Err(e) => {
+                if e.to_string()
+                    .contains("failed to convert function to given type")
+                {
+                    let plugin_filename = source.split("/").last().unwrap();
+                    let crate_version = env!("CARGO_PKG_VERSION");
+                    eprintln!("[Host]");
+                    eprintln!("[Host] Error: Failed instanciating {}", source);
+                    eprintln!(
+                        "[Host] You are most likely trying to use a plugin not compatible with pluginlab@{}",
+                        crate_version
+                    );
+                    eprintln!("[Host]");
+                    eprintln!("[Host] Try using a compatible version of the plugin by passing the following flag:");
+                    eprintln!("[Host] --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@{}/{}", crate_version, plugin_filename);
+                    eprintln!("[Host]");
+                    eprintln!("[Host] If it doesn't work, make sure to use the latest version of pluginlab: `cargo install pluginlab`");
+                    eprintln!("[Host]");
+                    eprintln!("[Host] Original error:");
+                }
+                return Err(e);
+            }
+        }
     }
 
     pub async fn load_repl_logic(&mut self, engine: &WasmEngine, source: &str) -> Result<()> {
