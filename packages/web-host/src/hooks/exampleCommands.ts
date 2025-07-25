@@ -1,53 +1,5 @@
 import { useState } from "react";
 
-function echo_foo() {
-  return "echo foo";
-}
-
-function echo_bar() {
-  return "echo bar";
-}
-
-function echo_baz() {
-  return "echo baz";
-}
-
-function echo_$0() {
-  return "echo $0";
-}
-
-function echo_$ROOT_$USER() {
-  return "echo $ROOT/$USER";
-}
-
-function export_USER_WebAssembly() {
-  return "export USER=WebAssembly";
-}
-
-function export_USER_Tophe() {
-  return "export USER=Tophe";
-}
-
-function greet_USER() {
-  return "greet $USER";
-}
-
-function azertyuiop() {
-  return "azertyuiop";
-}
-
-function echo_$question_mark() {
-  return "echo $?";
-}
-
-function help() {
-  return "help";
-}
-
-function man_weather() {
-  return "man weather";
-}
-
 function ls(path?: string) {
   if (path) {
     return `ls ${path}`;
@@ -62,48 +14,39 @@ function cat(path?: string) {
   return "cat";
 }
 
-function weather_Paris() {
-  return "weather Paris";
-}
-
-function export_DATE() {
-  return `export DATE=${new Date().toISOString()}`;
-}
-
-function echo_DATE() {
-  return `echo $DATE`;
-}
-
 const commands = [
-  echo_foo,
-  echo_bar,
-  echo_baz,
-  echo_$0,
-  echo_$ROOT_$USER,
-  greet_USER,
-  echo_$0,
-  export_USER_WebAssembly,
-  echo_$ROOT_$USER,
-  echo_$0,
-  echo_$question_mark,
-  azertyuiop,
-  echo_$question_mark,
-  echo_$question_mark,
-  export_DATE,
-  echo_DATE,
-  export_USER_Tophe,
-  echo_$ROOT_$USER,
-  ls,
+  "echo foo",
+  "echo bar",
+  "echo baz",
+  "echo $0",
+  "echo $ROOT/$USER",
+  "greet $USER",
+  "echo $0",
+  "export USER=WebAssembly",
+  "echo $ROOT/$USER",
+  "echo $0",
+  "echo $?",
+  "azertyuiop",
+  "echo $?",
+  "echo $?",
+  () => `export DATE=${new Date().toISOString()}`,
+  "echo $DATE",
+  "export USER=Tophe",
+  "echo $ROOT/$USER",
+  () => ls(),
   () => cat("README.md"),
-  ls,
+  () => ls(),
   () => ls("data"),
   () => ls("data/processed"),
   () => ls("data/processed/2024"),
   () => ls("documents"),
   () => cat("documents/config.json"),
-  weather_Paris,
-  man_weather,
-  help,
+  "weather Paris",
+  "man weather",
+  "help",
+  "echoc This is the same as `echo`, implemented in C",
+  "echoc try `man echo` vs `man echoc`",
+  "echoc qux",
 ];
 
 export function useGetExampleCommand() {
@@ -118,7 +61,8 @@ export function useGetExampleCommand() {
         setDone(true);
         setIndex(0);
       }
-      const output = commands[index]();
+      const command = commands[index];
+      const output = typeof command === "function" ? command() : command;
       setCommand(output);
       setRemaining((left) => left - 1);
       setIndex((index) => index + 1);
