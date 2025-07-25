@@ -18,11 +18,12 @@ export function Repl({
   const historyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const wandButtonRef = useRef<HTMLButtonElement>(null);
   const [input, setInput] = useState("");
   const { handleInput, commandRunning } = useReplLogic({ engine });
   const [inputFocus, setInputFocus] = useState(false);
   const { history } = useReplHistory();
-  const [wandButtonUsed, setWandButtonUsed] = useState(false);
+  const [wandButtonUsed, setWandButtonUsed] = useState<boolean | null>(null);
   const { getExampleCommand, remainingExampleCommands, doneExampleCommands } =
     useGetExampleCommand();
 
@@ -64,8 +65,30 @@ export function Repl({
     }
   }, [inputFocus]);
 
+  useEffect(() => {
+    if (wandButtonRef.current) {
+      wandButtonRef.current.addEventListener("animationend", () => {
+        setWandButtonUsed(false);
+      });
+    }
+  }, []);
+
   return (
     <div className={className}>
+      <style>
+        {`
+          @keyframes wandEnter {
+            0% {
+              transform: translate(-30vw, -60vh) scale(3);
+              opacity: 0.2;
+            }
+            100% {
+              transform: translate(0, 0) scale(1);
+              opacity: 1;
+            }
+          }
+        `}
+      </style>
       <ReplHistory
         ref={historyRef}
         className="fixed top-[80px] bottom-[100px] overflow-y-scroll max-w-4xl w-full pr-8"
@@ -108,6 +131,7 @@ export function Repl({
               <Play />
             </button>
             <button
+              ref={wandButtonRef}
               onClick={() => {
                 setWandButtonUsed(true);
                 if (commandRunning) {
@@ -126,8 +150,14 @@ export function Repl({
               type="button"
               className={cn(
                 "cursor-pointer bg-primary text-white px-4 py-2 rounded-md relative",
-                !wandButtonUsed && "animate-bounce",
+                wandButtonUsed === false && "animate-bounce",
               )}
+              style={{
+                animation:
+                  wandButtonUsed === null
+                    ? "wandEnter 1s ease-in-out forwards"
+                    : "",
+              }}
               title="Run example command"
             >
               <WandSparkles />
