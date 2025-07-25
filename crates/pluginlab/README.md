@@ -143,3 +143,34 @@ pluginlab\
   --allow-all
     </pre>
 </summary>
+
+<p></p>
+
+If you pass to the `pluginlab` cli a valid plugin but with an incompatible version (cli and plugin not sharing the same `wit` files which defines the interfaces how they interact), you will get an error like the following, which tells you the problem and offers you two solutions:
+
+- use a version of the plugin compatible with the version of the `pluginlab` cli you are using (giving you a link to the releases)
+- use the latest version of the `pluginlab` cli (by running `cargo install pluginlab`)
+
+```
+pluginlab\
+  --repl-logic https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
+[Host] Starting REPL host...
+[Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
+[Host]
+[Host] Error: Failed instanciating https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
+[Host] You are most likely trying to use a plugin not compatible with pluginlab@0.4.1
+[Host]
+[Host] Try using a compatible version of the plugin by passing the following flag:
+[Host] --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_echo.wasm
+[Host]
+[Host] If it doesn't work, make sure to use the latest version of pluginlab: `cargo install pluginlab`
+[Host]
+[Host] Original error:
+Error: failed to convert function to given type
+
+Caused by:
+    0: type mismatch with results
+    1: expected record of 3 fields, found 4 fields
+```

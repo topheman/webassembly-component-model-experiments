@@ -88,4 +88,42 @@ mod e2e_cli_host {
             .exp_string("ls: : Operation not permitted")
             .expect("Didn't get expected error output");
     }
+
+    #[test]
+    fn test_with_wrong_version_of_plugin() {
+        let crate_version = env!("CARGO_PKG_VERSION");
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &build_command(
+                &["fixtures/valid-plugin-with-invalid-wit.wasm"],
+                "repl_logic_guest.wasm",
+            ),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string(format!(
+"[Host] Error: Failed instanciating fixtures/valid-plugin-with-invalid-wit.wasm\r
+[Host] You are most likely trying to use a plugin not compatible with pluginlab@{}\r
+[Host]\r
+[Host] Try using a compatible version of the plugin by passing the following flag:\r
+[Host] --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@{}/valid-plugin-with-invalid-wit.wasm\r
+[Host]\r
+[Host] If it doesn't work, make sure to use the latest version of pluginlab: `cargo install pluginlab`\r
+[Host]\r
+[Host] Original error:",
+                crate_version,
+                crate_version,
+            ).as_str())
+            .expect("Didn't see error output");
+    }
 }
