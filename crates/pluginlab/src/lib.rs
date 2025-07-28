@@ -57,22 +57,33 @@ pub async fn run_async() -> Result<()> {
         eprintln!("[Host][Debug] Loaded plugins config: {:?}", plugins_config);
     }
 
-    host.store
-        .data_mut()
-        .repl_vars
-        .insert("ROOT".to_string(), "/Users".to_string());
-    host.store
-        .data_mut()
-        .repl_vars
-        .insert("USER".to_string(), "Tophe".to_string());
-    host.store
-        .data_mut()
-        .repl_vars
-        .insert("?".to_string(), "0".to_string());
+    {
+        let mut repl_vars = host
+            .store
+            .data_mut()
+            .repl_vars
+            .lock()
+            .expect("Failed to acquire repl_vars lock");
+        repl_vars.insert("ROOT".to_string(), "/Users".to_string());
+    }
+    {
+        let mut repl_vars = host
+            .store
+            .data_mut()
+            .repl_vars
+            .lock()
+            .expect("Failed to acquire repl_vars lock");
+        repl_vars.insert("USER".to_string(), "Tophe".to_string());
+        repl_vars.insert("?".to_string(), "0".to_string());
+    }
     if debug {
         eprintln!(
             "[Host][Debug] Loaded env vars: {:?}",
-            host.store.data().repl_vars
+            host.store
+                .data()
+                .repl_vars
+                .lock()
+                .expect("Failed to acquire repl_vars lock")
         );
     }
 
@@ -82,7 +93,14 @@ pub async fn run_async() -> Result<()> {
 
     loop {
         let mut line = String::new();
-        match host.store.data().repl_vars.get("?") {
+        match host
+            .store
+            .data()
+            .repl_vars
+            .lock()
+            .expect("Failed to acquire repl_vars lock")
+            .get("?")
+        {
             Some(last_status) => {
                 print!("repl({})> ", last_status);
             }

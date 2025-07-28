@@ -1,5 +1,6 @@
 use crate::permissions::NetworkPermissions;
 use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
 use wasmtime::component::ResourceTable;
 use wasmtime_wasi::p2::{IoView, WasiCtx, WasiView};
 
@@ -30,7 +31,7 @@ pub struct WasiState {
     /// and shared with the guest via the Guest bindings
 
     /// Custom environment variables stored by the REPL
-    pub repl_vars: HashMap<String, String>,
+    pub repl_vars: Arc<Mutex<HashMap<String, String>>>,
 
     /// Names of the plugins loaded in the host
     pub plugins_names: Vec<String>,
@@ -40,6 +41,8 @@ pub struct WasiState {
 pub struct PluginHost {
     /// Network permissions
     pub network_permissions: NetworkPermissions,
+    /// Shared reference to repl_vars from WasiState
+    pub repl_vars: Arc<Mutex<HashMap<String, String>>>,
 }
 
 impl crate::api::plugin_api::repl::api::http_client::Host for PluginHost {
@@ -85,10 +88,11 @@ impl crate::api::plugin_api::repl::api::http_client::Host for PluginHost {
 ///
 impl crate::api::plugin_api::repl::api::host_state_plugin::Host for PluginHost {
     async fn get_repl_var(&mut self, key: String) -> Option<String> {
-        None
-        // Can't do the following because `PluginHost` does not have access to repl_vars
-        // we need to add a repl_vars field to PluginHost that points to the repl_vars field of WasiState
-        // self.repl_vars.get(&key).cloned()
+        self.repl_vars
+            .lock()
+            .expect("Failed to acquire repl_vars lock")
+            .get(&key)
+            .cloned()
     }
 }
 
@@ -140,6 +144,8 @@ impl crate::api::host_api::repl::api::host_state::Host for WasiState {
     {
         // Return the stored environment variables
         self.repl_vars
+            .lock()
+            .expect("Failed to acquire repl_vars lock")
             .iter()
             .map(
                 |(key, value)| crate::api::host_api::repl::api::transport::ReplVar {
@@ -152,6 +158,9 @@ impl crate::api::host_api::repl::api::host_state::Host for WasiState {
 
     async fn set_repl_var(&mut self, var: crate::api::host_api::repl::api::transport::ReplVar) {
         // Set a single environment variable
-        self.repl_vars.insert(var.key.clone(), var.value.clone());
+        self.repl_vars
+            .lock()
+            .expect("Failed to acquire repl_vars lock")
+            .insert(var.key.clone(), var.value.clone());
     }
 }
