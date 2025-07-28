@@ -124,19 +124,6 @@ impl crate::api::host_api::repl::api::host_state::Host for WasiState {
         self.plugins_names.clone()
     }
 
-    async fn set_repl_vars(
-        &mut self,
-        vars: wasmtime::component::__internal::Vec<
-            crate::api::host_api::repl::api::transport::ReplVar,
-        >,
-    ) {
-        // Store environment variables in the WasiState
-        for var in vars {
-            self.repl_vars.insert(var.key.clone(), var.value.clone());
-            println!("Setting repl var: {} = {}", var.key, var.value);
-        }
-    }
-
     async fn get_repl_vars(
         &mut self,
     ) -> wasmtime::component::__internal::Vec<crate::api::host_api::repl::api::transport::ReplVar>
