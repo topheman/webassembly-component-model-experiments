@@ -82,6 +82,16 @@ impl crate::api::plugin_api::repl::api::http_client::Host for PluginHost {
     }
 }
 
+///
+impl crate::api::plugin_api::repl::api::host_state_plugin::Host for PluginHost {
+    async fn get_repl_var(&mut self, key: String) -> Option<String> {
+        None
+        // Can't do the following because `PluginHost` does not have access to repl_vars
+        // we need to add a repl_vars field to PluginHost that points to the repl_vars field of WasiState
+        // self.repl_vars.get(&key).cloned()
+    }
+}
+
 /// It is necessary to implement this trait on PluginHost because other parts rely on it.
 impl crate::api::plugin_api::repl::api::transport::Host for PluginHost {
     // This trait has no methods, so no implementation needed
