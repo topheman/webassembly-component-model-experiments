@@ -1458,6 +1458,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "plugin-tee"
+version = "0.1.0"
+dependencies = [
+ "wit-bindgen-rt 0.42.1",
+]
+
+[[package]]
 name = "plugin-weather"
 version = "0.1.0"
 dependencies = [

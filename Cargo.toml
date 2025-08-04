@@ -7,6 +7,7 @@ members = [
     "crates/plugin-ls",
     "crates/plugin-cat",
     "crates/plugin-weather",
+    "crates/plugin-tee",
     "crates/repl-logic-guest",
 ]
 
