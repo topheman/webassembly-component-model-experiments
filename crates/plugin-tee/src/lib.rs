@@ -68,22 +68,32 @@ fn run_inner(payload: String) -> Result<String, String> {
 
     if !is_append {
         let mut file = std::fs::File::create(&filepath)
-            .map_err(|e| format!("Failed to create file '{}': {}", filepath, e))?;
+            .map_err(|e| enhanced_error(e, format!("Failed to create file '{}'", filepath)))?;
         file.write_all(content_as_bytes)
-            .map_err(|e| format!("Failed to write to file '{}': {}", filepath, e))?;
+            .map_err(|e| enhanced_error(e, format!("Failed to write to file '{}'", filepath)))?;
         return Ok(content);
     } else {
         let mut file = std::fs::File::options()
             .append(true)
             .open(&filepath)
-            .map_err(|e| format!("Failed to open file in append mode '{}': {}", filepath, e))?;
+            .map_err(|e| {
+                enhanced_error(
+                    e,
+                    format!("Failed to open file in append mode '{}'", filepath),
+                )
+            })?;
         // Add a newline before the content in append mode
-        file.write_all(b"\n")
-            .map_err(|e| format!("Failed to write newline to file '{}': {}", filepath, e))?;
+        file.write_all(b"\n").map_err(|e| {
+            enhanced_error(e, format!("Failed to write newline to file '{}'", filepath))
+        })?;
         file.write_all(content_as_bytes)
-            .map_err(|e| format!("Failed to write to file '{}': {}", filepath, e))?;
+            .map_err(|e| enhanced_error(e, format!("Failed to write to file '{}'", filepath)))?;
         return Ok(content);
     }
+}
+
+fn enhanced_error(e: std::io::Error, more_info: String) -> String {
+    format!("{} - {} - {}", e.kind(), more_info, e.to_string())
 }
 
 bindings::export!(Component with_types_in bindings);
