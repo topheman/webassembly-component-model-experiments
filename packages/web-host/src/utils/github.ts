@@ -8,6 +8,7 @@ const pluginSourceUrlMapping = {
   cat: "https://github.com/topheman/webassembly-component-model-experiments/tree/master/crates/plugin-cat",
   echoc:
     "https://github.com/topheman/webassembly-component-model-experiments/blob/master/c_modules/plugin-echo/component.c",
+  tee: "https://github.com/topheman/webassembly-component-model-experiments/tree/master/crates/plugin-tee",
 } as const;
 
 export function getPluginSourceUrl(
