@@ -82,6 +82,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
   --allow-all
 ```
@@ -106,6 +107,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
   --allow-all
 [Host] Starting REPL host...
@@ -115,6 +117,8 @@ pluginlab\
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm
 repl(0)> echo foo
 foo
 repl(0)> echo $ROOT/$USER
@@ -220,6 +224,7 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_echo.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_weather.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm\
+  --plugins ./target/wasm32-wasip1/debug/plugin_tee.wasm\
   --plugins ./c_modules/plugin-echo/plugin-echo-c.wasm\
   --allow-all
 ```
@@ -378,13 +383,14 @@ When a git tag is pushed, a pre-release is prepared on github, linked to the tag
 
 ```sh
 pluginlab\
-  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/repl_logic_guest.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_greet.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_ls.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_echo.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_weather.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_cat.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin-echo-c.wasm\
+  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/repl_logic_guest.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_greet.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_ls.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_echo.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_weather.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_cat.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_tee.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin-echo-c.wasm\
   --allow-all
 ```
 
