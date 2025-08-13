@@ -90,6 +90,40 @@ mod e2e_cli_host {
     }
 
     #[test]
+    fn test_without_permission_allow_all() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &format!(
+                "{} --dir tmp/filesystem --allow-write",
+                &build_command(
+                    &["target/wasm32-wasip1/debug/plugin_tee.wasm"],
+                    "repl_logic_guest.wasm"
+                )
+            ),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("tee documents/work/projects/alpha/.gitkeep")
+            .expect("Failed to send command");
+        session
+            .exp_string("permission denied - Failed to create file 'documents/work/projects/alpha/.gitkeep' - Operation not permitted (os error 63)\r\nrepl(1)>")
+            .expect("Didn't get expected output from tee plugin");
+    }
+
+    #[test]
     fn test_with_wrong_version_of_plugin() {
         let crate_version = env!("CARGO_PKG_VERSION");
         let project_root = find_project_root();

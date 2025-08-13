@@ -181,7 +181,7 @@ mod e2e_rust_plugins {
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
             &format!(
-                "{} --dir tmp/filesystem --allow-read",
+                "{} --dir tmp/filesystem --allow-all",
                 &build_command(
                     &["plugin_tee.wasm", "plugin_echo.wasm", "plugin_cat.wasm"],
                     "repl_logic_guest.wasm"
@@ -227,7 +227,7 @@ mod e2e_rust_plugins {
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
             &format!(
-                "{} --dir tmp/filesystem --allow-read",
+                "{} --dir tmp/filesystem --allow-all",
                 &build_command(
                     &["plugin_tee.wasm", "plugin_echo.wasm", "plugin_cat.wasm"],
                     "repl_logic_guest.wasm"
@@ -273,7 +273,7 @@ mod e2e_rust_plugins {
         std::env::set_current_dir(&project_root).unwrap();
         let mut session = spawn(
             &format!(
-                "{} --dir tmp/filesystem --allow-read",
+                "{} --dir tmp/filesystem --allow-all",
                 &build_command(
                     &["plugin_tee.wasm", "plugin_echo.wasm", "plugin_cat.wasm"],
                     "repl_logic_guest.wasm"
@@ -299,16 +299,16 @@ mod e2e_rust_plugins {
             .exp_string("hello\r\nrepl(0)>")
             .expect("Didn't get expected output from echo plugin");
         session
-            .send_line("tee -a data/sample.csv")
+            .send_line("tee -a documents/work/projects/alpha/.gitkeep")
             .expect("Failed to send command");
         session
             .exp_string("hello\r\nrepl(0)>")
             .expect("Didn't get expected output from tee plugin");
         session
-            .send_line("cat data/sample.csv")
+            .send_line("cat documents/work/projects/alpha/.gitkeep")
             .expect("Failed to send command");
         session
-            .exp_string("id,name,age,city,active\r\n1,Alice,28,New York,true\r\n2,Bob,32,San Francisco,true\r\n3,Charlie,25,Chicago,false\r\n4,Diana,29,Boston,true\r\n5,Eve,35,Seattle,true\r\nhello\r\nrepl(0)>")
-            .expect("Didn't get expected contents of sample.csv");
+            .exp_string("# This file ensures the alpha directory is tracked in git\r\n# Deep nested directory for testing\r\n\r\nhello\r\nrepl(0)>")
+            .expect("Didn't get expected contents of .gitkeep");
     }
 }
