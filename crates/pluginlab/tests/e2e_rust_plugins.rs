@@ -173,4 +173,142 @@ mod e2e_rust_plugins {
             .exp_string("# Documents")
             .expect("Didn't get expected contents of README.md");
     }
+
+    #[test]
+    fn test_tee_plugin_new_file() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &format!(
+                "{} --dir tmp/filesystem --allow-all",
+                &build_command(
+                    &["plugin_tee.wasm", "plugin_echo.wasm", "plugin_cat.wasm"],
+                    "repl_logic_guest.wasm"
+                )
+            ),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("echo hello")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\nrepl(0)>")
+            .expect("Didn't get expected output from echo plugin");
+        session
+            .send_line("tee hello.txt")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\nrepl(0)>")
+            .expect("Didn't get expected output from tee plugin");
+        session
+            .send_line("cat hello.txt")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\nrepl(0)>")
+            .expect("Didn't get expected contents of hello.txt");
+    }
+
+    #[test]
+    fn test_tee_plugin_replace_file() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &format!(
+                "{} --dir tmp/filesystem --allow-all",
+                &build_command(
+                    &["plugin_tee.wasm", "plugin_echo.wasm", "plugin_cat.wasm"],
+                    "repl_logic_guest.wasm"
+                )
+            ),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("echo hello")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\nrepl(0)>")
+            .expect("Didn't get expected output from echo plugin");
+        session
+            .send_line("tee documents/notes.txt")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\nrepl(0)>")
+            .expect("Didn't get expected output from tee plugin");
+        session
+            .send_line("cat documents/notes.txt")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\nrepl(0)>")
+            .expect("Didn't get expected contents of hello.txt");
+    }
+
+    #[test]
+    fn test_tee_plugin_append_file() {
+        let project_root = find_project_root();
+        println!("Setting current directory to: {:?}", project_root);
+        std::env::set_current_dir(&project_root).unwrap();
+        let mut session = spawn(
+            &format!(
+                "{} --dir tmp/filesystem --allow-all",
+                &build_command(
+                    &["plugin_tee.wasm", "plugin_echo.wasm", "plugin_cat.wasm"],
+                    "repl_logic_guest.wasm"
+                )
+            ),
+            Some(TEST_TIMEOUT),
+        )
+        .expect("Can't launch pluginlab with plugin greet");
+
+        session
+            .exp_string("[Host] Starting REPL host...")
+            .expect("Didn't see startup message");
+        session
+            .exp_string("[Host] Loading plugin:")
+            .expect("Didn't see plugin loading message");
+        session
+            .exp_string("repl(0)>")
+            .expect("Didn't see REPL prompt");
+        session
+            .send_line("echo hello")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\nrepl(0)>")
+            .expect("Didn't get expected output from echo plugin");
+        session
+            .send_line("tee -a documents/work/projects/alpha/.gitkeep")
+            .expect("Failed to send command");
+        session
+            .exp_string("hello\r\nrepl(0)>")
+            .expect("Didn't get expected output from tee plugin");
+        session
+            .send_line("cat documents/work/projects/alpha/.gitkeep")
+            .expect("Failed to send command");
+        session
+            .exp_string("# This file ensures the alpha directory is tracked in git\r\n# Deep nested directory for testing\r\n\r\nhello\r\nrepl(0)>")
+            .expect("Didn't get expected contents of .gitkeep");
+    }
 }

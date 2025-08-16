@@ -1,7 +1,7 @@
 use crate::cli::Cli;
 use crate::permissions::NetworkPermissions;
 use anyhow::Result;
-use std::collections::HashMap;
+
 use std::path::Path;
 use wasmtime::component::{Component, Linker as ComponentLinker, ResourceTable};
 use wasmtime::{Config, Engine, Store};
@@ -120,6 +120,9 @@ impl WasmEngine {
 
     /// Create a new store with WASI context
     pub fn create_store(&self, wasi_ctx: WasiCtx, cli: &Cli) -> Store<WasiState> {
+        let repl_vars =
+            std::sync::Arc::new(std::sync::Mutex::new(std::collections::HashMap::new()));
+
         Store::new(
             &self.engine,
             WasiState {
@@ -127,8 +130,9 @@ impl WasmEngine {
                 table: ResourceTable::new(),
                 plugin_host: PluginHost {
                     network_permissions: NetworkPermissions::from(cli),
+                    repl_vars: repl_vars.clone(),
                 },
-                repl_vars: HashMap::new(),
+                repl_vars,
                 plugins_names: Vec::new(),
             },
         )

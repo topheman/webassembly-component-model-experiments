@@ -23,9 +23,3 @@ export function getReplVars(): ReplVar[] {
 export function setReplVar({ key, value }: { key: string; value: string }) {
   internalState.replVars.set(key, value);
 }
-
-export function setReplVars(vars: ReplVar[]) {
-  for (const { key, value } of vars) {
-    internalState.replVars.set(key, value);
-  }
-}

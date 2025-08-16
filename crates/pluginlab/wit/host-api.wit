@@ -5,7 +5,6 @@ interface host-state {
   use transport.{repl-var};
 
   get-plugins-names: func() -> list<string>;
-  set-repl-vars: func(vars: list<repl-var>);
   get-repl-vars: func() -> list<repl-var>;
   set-repl-var: func(var: repl-var);
 }

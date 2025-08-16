@@ -61,6 +61,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
   --allow-all
 ```
@@ -85,6 +86,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
   --allow-all
 [Host] Starting REPL host...
@@ -133,13 +135,14 @@ The plugins are also versioned in [github releases](https://github.com/topheman/
     <summary>Example of running the CLI host with old versions of the plugins (if you have an old version of <code>pluginlab</code></summary>
     <pre>
 pluginlab\
-  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/repl_logic_guest.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_greet.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_ls.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_echo.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_weather.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_cat.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin-echo-c.wasm\
+  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/repl_logic_guest.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_greet.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_ls.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_echo.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_weather.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_cat.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_tee.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin-echo-c.wasm\
   --allow-all
     </pre>
 </summary>
@@ -163,7 +166,7 @@ pluginlab\
 [Host] You are most likely trying to use a plugin not compatible with pluginlab@0.4.1
 [Host]
 [Host] Try using a compatible version of the plugin by passing the following flag:
-[Host] --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.4.1/plugin_echo.wasm
+[Host] --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_echo.wasm
 [Host]
 [Host] If it doesn't work, make sure to use the latest version of pluginlab: `cargo install pluginlab`
 [Host]

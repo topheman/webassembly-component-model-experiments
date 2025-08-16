@@ -23,7 +23,12 @@ interface http-client {
   get: func(url: string, headers: list<http-header>) -> result<http-response, string>;
 }
 
+interface host-state-plugin {
+  get-repl-var: func(key: string) -> option<string>;
+}
+
 world plugin-api {
   import http-client;
+  import host-state-plugin;
   export plugin;
 }
