@@ -46,7 +46,7 @@ Plugins like `ls` or `cat` can interact with the filesystem using the primitives
 
 <p align="center">
   Example of running the CLI <code>pluginlab</code>
-  <a href="https://asciinema.org/a/DWYAgrjSpwlejvRJQY8AHCEfD?speed=1.5" title="Click to watch the demo">
+  <a href="https://asciinema.org/a/733915?speed=2" title="Click to watch the demo">
     <img src="./crates/pluginlab/demo-preview.png" alt="pluginlab demo" />
   </a>
 </p>
