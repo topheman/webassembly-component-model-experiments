@@ -39,7 +39,7 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
-    "@bytecodealliance/jco": "^1.11.2",
+    "@bytecodealliance/jco": "^1.13.2",
     "@playwright/test": "^1.54.1",
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "^24.0.4",
