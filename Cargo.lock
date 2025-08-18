@@ -1434,35 +1434,35 @@ checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
 name = "plugin-cat"
 version = "0.1.0"
 dependencies = [
- "wit-bindgen-rt 0.42.1",
+ "wit-bindgen-rt 0.44.0",
 ]
 
 [[package]]
 name = "plugin-echo"
 version = "0.1.0"
 dependencies = [
- "wit-bindgen-rt 0.42.1",
+ "wit-bindgen-rt 0.44.0",
 ]
 
 [[package]]
 name = "plugin-greet"
 version = "0.1.0"
 dependencies = [
- "wit-bindgen-rt 0.42.1",
+ "wit-bindgen-rt 0.44.0",
 ]
 
 [[package]]
 name = "plugin-ls"
 version = "0.1.0"
 dependencies = [
- "wit-bindgen-rt 0.42.1",
+ "wit-bindgen-rt 0.44.0",
 ]
 
 [[package]]
 name = "plugin-tee"
 version = "0.1.0"
 dependencies = [
- "wit-bindgen-rt 0.42.1",
+ "wit-bindgen-rt 0.44.0",
 ]
 
 [[package]]
@@ -1471,7 +1471,7 @@ version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",
- "wit-bindgen-rt 0.42.1",
+ "wit-bindgen-rt 0.44.0",
 ]
 
 [[package]]
@@ -1671,7 +1671,7 @@ checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 name = "repl-logic-guest"
 version = "0.1.0"
 dependencies = [
- "wit-bindgen-rt 0.42.1",
+ "wit-bindgen-rt 0.44.0",
 ]
 
 [[package]]
@@ -3017,9 +3017,9 @@ dependencies = [
 
 [[package]]
 name = "wit-bindgen-rt"
-version = "0.42.1"
+version = "0.44.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "051105bab12bc78e161f8dfb3596e772dd6a01ebf9c4840988e00347e744966a"
+checksum = "653c85dd7aee6fe6f4bded0d242406deadae9819029ce6f7d258c920c384358a"
 dependencies = [
  "bitflags 2.9.1",
 ]

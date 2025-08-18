@@ -42,4 +42,4 @@ wasmtime-wasi = "35"
 clap = { version = "4.5", features = ["derive"] }
 tokio = { version = "1.36", features = ["full"] }
 anyhow = "1.0"
-wit-bindgen-rt = { version = "0.42.1", features = ["bitflags"] }
+wit-bindgen-rt = { version = "0.44.0", features = ["bitflags"] }

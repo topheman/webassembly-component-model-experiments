@@ -32,7 +32,7 @@ jobs:
       - name: Install wasm-tools
         run: cargo binstall wasm-tools@1.235.0
       - name: Install wit-bindgen
-        run: cargo install wit-bindgen-cli@0.43.0
+        run: cargo install wit-bindgen-cli@0.44.0
       - name: Install wasi-sdk
         run: |
           mkdir c_deps
