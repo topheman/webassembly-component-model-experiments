@@ -29,7 +29,7 @@ license = "MIT"
 authors = ["Christophe Rosset <tophe@topheman.com>"]
 
 [workspace.dependencies]
-wasmtime = { version = "33", default-features = false, features = [
+wasmtime = { version = "35", default-features = false, features = [
     "async",
     "demangle",
     "runtime",
@@ -38,7 +38,7 @@ wasmtime = { version = "33", default-features = false, features = [
     "incremental-cache",
     "parallel-compilation",
 ] }
-wasmtime-wasi = "33"
+wasmtime-wasi = "35"
 clap = { version = "4.5", features = ["derive"] }
 tokio = { version = "1.36", features = ["full"] }
 anyhow = "1.0"
