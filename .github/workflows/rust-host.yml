@@ -17,8 +17,8 @@ jobs:
           else
             echo "WASI_OS=linux" >> $GITHUB_ENV
           fi
-          echo "WASI_VERSION_FULL=25.0" >> $GITHUB_ENV
-          echo "WASI_VERSION=25" >> $GITHUB_ENV
+          echo "WASI_VERSION_FULL=27.0" >> $GITHUB_ENV
+          echo "WASI_VERSION=27" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
         with:
