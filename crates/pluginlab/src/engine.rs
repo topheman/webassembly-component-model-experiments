@@ -157,7 +157,10 @@ impl WasmEngine {
         wasmtime_wasi::p2::add_to_linker_async(&mut linker)?;
 
         // Add the plugin API interface with host implementation
-        PluginApi::add_to_linker(&mut linker, |state: &mut WasiState| &mut state.plugin_host)?;
+        PluginApi::add_to_linker::<WasiState, wasmtime::component::HasSelf<PluginHost>>(
+            &mut linker,
+            |state: &mut WasiState| &mut state.plugin_host,
+        )?;
 
         // Instantiate the component and get the plugin interface
         let plugin = PluginApi::instantiate_async(store, &component, &linker).await?;
@@ -174,7 +177,10 @@ impl WasmEngine {
         wasmtime_wasi::p2::add_to_linker_sync(&mut linker)?;
 
         // Add the host API interface with host implementation
-        HostApi::add_to_linker(&mut linker, |state: &mut WasiState| state)?;
+        HostApi::add_to_linker::<WasiState, wasmtime::component::HasSelf<WasiState>>(
+            &mut linker,
+            |state: &mut WasiState| state,
+        )?;
 
         let repl_logic = HostApi::instantiate_async(store, &component, &linker).await?;
         Ok(repl_logic)

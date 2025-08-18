@@ -40,7 +40,8 @@
     "web-host:build": "npm run build --workspace=packages/web-host",
     "web-host:preview": "npm run preview --workspace=packages/web-host",
     "web-host:dev": "npm run dev --workspace=packages/web-host",
-    "prepare": "husky"
+    "prepare": "husky",
+    "clean:install": "find . -name \"node_modules\" -exec rm -rf '{}' +"
   },
   "workspaces": [
     "packages/*"

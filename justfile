@@ -18,6 +18,7 @@ dl-wasi-sdk:
     FILENAME=wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS}.tar.gz
     curl -L -o c_deps/${FILENAME} https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_VERSION}/${FILENAME}
     tar -C c_deps -xvf c_deps/${FILENAME}
+    rm -rf c_deps/wasi-sdk
     mv c_deps/wasi-sdk-${WASI_VERSION_FULL}-${WASI_ARCH}-${WASI_OS} c_deps/wasi-sdk
 
 # Generate the C bindings for the plugin

@@ -186,7 +186,7 @@ just init-env-file
 ```
 
 ```bash
-cargo install wit-bindgen-cli@0.43.0
+cargo install wit-bindgen-cli@0.44.0
 ```
 
 ```bash
@@ -420,7 +420,7 @@ Those are **optional** tools that are handy for WebAssembly development:
 - [cargo component 0.21.1+](https://github.com/bytecodealliance/cargo-component?tab=readme-ov-file#installation)
 - [wasm-tools 1.235.0](https://github.com/bytecodealliance/wasm-tools?tab=readme-ov-file#installation)
 - [wasm-opt 116](https://github.com/WebAssembly/binaryen?tab=readme-ov-file#installation)
-- [wit-bindgen-cli 0.43.0](https://github.com/bytecodealliance/wit-bindgen)
+- [wit-bindgen-cli 0.44.0](https://github.com/bytecodealliance/wit-bindgen)
 
 ```bash
 # latest versions
