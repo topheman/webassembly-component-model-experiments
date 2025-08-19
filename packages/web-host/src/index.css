@@ -43,6 +43,15 @@ body {
   color: #222;
 }
 
+/* Prevent bouncing effect when scrolling on the REPL page (multiple scrolling containers) */
+body:has([data-page="repl"]) {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 /* Focus styles for better accessibility */
 button:focus-visible {
   outline: 2px solid var(--color-primary);

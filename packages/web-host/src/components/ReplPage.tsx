@@ -9,7 +9,7 @@ export const ReplPage = ({ onBackToHome }: ReplPageProps) => {
   const wasm = useWasm();
 
   return (
-    <div className="container mx-auto px-4 max-w-4xl">
+    <div className="container mx-auto px-4 max-w-4xl" data-page="repl">
       <div className="sticky top-0 py-2 bg-gray-50">
         <div className="flex items-center justify-between md:mb-10 my-2">
           <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-wasi-purple)] to-[var(--color-wasi-violet)] drop-shadow">
