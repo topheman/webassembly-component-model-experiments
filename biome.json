@@ -6,7 +6,8 @@
       "!**/node_modules",
       "!**/dist",
       "!**/build",
-      "!**/package.json"
+      "!**/package.json",
+      "!packages/web-host/overrides/**"
     ]
   },
   "formatter": {
