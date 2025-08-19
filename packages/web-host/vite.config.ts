@@ -20,6 +20,10 @@ export default defineConfig({
         __dirname,
         "./src/wasm/host/host-state-plugin.ts",
       ),
+      "@bytecodealliance/preview2-shim": path.resolve(
+        __dirname,
+        "./overrides/@bytecodealliance/preview2-shim/lib/browser",
+      ),
     },
   },
   base: "/webassembly-component-model-experiments/",
