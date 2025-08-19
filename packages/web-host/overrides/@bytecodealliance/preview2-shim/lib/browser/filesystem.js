@@ -110,9 +110,8 @@ class Descriptor {
     let offset = Number(_offset);
     return new OutputStream({
       write (buf) {
-        const newSource = new Uint8Array(buf.byteLength + entry.source.byteLength);
-        newSource.set(entry.source, 0);
-        newSource.set(buf, offset);
+        const newSource = new Uint8Array(buf.byteLength);
+        newSource.set(buf, 0);
         offset += buf.byteLength;
         entry.source = newSource;
         return buf.byteLength;
@@ -196,7 +195,7 @@ class Descriptor {
       statusChangeTimestamp: timeZero,
     }
   }
-  
+
   statAt(_pathFlags, path) {
     const entry = getChildEntry(this.#entry, path, { create: false, directory: false });
     let type = 'unknown', size = BigInt(0);
