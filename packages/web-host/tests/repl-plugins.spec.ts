@@ -89,3 +89,34 @@ test("cat README.md", async ({ page }) => {
 
 You are interacting with a virtual filesystem, in your browser!`);
 });
+
+test("tee new-file.txt", async ({ page }) => {
+  await page.goto("/#repl");
+  // check the file don't exist
+  await fillAndSubmitCommand(page, "ls", {
+    expectStdout: `D	data
+D	documents
+D	logs
+F	.config
+F	.hidden_file
+F	README.md`,
+  });
+  await fillAndSubmitCommand(page, "echo Some Content");
+  await fillAndSubmitCommand(page, "tee new-file.txt", {
+    expectStdout: "Some Content",
+  });
+  await fillAndSubmitCommand(page, "cat new-file.txt", {
+    expectStdout: "Some Content",
+  });
+});
+
+test("tee README.md", async ({ page }) => {
+  await page.goto("/#repl");
+  await fillAndSubmitCommand(page, "echo Some Content");
+  await fillAndSubmitCommand(page, "tee README.md", {
+    expectStdout: "Some Content",
+  });
+  await fillAndSubmitCommand(page, "cat README.md", {
+    expectStdout: "Some Content",
+  });
+});
