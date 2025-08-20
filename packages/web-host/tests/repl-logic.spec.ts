@@ -80,6 +80,7 @@ help	reserved
 list-commands	reserved
 ls	plugin
 man	reserved
+tee	plugin
 weather	plugin`,
   );
 });
