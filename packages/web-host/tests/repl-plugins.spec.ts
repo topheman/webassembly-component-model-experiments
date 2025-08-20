@@ -120,3 +120,18 @@ test("tee README.md", async ({ page }) => {
     expectStdout: "Some Content",
   });
 });
+
+test("tee -a output.txt", async ({ page }) => {
+  await page.goto("/#repl");
+  await fillAndSubmitCommand(page, "echo Some Initial Content");
+  await fillAndSubmitCommand(page, "tee output.txt", {
+    expectStdout: "Some Initial Content",
+  });
+  await fillAndSubmitCommand(page, "echo Some More Content");
+  await fillAndSubmitCommand(page, "tee -a output.txt", {
+    expectStdout: "Some More Content",
+  });
+  await fillAndSubmitCommand(page, "cat output.txt", {
+    expectStdout: "Some Initial Content\nSome More Content",
+  });
+});
