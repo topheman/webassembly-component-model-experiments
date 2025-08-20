@@ -60,10 +60,10 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
           runs in browsers and terminals with different host implementations.
         </p>
         <p className="text-gray-700 mb-6 text-lg">
-          Plugins like <code>cat</code> or <code>ls</code> can interact with a
-          virtual filesystem using the primitives of the languages they are
-          written in (like <code>std::fs::read_dir</code> or{" "}
-          <code>std::fs::read_to_string</code>).
+          Plugins like <code>cat</code>, <code>ls</code> or <code>tee</code> can
+          interact with a virtual filesystem using the primitives of the
+          languages they are written in (like <code>std::fs::read_dir</code>,{" "}
+          <code>std::fs::read_to_string</code> or <code>std::fs::write</code>).
         </p>
 
         <h4 className="text-xl font-bold mb-3">Key Features</h4>
@@ -75,9 +75,10 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
             Language-agnostic plugins (any language that compiles to WASM)
           </li>
           <li>
-            Virtual filesystem: the I/O operations are forwarded via the{" "}
-            <code>@bytecodealliance/preview2-shim/filesystem</code> shim, which
-            shims <code>wasi:filesystem</code>
+            Virtual filesystem: the I/O operations are forwarded via a local
+            fork of <code>@bytecodealliance/preview2-shim/filesystem</code>,
+            which shims <code>wasi:filesystem</code> (yes, you can do{" "}
+            <strong>WRITE</strong> operations)
           </li>
           <li>Modern React + TypeScript web interface</li>
         </ul>
