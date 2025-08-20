@@ -120,7 +120,17 @@ class Descriptor {
   }
 
   appendViaStream() {
-    console.log(`[filesystem] APPEND STREAM`);
+    const entry = this.#entry;
+    return new OutputStream({
+      write (buf) {
+        const entrySource = getSource(entry);
+        const newSource = new Uint8Array(buf.byteLength + entrySource.byteLength);
+        newSource.set(entrySource, 0);
+        newSource.set(buf, entrySource.byteLength);
+        entry.source = newSource;
+        return buf.byteLength;
+      }
+    });
   }
 
   advise(descriptor, offset, length, advice) {
