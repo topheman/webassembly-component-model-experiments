@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { fillAndSubmitCommand, getLastStd } from "./utils";
+import { fillAndSubmitCommand, getLastStd, sleep } from "./utils";
 
 test("echo foo", async ({ page }) => {
   await page.goto("/#repl");
@@ -102,6 +102,7 @@ F	.hidden_file
 F	README.md`,
   });
   await fillAndSubmitCommand(page, "echo Some Content");
+  await sleep();
   await fillAndSubmitCommand(page, "tee new-file.txt", {
     expectStdout: "Some Content",
   });
@@ -113,6 +114,7 @@ F	README.md`,
 test("tee README.md", async ({ page }) => {
   await page.goto("/#repl");
   await fillAndSubmitCommand(page, "echo Some Content");
+  await sleep();
   await fillAndSubmitCommand(page, "tee README.md", {
     expectStdout: "Some Content",
   });
@@ -124,10 +126,12 @@ test("tee README.md", async ({ page }) => {
 test("tee -a output.txt", async ({ page }) => {
   await page.goto("/#repl");
   await fillAndSubmitCommand(page, "echo Some Initial Content");
+  await sleep();
   await fillAndSubmitCommand(page, "tee output.txt", {
     expectStdout: "Some Initial Content",
   });
   await fillAndSubmitCommand(page, "echo Some More Content");
+  await sleep();
   await fillAndSubmitCommand(page, "tee -a output.txt", {
     expectStdout: "Some More Content",
   });

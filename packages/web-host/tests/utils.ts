@@ -1,15 +1,29 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
-const NEXT_FRAME_DELAY = 64;
-
 /**
  * Get the last std output of the given type
+ * If expectContent is provided, it will retry to get the last std output until it matches the expected content
  */
 export async function getLastStd(
   page: Page,
   type: "stdin" | "stdout" | "stderr",
+  {
+    expectContent,
+  }: {
+    expectContent?: string;
+  } = {},
 ) {
-  return await page.locator(`[data-stdtype='${type}']`).last();
+  const locator = await page.locator(`[data-stdtype='${type}']`).last();
+  if (expectContent) {
+    const text = await locator.textContent();
+    if (text?.includes(expectContent)) {
+      return locator;
+    }
+    // if no match, do a hard expect that will fail the test with a clear error message
+    // Sorry you landed here, you will most likely have to add some `sleep()` in your code 🥲
+    await expect(locator).toHaveText(expectContent);
+  }
+  return locator;
 }
 
 /**
@@ -28,8 +42,9 @@ export async function getLastStdAfter(
     .last();
 }
 
-async function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+export async function sleep(ms?: number): Promise<void> {
+  const DEFAULT_DELAY = 200; // taking into account the default delay necessary in the CI
+  return new Promise((resolve) => setTimeout(resolve, ms ?? DEFAULT_DELAY));
 }
 
 /**
@@ -40,21 +55,27 @@ export async function fillAndSubmitCommand(
   page: Page,
   command: string,
   {
-    expectStdin = command,
+    expectStdin,
     expectStdout,
     expectStderr,
+    afterSubmit,
   }: {
     expectStdin?: string;
     expectStdout?: string;
     expectStderr?: string;
+    afterSubmit?: () => Promise<void>;
   } = {},
 ) {
+  const expectedStdin = expectStdin ?? command;
   const input = await page.getByPlaceholder("Type a command...");
   await input.fill(command);
   await input.press("Enter");
-  await sleep(NEXT_FRAME_DELAY);
-  const stdin = await getLastStd(page, "stdin");
-  await expect(stdin).toHaveText(expectStdin);
+  if (afterSubmit) {
+    await afterSubmit();
+  }
+  const stdin = await getLastStd(page, "stdin", {
+    expectContent: expectedStdin,
+  });
   if (expectStdout) {
     const stdout = await getLastStdAfter(page, "stdout", stdin);
     await expect(stdout).toHaveText(expectStdout);
@@ -73,7 +94,7 @@ export async function clickWandButton(
   page: Page,
   command: string,
   {
-    expectStdin = command,
+    expectStdin,
     expectStdout,
     expectStderr,
   }: {
@@ -82,13 +103,15 @@ export async function clickWandButton(
     expectStderr?: string;
   } = {},
 ) {
+  const expectedStdin = expectStdin ?? command;
   await page.getByTitle("Run example command").click({ force: true });
   const input = await page.getByPlaceholder("Type a command...");
-  await expect(input).toHaveValue(expectStdin);
-  const stdin = await getLastStd(page, "stdin");
-  await expect(stdin).toHaveText(expectStdin);
+  await expect(input).toHaveValue(expectedStdin);
+  const stdin = await getLastStd(page, "stdin", {
+    expectContent: expectedStdin,
+  });
   if (expectStdout) {
-    const stdout = await getLastStd(page, "stdout");
+    const stdout = await getLastStdAfter(page, "stdout", stdin);
     await expect(stdout).toHaveText(expectStdout);
   }
   if (expectStderr) {
