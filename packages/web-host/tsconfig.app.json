@@ -25,8 +25,11 @@
     "paths": {
       "repl:api/host-state": ["./src/wasm/host/host-state.ts"],
       "repl:api/http-client": ["./src/wasm/host/http-client.ts"],
-      "repl:api/host-state-plugin": ["./src/wasm/host/host-state-plugin.ts"]
+      "repl:api/host-state-plugin": ["./src/wasm/host/host-state-plugin.ts"],
+      "@bytecodealliance/preview2-shim": [
+        "./overrides/@bytecodealliance/preview2-shim"
+      ]
     }
   },
-  "include": ["src", "clis"]
+  "include": ["src", "clis", "overrides"]
 }

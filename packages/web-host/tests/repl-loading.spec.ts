@@ -11,7 +11,7 @@ test("repl logic should have loaded", async ({ page }) => {
 });
 
 test("plugins should have loaded under their names", async ({ page }) => {
-  const pluginNames = ["echo", "weather", "greet", "ls", "cat", "echoc"];
+  const pluginNames = ["echo", "weather", "greet", "ls", "cat", "echoc", "tee"];
   await page.goto("/#repl");
   for (const pluginName of pluginNames) {
     await expect(

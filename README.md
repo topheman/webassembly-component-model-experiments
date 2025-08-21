@@ -37,7 +37,7 @@ Plugins are sandboxed by default - they cannot access the filesystem or network 
 Plugins like `ls` or `cat` can interact with the filesystem using the primitives of the languages they are written in.
 
 - on the CLI, a folder from the disk is mounted via the `--dir` flag
-- on the browser, a virtual filesystem is mounted, the I/O operations are forwarded via the `@bytecodealliance/preview2-shim/filesystem` shim, which shims the `wasi:filesystem` filesystem interface
+- on the browser, a virtual filesystem is mounted, the I/O operations are forwarded via a [local fork](./packages/web-host/overrides/@bytecodealliance/preview2-shim) of `@bytecodealliance/preview2-shim/filesystem` shim, which shims the `wasi:filesystem` filesystem interface
 
 <p align="center"><a href="https://topheman.github.io/webassembly-component-model-experiments/"><img src="./packages/web-host/public/wasi.png" alt="Demo" /></a></p>
 <p align="center">
@@ -409,6 +409,13 @@ pluginlab\
   - formating / linting the TypeScript code
   - formating the rust code
   - typechecking the TypeScript code
+
+### Local fork of `@bytecodealliance/preview2-shim`
+
+- The original [`@bytecodealliance/preview2-shim`](https://github.com/bytecodealliance/jco/tree/main/packages/preview2-shim) for the **browser** doesn't support **WRITE** operations on the filesystem
+- A fork was created in [`packages/web-host/overrides/@bytecodealliance/preview2-shim`](./packages/web-host/overrides/@bytecodealliance/preview2-shim) to fix this issue
+
+Everything is described in [PR#15 Support plugin-tee in the web host](https://github.com/topheman/webassembly-component-model-experiments/pull/15) (must read 😉).
 
 ## Resources
 

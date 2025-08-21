@@ -23,6 +23,7 @@ export function ReplHistory({
             <pre
               className="bg-gray-50 whitespace-pre-wrap word-break-word"
               data-stdtype="stdin"
+              data-std-index={index}
             >
               {entry.stdin}
             </pre>
@@ -31,6 +32,7 @@ export function ReplHistory({
             <pre
               className="bg-gray-50 whitespace-pre-wrap word-break-word"
               data-stdtype="stdin"
+              data-std-index={index}
               // biome-ignore lint/security/noDangerouslySetInnerHtml: need to pass `allowHtml:true` to the addReplHistoryEntry function - only used for adding links to source of plugins when loaded
               dangerouslySetInnerHTML={{ __html: entry.stdin }}
             />
@@ -40,6 +42,7 @@ export function ReplHistory({
               className="bg-green-100 whitespace-pre-wrap before:content-[attr(data-status)] relative before:absolute before:right-0 before:top-0 word-break-word"
               data-status={entry.status === "success" ? "✅" : "❌"}
               data-stdtype="stdout"
+              data-std-index={index}
             >
               {entry.stdout}
             </pre>
@@ -49,6 +52,7 @@ export function ReplHistory({
               className="bg-red-100 whitespace-pre-wrap before:content-[attr(data-status)] relative before:absolute before:right-0 before:top-0 word-break-word"
               data-status={entry.status === "success" ? "✅" : "❌"}
               data-stdtype="stderr"
+              data-std-index={index}
             >
               {entry.stderr}
             </pre>

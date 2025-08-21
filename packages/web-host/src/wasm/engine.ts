@@ -41,6 +41,7 @@ async function loadPlugins({
     import("./generated/plugin_greet/transpiled/plugin_greet.js"),
     import("./generated/plugin_ls/transpiled/plugin_ls.js"),
     import("./generated/plugin_cat/transpiled/plugin_cat.js"),
+    import("./generated/plugin_tee/transpiled/plugin_tee.js"),
     import("./generated/plugin-echo-c/transpiled/plugin-echo-c.js"),
   ]).then((plugins) =>
     plugins.map((plugin) => {
