@@ -28,59 +28,47 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
 
       <div className="bg-white rounded-2xl p-8 border border-[var(--color-wasi-purple)]/20 shadow-lg mb-12">
         <h3 className="text-2xl font-bold mb-4">What is it?</h3>
-        <p className="text-gray-700 mb-4 text-lg">
-          The WebAssembly Component Model enables interoperable WebAssembly
-          libraries, but existing examples are either{" "}
-          <strong>too simple</strong> or <strong>too complex</strong>. This
-          project demonstrates its power with a{" "}
-          <strong>practical implementation</strong> that goes{" "}
-          <strong>beyond "hello world"</strong>.
-        </p>
         <p className="text-gray-700 mb-6 text-lg">
-          It's a{" "}
-          <strong>REPL (Read-Eval-Print Loop) with a plugin system</strong>{" "}
-          where plugins can be written in{" "}
-          <strong>any language that compiles to WebAssembly</strong>. The
-          plugins are <strong>sandboxed by default</strong>, and the core logic
-          itself is written in Rust and also compiles to WebAssembly.
+          A <strong>REPL with a plugin system</strong> that demonstrates the
+          WebAssembly Component Model's power. Plugins can be written in{" "}
+          <strong>any language that compiles to WASM</strong> and run in a{" "}
+          <strong>sandboxed environment</strong>.
+          <br />
+          Existing examples are either <strong>too simple</strong> or{" "}
+          <strong>too complex</strong> - this project goes{" "}
+          <strong>beyond "hello world"</strong> with a{" "}
+          <strong>practical implementation</strong>.
         </p>
 
         <h3 className="text-2xl font-bold mb-4">This Web Version</h3>
-        <p className="text-gray-700 mb-4 text-lg">
-          You're currently using the <strong>web version</strong> of the REPL,
-          built with React and TypeScript. There's also a corresponding{" "}
-          <strong>Rust CLI version</strong> that runs in the terminal. Both
-          versions load and execute the{" "}
-          <strong>same WebAssembly components</strong> - the REPL logic and
-          plugins are compiled once and run in both environments.
-        </p>
         <p className="text-gray-700 mb-6 text-lg">
-          This demonstrates how the WebAssembly Component Model enables{" "}
-          <strong>true cross-platform compatibility</strong> - the same code
-          runs in browsers and terminals with different host implementations.
-        </p>
-        <p className="text-gray-700 mb-6 text-lg">
-          Plugins like <code>cat</code>, <code>ls</code> or <code>tee</code> can
-          interact with a virtual filesystem using the primitives of the
-          languages they are written in (like <code>std::fs::read_dir</code>,{" "}
-          <code>std::fs::read_to_string</code> or <code>std::fs::write</code>).
+          You're using the <strong>web version</strong> built with
+          React/TypeScript. There's also a <strong>Rust CLI version</strong>.
+          Both load the <strong>same WebAssembly components</strong>,
+          demonstrating true cross-platform compatibility.
         </p>
 
         <h4 className="text-xl font-bold mb-3">Key Features</h4>
         <ul className="text-gray-700 space-y-2 mb-3 text-base pl-4 list-disc">
-          <li>WebAssembly Component Model architecture</li>
-          <li>Dual host support (CLI + Web)</li>
-          <li>Plugin system with sandboxed WebAssembly components</li>
           <li>
-            Language-agnostic plugins (any language that compiles to WASM)
+            <strong>WebAssembly Component Model</strong> architecture
           </li>
           <li>
-            Virtual filesystem: the I/O operations are forwarded via a local
-            fork of <code>@bytecodealliance/preview2-shim/filesystem</code>,
-            which shims <code>wasi:filesystem</code> (yes, you can do{" "}
-            <strong>WRITE</strong> operations)
+            <strong>Dual host support</strong> (CLI + Web)
           </li>
-          <li>Modern React + TypeScript web interface</li>
+          <li>
+            <strong>Plugin system</strong> with sandboxed WASM components
+          </li>
+          <li>
+            <strong>Language-agnostic</strong> plugins
+          </li>
+          <li>
+            <strong>Virtual filesystem</strong> on the browser with WASI shim
+            for filesystem (including <strong>WRITE</strong> operations)
+          </li>
+          <li>
+            <strong>Modern React + TypeScript</strong> interface
+          </li>
         </ul>
 
         <div className="flex flex-row gap-4 items-center justify-center mt-8">
