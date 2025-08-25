@@ -1,0 +1,37 @@
+interface plugin {
+  use transport.{plugin-response};
+
+  name: func() -> string;
+  man: func() -> string;
+  run: func(payload: string) -> result<plugin-response>;
+}
+
+/// Provided by the host, accessible by plugins
+interface http-client {
+  record http-header {
+    name: string,
+    value: string,
+  }
+
+  record http-response {
+    status: u16,
+    ok: bool,
+    headers: list<http-header>,
+    body: string,
+  }
+
+  get: func(url: string, headers: list<http-header>) -> result<http-response, string>;
+}
+
+interface host-state-plugin {
+  get-repl-var: func(key: string) -> option<string>;
+}
+
+world plugin-api {
+  // The wasip2 target of TinyGo assumes that the component is targeting wasi:cli/command@0.2.0 world (part of wasi:cli),
+  // so it needs to include the imports from that world.
+  include wasi:cli/imports@0.2.0;
+  import http-client;
+  import host-state-plugin;
+  export plugin;
+}

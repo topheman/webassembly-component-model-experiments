@@ -44,6 +44,41 @@ build-c-plugins:
     #!/usr/bin/env bash
     just list-c-plugins|xargs -I {} just build-c-plugin {}
 
+# Bundle wit files into a single file `repl:api.wasm`
+go-wit-build:
+    #!/usr/bin/env bash
+    cd go_modules/
+    wkg wit build
+
+# Generate Go bindings for the plugin
+go-wit-bindgen-plugin plugin: go-wit-build
+    #!/usr/bin/env bash
+    cd go_modules/{{plugin}}
+    rm -rf internal
+    go tool wit-bindgen-go generate --world plugin-api --out internal ../repl:api.wasm
+
+# Generate Go bindings for all plugins
+go-wit-bindgen-plugins:
+    #!/usr/bin/env bash
+    just list-go-plugins|xargs -I {} just go-wit-bindgen-plugin {}
+
+# Build a specific Go plugin
+build-go-plugin plugin:
+    #!/usr/bin/env bash
+    just go-wit-bindgen-plugin {{plugin}}
+    cd go_modules/{{plugin}}
+    tinygo build -target=wasip2 --wit-package ../repl:api.wasm --wit-world plugin-api -o {{plugin}}-go.wasm main.go
+
+# Build all Go plugins
+build-go-plugins:
+    #!/usr/bin/env bash
+    just list-go-plugins|xargs -I {} just build-go-plugin {}
+
+# List all Go plugins
+list-go-plugins:
+    #!/usr/bin/env bash
+    ls -1 go_modules|grep plugin-
+
 # Build all rust plugins in debug mode
 build-rust-plugins:
     #!/usr/bin/env bash
@@ -71,6 +106,7 @@ build-plugins:
     just build-repl-logic-guest
     just build-rust-plugins
     just build-c-plugins
+    just build-go-plugins
 
 # Build all plugins in release mode
 build-plugins-release:
@@ -78,6 +114,7 @@ build-plugins-release:
     just build-repl-logic-guest-release
     just build-rust-plugins-release
     just build-c-plugins
+    just build-go-plugins
 
 # Build a specific plugin
 build-plugin plugin:

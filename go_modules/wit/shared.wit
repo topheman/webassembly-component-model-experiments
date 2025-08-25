@@ -1,0 +1,27 @@
+interface transport {
+  record plugin-response {
+    status: repl-status,
+    stdout: option<string>,
+    stderr: option<string>,
+  }
+
+  enum repl-status {
+    success,
+    error,
+  }
+
+  record parsed-line {
+    command: string,
+    payload: string,
+  }
+
+  variant readline-response {
+    to-run(parsed-line),
+    ready(plugin-response),
+  }
+
+  record repl-var {
+    key: string,
+    value: string,
+  }
+}
