@@ -30,6 +30,23 @@ jobs:
           node-version-file: .nvmrc
       - uses: cargo-bins/cargo-binstall@main
       - uses: extractions/setup-just@v3
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+      - name: Install TinyGo Compiler
+        run: |
+          if [ "${{ runner.arch }}" = "X64" ]; then
+            wget https://github.com/tinygo-org/tinygo/releases/download/v0.39.0/tinygo_0.39.0_amd64.deb
+            sudo dpkg -i tinygo_0.39.0_amd64.deb
+          else
+            wget https://github.com/tinygo-org/tinygo/releases/download/v0.39.0/tinygo_0.39.0_armhf.deb
+            sudo dpkg -i tinygo_0.39.0_armhf.deb
+          fi
+          export PATH=$PATH:/usr/local/bin
+      - name: Check TinyGo Compiler
+        run: tinygo version
+      - name: Install wkg
+        run: cargo binstall wkg
       - name: Install cargo-component
         run: cargo binstall cargo-component@0.21.1
       - name: Install wasm-tools
