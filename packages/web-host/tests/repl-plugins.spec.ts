@@ -11,6 +11,11 @@ test("echoc foo", async ({ page }) => {
   await fillAndSubmitCommand(page, "echoc foo", { expectStdout: "foo" });
 });
 
+test("echogo foo", async ({ page }) => {
+  await page.goto("/#repl");
+  await fillAndSubmitCommand(page, "echogo foo", { expectStdout: "foo" });
+});
+
 test("greet World", async ({ page }) => {
   await page.goto("/#repl");
   await fillAndSubmitCommand(page, "greet World", {

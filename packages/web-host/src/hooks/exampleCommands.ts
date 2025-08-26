@@ -55,8 +55,12 @@ const commands = [
   "man weather",
   "help",
   "echoc This is the same as `echo`, implemented in C",
-  "echoc try `man echo` vs `man echoc`",
+  "echogo Same, but in Go",
+  "echoc Whole C toolchain available",
+  "echogo Whole Go toolchain available",
+  "echo try `man echo` vs `man echoc` vs `man echogo`",
   "echoc qux",
+  "echogo qux",
 ];
 
 export function useGetExampleCommand() {

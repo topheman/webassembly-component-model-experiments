@@ -42,6 +42,7 @@ prepare_wasm_files() {
         "target/wasm32-wasip1/$mode/plugin_weather.wasm"
         "target/wasm32-wasip1/$mode/plugin_tee.wasm"
         "c_modules/plugin-echo/plugin-echo-c.wasm"
+        "go_modules/plugin-echo/plugin-echo-go.wasm"
         "target/wasm32-wasip1/$mode/repl_logic_guest.wasm"
     )
 

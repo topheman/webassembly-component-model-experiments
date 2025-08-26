@@ -43,6 +43,7 @@ async function loadPlugins({
     import("./generated/plugin_cat/transpiled/plugin_cat.js"),
     import("./generated/plugin_tee/transpiled/plugin_tee.js"),
     import("./generated/plugin-echo-c/transpiled/plugin-echo-c.js"),
+    import("./generated/plugin-echo-go/transpiled/plugin-echo-go.js"),
   ]).then((plugins) =>
     plugins.map((plugin) => {
       // Since we `allowHtml`, which will `dangerouslySetInnerHTML`, we need to sanitize the plugin name
