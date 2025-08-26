@@ -23,7 +23,7 @@ There are two kinds of hosts:
 Those hosts then run the same codebase which is compiled to WebAssembly:
 
 - the REPL logic
-- the plugins (made a few in rust, C and TypeScript)
+- the plugins (made a few in rust, C, Go, and TypeScript)
 
 Security model: the REPL cli implements a security model inspired by [deno](https://docs.deno.com/runtime/fundamentals/security/#permissions):
 
@@ -84,6 +84,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-go.wasm\
   --allow-all
 ```
 
@@ -109,6 +110,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-go.wasm\
   --allow-all
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
@@ -119,6 +121,7 @@ pluginlab\
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-go.wasm
 repl(0)> echo foo
 foo
 repl(0)> echo $ROOT/$USER
@@ -159,6 +162,7 @@ Go check [topheman.github.io/webassembly-component-model-experiments](https://to
 
 - Rust 1.87+
 - Node.js 22.6.0+ (needs `--experimental-strip-types` flag)
+- Go 1.25+
 - [just](https://github.com/casey/just?tab=readme-ov-file#installation)
 
 ### Setup
@@ -199,6 +203,17 @@ cargo binstall wasm-tools@1.235.0
 just dl-wasi-sdk
 ```
 
+#### Go tooling
+
+[From the WebAssembly Component Model section for Go tooling](https://component-model.bytecodealliance.org/language-support/go.html)
+
+- Install [TinyGo](https://tinygo.org/getting-started/install/)
+- Install [wasm-tools](https://github.com/bytecodealliance/wasm-tools) - same as C
+- Install [wkg](https://github.com/bytecodealliance/wasm-pkg-tools)
+  ```bash
+  cargo binstall wkg
+  ```
+
 ### pluginlab (rust) - REPL cli host
 
 #### Build
@@ -226,13 +241,14 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_tee.wasm\
   --plugins ./c_modules/plugin-echo/plugin-echo-c.wasm\
+  --plugins ./go_modules/plugin-echo-go/plugin-echo-go.wasm\
   --allow-all
 ```
 
 This will run the `pluginlab` binary which will itself:
 
 - load and compile the `repl_logic_guest.wasm` file inside the embedded `wasmtime` engine injecting the [`host-api`](./crates/pluginlab/wit/host-api.wit) interface
-- load and compile the `plugin_*.wasm` files into the engine, injecting the [`plugin-api`](./crates/pluginlab/wit/plugin-api.wit) interface
+- load and compile the `plugin*.wasm` files passed via `--plugins` into the engine, injecting the [`plugin-api`](./crates/pluginlab/wit/plugin-api.wit) interface
 - launch the REPL loop executing the code from the `repl_logic_guest.wasm` file which will:
   - readline from the user
   - parse the command
@@ -336,7 +352,7 @@ To be sure that the preview server is up and running before running the tests, w
 
 ### plugins
 
-There are currently plugins implemented in 3 languages (most of them are in rust):
+There are currently plugins implemented in 3 languages (most of them are in rust), their toolchain is already setup in the project, you just have to write the plugin code and run `just build`.
 
 #### Rust
 
@@ -345,6 +361,10 @@ You can write plugins in rust in [`crates/plugin-*`](./crates).
 #### C
 
 You can write plugins in C in [`c_modules/plugin-*`](./c_modules), thanks to `wit-bindgen` (based on [wit-bindgen](https://github.com/bytecodealliance/wit-bindgen)).
+
+#### Go
+
+You can write plugins in Go in [`go_modules/plugin-*`](./go_modules), thanks to [TinyGo Compiler](https://tinygo.org/getting-started/install/).
 
 #### TypeScript
 
@@ -383,14 +403,15 @@ When a git tag is pushed, a pre-release is prepared on github, linked to the tag
 
 ```sh
 pluginlab\
-  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/repl_logic_guest.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_greet.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_ls.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_echo.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_weather.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_cat.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_tee.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin-echo-c.wasm\
+  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/repl_logic_guest.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_greet.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_ls.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_echo.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_weather.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_cat.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_tee.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin-echo-c.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin-echo-go.wasm\
   --allow-all
 ```
 
@@ -444,3 +465,10 @@ cargo binstall cargo-component@0.21.1 wasm-tools@1.235.0 wasm-opt@116
 - [From the WebAssembly Component Model section for C tooling](https://component-model.bytecodealliance.org/language-support/c.html)
 - [WASI SDK](https://github.com/WebAssembly/wasi-sdk)
 - [WIT Bindgen](https://github.com/bytecodealliance/wit-bindgen)
+
+### Go tooling
+
+- [From the WebAssembly Component Model section for Go tooling](https://component-model.bytecodealliance.org/language-support/go.html)
+- [TinyGo Compiler](https://tinygo.org/getting-started/install/)
+- [wasm-tools](https://github.com/bytecodealliance/wasm-tools)
+- [wkg](https://github.com/bytecodealliance/wasm-pkg-tools)

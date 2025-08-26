@@ -74,6 +74,7 @@ test("list-commands", async ({ page }) => {
     `cat	plugin
 echo	plugin
 echoc	plugin
+echogo	plugin
 export	reserved
 greet	plugin
 help	reserved

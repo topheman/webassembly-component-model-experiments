@@ -18,7 +18,7 @@ There are two kinds of hosts:
 Those hosts then run the same codebase which is compiled to WebAssembly:
 
 - the REPL logic
-- the plugins (made a few in rust, C and TypeScript)
+- the plugins (made a few in rust, C, Go, and TypeScript)
 
 Security model: the REPL cli implements a security model inspired by [deno](https://docs.deno.com/runtime/fundamentals/security/#permissions):
 
@@ -63,6 +63,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-go.wasm\
   --allow-all
 ```
 
@@ -88,6 +89,7 @@ pluginlab\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm\
   --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm\
+  --plugins https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-go.wasm\
   --allow-all
 [Host] Starting REPL host...
 [Host] Loading REPL logic from: https://topheman.github.io/webassembly-component-model-experiments/plugins/repl_logic_guest.wasm
@@ -96,6 +98,9 @@ pluginlab\
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_echo.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_weather.wasm
 [Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_cat.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin_tee.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-c.wasm
+[Host] Loading plugin: https://topheman.github.io/webassembly-component-model-experiments/plugins/plugin-echo-go.wasm
 repl(0)> echo foo
 foo
 repl(0)> echo $ROOT/$USER
@@ -135,14 +140,15 @@ The plugins are also versioned in [github releases](https://github.com/topheman/
     <summary>Example of running the CLI host with old versions of the plugins (if you have an old version of <code>pluginlab</code></summary>
     <pre>
 pluginlab\
-  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/repl_logic_guest.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_greet.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_ls.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_echo.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_weather.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_cat.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin_tee.wasm\
-  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.0/plugin-echo-c.wasm\
+  --repl-logic https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/repl_logic_guest.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_greet.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_ls.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_echo.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_weather.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_cat.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin_tee.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin-echo-c.wasm\
+  --plugins https://github.com/topheman/webassembly-component-model-experiments/releases/download/pluginlab@0.5.2/plugin-echo-go.wasm\
   --allow-all
     </pre>
 </summary>
