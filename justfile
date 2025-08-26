@@ -44,8 +44,13 @@ build-c-plugins:
     #!/usr/bin/env bash
     just list-c-plugins|xargs -I {} just build-c-plugin {}
 
+# Prepare the wit files for Go
+prepare-wit-files-for-go:
+    #!/usr/bin/env bash
+    ./scripts/prepare-wit-files.sh -i crates/pluginlab/wit -o go_modules/wit -s "SPECIFIC TinyGo"
+
 # Bundle wit files into a single file `repl:api.wasm`
-go-wit-build:
+go-wit-build: prepare-wit-files-for-go
     #!/usr/bin/env bash
     cd go_modules/
     wkg wit build

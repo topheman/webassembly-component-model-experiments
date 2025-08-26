@@ -28,6 +28,10 @@ interface host-state-plugin {
 }
 
 world plugin-api {
+  // The wasip2 target of TinyGo assumes that the component is targeting wasi:cli/command@0.2.0 world (part of wasi:cli),
+  // so it needs to include the imports from that world.
+  // It's only included for the versions of the wit files destined for TinyGo.
+  // include wasi:cli/imports@0.2.0; // SPECIFIC TinyGo - DO NOT CHANGE THIS LINE
   import http-client;
   import host-state-plugin;
   export plugin;
