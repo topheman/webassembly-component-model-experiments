@@ -24,6 +24,7 @@ clap = { workspace = true }
 tokio = { workspace = true }
 anyhow = { workspace = true }
 reqwest = "0.12.20"
+clap_complete = "4.5"
 
 [build-dependencies]
 wasmtime = { workspace = true }
