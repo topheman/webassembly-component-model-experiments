@@ -83,6 +83,7 @@ jobs:
     env:
       RELEASE_NAME: ${{ github.ref_name }}
     steps:
+      - uses: actions/checkout@v4
       - name: Restore cached wasm files
         id: cache-wasm-files-restore
         uses: actions/cache/restore@v4
