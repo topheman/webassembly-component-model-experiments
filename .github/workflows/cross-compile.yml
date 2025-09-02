@@ -1,4 +1,4 @@
-# inspired by https://github.com/topheman/update-homebrew-tap-playground/blob/master/.github/workflows/cross-compile.yml
+# inspired by https://github.com/topheman/update-homebrew-tap-playground/blob/master/.github/workflows/cross-compile.yml# inspired by https://github.com/topheman/update-homebrew-tap-playground/blob/master/.github/workflows/cross-compile.yml
 name: Cross-Compile
 
 on: [push]
@@ -9,87 +9,70 @@ env:
 
 jobs:
   build:
-    if: github.ref_type == 'tag'
-    runs-on: ubuntu-latest
+    name: Cross-Compile ${{ matrix.platform.target }}
+    strategy:
+      matrix:
+        platform:
 
+          - runs-on: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - runs-on: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - runs-on: macos-14
+            target: x86_64-apple-darwin
+          - runs-on: macos-14
+            target: aarch64-apple-darwin
+    runs-on: ${{ matrix.platform.runs-on }}
     steps:
-
-    - name: Set up MacOS Cross Compiler
-      uses: Timmmm/setup-osxcross@v2
-      with:
-        osx-version: "12.3"
-
-    - name: Install Rustup targets
-      run: rustup target add x86_64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin
-
-    - name: Check out source code
-      uses: actions/checkout@v4
-
-    - name: Check
-      run: cargo check -p pluginlab
-
-    - name: Build
-      run: cargo build -p pluginlab --release --target x86_64-unknown-linux-gnu --target x86_64-apple-darwin --target aarch64-apple-darwin
-
-    - name: Generate completions
-      run: |
-        mkdir -p ./target/x86_64-unknown-linux-gnu/release/completions/{zsh,bash,fish}
-        ./target/x86_64-unknown-linux-gnu/release/${{ env.BINARY_NAME }} generate-completions --shell zsh > ./target/x86_64-unknown-linux-gnu/release/completions/zsh/_${{ env.BINARY_NAME }}
-        ./target/x86_64-unknown-linux-gnu/release/${{ env.BINARY_NAME }} generate-completions --shell bash > ./target/x86_64-unknown-linux-gnu/release/completions/bash/${{ env.BINARY_NAME }}
-        ./target/x86_64-unknown-linux-gnu/release/${{ env.BINARY_NAME }} generate-completions --shell fish > ./target/x86_64-unknown-linux-gnu/release/completions/fish/${{ env.BINARY_NAME }}.fish
-
-    - name: Copy completions
-      run: |
-        cp -r ./target/x86_64-unknown-linux-gnu/release/completions ./target/x86_64-apple-darwin/release/completions
-        cp -r ./target/x86_64-unknown-linux-gnu/release/completions ./target/aarch64-apple-darwin/release/completions
-
-    - name: Compress
-      run: |
-        rm -rf ./tmp
-        mkdir ./tmp
-        (cd target/x86_64-unknown-linux-gnu/release && tar -cvf ${{ env.BINARY_NAME }}-x86_64-unknown-linux-gnu.tar.gz ${{ env.BINARY_NAME }} completions && mv ${{ env.BINARY_NAME }}-x86_64-unknown-linux-gnu.tar.gz ../../../tmp)
-        (cd target/x86_64-apple-darwin/release && tar -cvf ${{ env.BINARY_NAME }}-x86_64-apple-darwin.tar.gz ${{ env.BINARY_NAME }} completions && mv ${{ env.BINARY_NAME }}-x86_64-apple-darwin.tar.gz ../../../tmp)
-        (cd target/aarch64-apple-darwin/release && tar -cvf ${{ env.BINARY_NAME }}-aarch64-apple-darwin.tar.gz ${{ env.BINARY_NAME }} completions && mv ${{ env.BINARY_NAME }}-aarch64-apple-darwin.tar.gz ../../../tmp)
-
-    - name: Calculate sha256
-      run: |
-        shasum -a 256 ./tmp/${{ env.BINARY_NAME }}-x86_64-unknown-linux-gnu.tar.gz >> ./tmp/sha256.txt
-        shasum -a 256 ./tmp/${{ env.BINARY_NAME }}-x86_64-apple-darwin.tar.gz >> ./tmp/sha256.txt
-        shasum -a 256 ./tmp/${{ env.BINARY_NAME }}-aarch64-apple-darwin.tar.gz >> ./tmp/sha256.txt
-    - name: Cache
-      if: github.ref_type == 'tag'
-      id: cache-cross-compiled-artifacts
-      uses: actions/cache@v4
-      with:
-        path: ./tmp
-        key: ${{ runner.os }}-cross-compiled-artifacts-${{ github.sha }}
-
-  draft-release:
-    if: github.ref_type == 'tag'
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v1
+        with:
+          command: build
+          target: ${{ matrix.platform.target }}
+          args: "--locked --release -p pluginlab"
+          strip: true
+      - name: Generate completions
+        run: |
+          mkdir -p ./tmp/${{ matrix.platform.target }}
+          cp target/${{ matrix.platform.target }}/release/${{ env.BINARY_NAME }} ./tmp/${{ matrix.platform.target }}/${{ env.BINARY_NAME }}
+          mkdir -p ./tmp/${{ matrix.platform.target }}/completions/{zsh,bash,fish}
+          ./tmp/${{ matrix.platform.target }}/${{ env.BINARY_NAME }} generate-completions --shell zsh > ./tmp/${{ matrix.platform.target }}/completions/zsh/_${{ env.BINARY_NAME }}
+          ./tmp/${{ matrix.platform.target }}/${{ env.BINARY_NAME }} generate-completions --shell bash > ./tmp/${{ matrix.platform.target }}/completions/bash/${{ env.BINARY_NAME }}
+          ./tmp/${{ matrix.platform.target }}/${{ env.BINARY_NAME }} generate-completions --shell fish > ./tmp/${{ matrix.platform.target }}/completions/fish/${{ env.BINARY_NAME }}.fish
+      - name: Compress
+        run: |
+          mkdir -p ./compressed
+          cd ./tmp/${{ matrix.platform.target }}
+          tar -cvf ${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz ${{ env.BINARY_NAME }} completions
+          mv ${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz ../../compressed
+      - name: Cache compressed binaries
+        uses: actions/cache@v4
+        with:
+          path: ./compressed
+          key: ${{ matrix.platform.target }}-compressed-binaries-${{ github.sha }}
+  upload-archives: # will be changed for release-draft
     needs: build
-    env:
-      RELEASE_NAME: ${{ github.ref_name }}
+    name: Upload archive for build ${{ matrix.platform.target }}
+    strategy:
+      matrix:
+        platform:
+          - target: x86_64-unknown-linux-gnu
+          - target: aarch64-unknown-linux-gnu
+          - target: x86_64-apple-darwin
+          - target: aarch64-apple-darwin
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Restore cached cross-compiled artifacts
-        id: cache-cross-compiled-artifacts-restore
+      - name: Restore cached compressed binaries
         uses: actions/cache/restore@v4
         with:
-          path: ./tmp
-          key: ${{ runner.os }}-cross-compiled-artifacts-${{ github.sha }}
-      - name: Create release draft if it doesn't exist
-        uses: topheman/create-release-if-not-exist@v1
+          path: ./compressed
+          key: ${{ matrix.platform.target }}-compressed-binaries-${{ github.sha }}
+      - name: Upload archive
+        uses: actions/upload-artifact@v4
         with:
-          args: ${{ env.RELEASE_NAME }} --draft --generate-notes
-      - name: Upload Binaries
-        run: |
-          gh release upload ${{ env.RELEASE_NAME }} \
-            ./tmp/${{ env.BINARY_NAME }}-x86_64-unknown-linux-gnu.tar.gz \
-            ./tmp/${{ env.BINARY_NAME }}-x86_64-apple-darwin.tar.gz \
-            ./tmp/${{ env.BINARY_NAME }}-aarch64-apple-darwin.tar.gz \
-            ./tmp/sha256.txt
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: ./compressed/
+          name: ${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz
+          retention-days: 10
+

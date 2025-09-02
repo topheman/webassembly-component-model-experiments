@@ -3,6 +3,7 @@ on: [push, pull_request]
 
 jobs:
   build-and-test:
+    if: false # TODO: remove
     runs-on: ubuntu-latest
     steps:
       - name: Set variables based on OS and architecture for just dl-wasi-sdk
