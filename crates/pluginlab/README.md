@@ -45,8 +45,16 @@ More details on the github repo: [topheman/webassembly-component-model-experimen
 
 ## Install
 
+**Using cargo (from source)**
+
 ```bash
 cargo install pluginlab
+```
+
+**Using homebrew**
+
+```bash
+brew install topheman/tap/pluginlab
 ```
 
 ## Usage

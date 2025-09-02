@@ -1,0 +1,95 @@
+# inspired by https://github.com/topheman/update-homebrew-tap-playground/blob/master/.github/workflows/cross-compile.yml
+name: Cross-Compile
+
+on: [push]
+
+env:
+  CARGO_TERM_COLOR: always
+  BINARY_NAME: pluginlab
+
+jobs:
+  build:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Set up MacOS Cross Compiler
+      uses: Timmmm/setup-osxcross@v2
+      with:
+        osx-version: "12.3"
+
+    - name: Install Rustup targets
+      run: rustup target add x86_64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin
+
+    - name: Check out source code
+      uses: actions/checkout@v3
+
+    - name: Check
+      run: cargo check
+
+    - name: Build
+      run: cargo build -p pluginlab --release --target x86_64-unknown-linux-gnu --target x86_64-apple-darwin --target aarch64-apple-darwin
+
+    - name: Generate completions
+      run: |
+        mkdir -p ./target/x86_64-unknown-linux-gnu/release/completions/{zsh,bash,fish}
+        ./target/x86_64-unknown-linux-gnu/release/${{ env.BINARY_NAME }} generate-completions --shell zsh > ./target/x86_64-unknown-linux-gnu/release/completions/zsh/_${{ env.BINARY_NAME }}
+        ./target/x86_64-unknown-linux-gnu/release/${{ env.BINARY_NAME }} generate-completions --shell bash > ./target/x86_64-unknown-linux-gnu/release/completions/bash/${{ env.BINARY_NAME }}
+        ./target/x86_64-unknown-linux-gnu/release/${{ env.BINARY_NAME }} generate-completions --shell fish > ./target/x86_64-unknown-linux-gnu/release/completions/fish/${{ env.BINARY_NAME }}.fish
+
+    - name: Copy completions
+      run: |
+        cp -r ./target/x86_64-unknown-linux-gnu/release/completions ./target/x86_64-apple-darwin/release/completions
+        cp -r ./target/x86_64-unknown-linux-gnu/release/completions ./target/aarch64-apple-darwin/release/completions
+
+    - name: Compress
+      run: |
+        rm -rf ./tmp
+        mkdir ./tmp
+        (cd target/x86_64-unknown-linux-gnu/release && tar -cvf ${{ env.BINARY_NAME }}-x86_64-unknown-linux-gnu.tar.gz ${{ env.BINARY_NAME }} completions && mv ${{ env.BINARY_NAME }}-x86_64-unknown-linux-gnu.tar.gz ../../../tmp)
+        (cd target/x86_64-apple-darwin/release && tar -cvf ${{ env.BINARY_NAME }}-x86_64-apple-darwin.tar.gz ${{ env.BINARY_NAME }} completions && mv ${{ env.BINARY_NAME }}-x86_64-apple-darwin.tar.gz ../../../tmp)
+        (cd target/aarch64-apple-darwin/release && tar -cvf ${{ env.BINARY_NAME }}-aarch64-apple-darwin.tar.gz ${{ env.BINARY_NAME }} completions && mv ${{ env.BINARY_NAME }}-aarch64-apple-darwin.tar.gz ../../../tmp)
+
+    - name: Calculate sha256
+      run: |
+        shasum -a 256 ./tmp/${{ env.BINARY_NAME }}-x86_64-unknown-linux-gnu.tar.gz >> ./tmp/sha256.txt
+        shasum -a 256 ./tmp/${{ env.BINARY_NAME }}-x86_64-apple-darwin.tar.gz >> ./tmp/sha256.txt
+        shasum -a 256 ./tmp/${{ env.BINARY_NAME }}-aarch64-apple-darwin.tar.gz >> ./tmp/sha256.txt
+    - name: Cache
+      if: github.ref_type == 'tag'
+      id: cache-cross-compiled-artifacts
+      uses: actions/cache@v4
+      with:
+        path: ./tmp
+        key: ${{ runner.os }}-cross-compiled-artifacts-${{ github.sha }}
+
+  draft-release:
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      RELEASE_NAME: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore cached cross-compiled artifacts
+        id: cache-cross-compiled-artifacts-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ./tmp
+          key: ${{ runner.os }}-cross-compiled-artifacts-${{ github.sha }}
+      - name: Create release draft if it doesn't exist
+        uses: topheman/create-release-if-not-exist@v1
+        with:
+          args: ${{ env.RELEASE_NAME }} --draft --generate-notes
+      - name: Upload Binaries
+        run: |
+          gh release upload ${{ env.RELEASE_NAME }} \
+            ./tmp/${{ env.BINARY_NAME }}-x86_64-unknown-linux-gnu.tar.gz \
+            ./tmp/${{ env.BINARY_NAME }}-x86_64-apple-darwin.tar.gz \
+            ./tmp/${{ env.BINARY_NAME }}-aarch64-apple-darwin.tar.gz \
+            ./tmp/sha256.txt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

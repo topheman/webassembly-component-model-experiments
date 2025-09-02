@@ -65,11 +65,18 @@ In the last seven years I've done a few projects involving rust and WebAssembly:
 
 ### pluginlab (rust) - REPL cli host
 
-#### Install
+#### Install the binary
+
+**Using cargo (from source)**
 
 ```bash
-# Install the pluginlab binary
 cargo install pluginlab
+```
+
+**Using homebrew**
+
+```bash
+brew install topheman/tap/pluginlab
 ```
 
 #### Run
