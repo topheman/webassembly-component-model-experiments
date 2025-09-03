@@ -15,12 +15,13 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v4
       - name: Update Homebrew Formula
-        uses: topheman/update-homebrew-tap@v1
+        uses: topheman/update-homebrew-tap@v2
         with:
           formula-target-repository: topheman/homebrew-tap
           formula-target-file: Formula/pluginlab.rb
           tar-files: |
             {
+              "linuxArm": "https://github.com/topheman/webassembly-component-model-experiments/releases/download/${{ github.ref_name }}/pluginlab-aarch64-unknown-linux-gnu.tar.gz",
               "linuxIntel": "https://github.com/topheman/webassembly-component-model-experiments/releases/download/${{ github.ref_name }}/pluginlab-x86_64-unknown-linux-gnu.tar.gz",
               "macArm": "https://github.com/topheman/webassembly-component-model-experiments/releases/download/${{ github.ref_name }}/pluginlab-aarch64-apple-darwin.tar.gz",
               "macIntel": "https://github.com/topheman/webassembly-component-model-experiments/releases/download/${{ github.ref_name }}/pluginlab-x86_64-apple-darwin.tar.gz"
