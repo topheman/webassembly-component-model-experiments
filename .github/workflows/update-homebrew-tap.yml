@@ -1,0 +1,37 @@
+name: Update Homebrew Tap
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-homebrew-tap:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # ✅ minimal required for pushing commits
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+      - name: Update Homebrew Formula
+        uses: topheman/update-homebrew-tap@v2
+        with:
+          formula-target-repository: topheman/homebrew-tap
+          formula-target-file: Formula/pluginlab.rb
+          tar-files: |
+            {
+              "linuxArm": "https://github.com/topheman/webassembly-component-model-experiments/releases/download/${{ github.ref_name }}/pluginlab-aarch64-unknown-linux-gnu.tar.gz",
+              "linuxIntel": "https://github.com/topheman/webassembly-component-model-experiments/releases/download/${{ github.ref_name }}/pluginlab-x86_64-unknown-linux-gnu.tar.gz",
+              "macArm": "https://github.com/topheman/webassembly-component-model-experiments/releases/download/${{ github.ref_name }}/pluginlab-aarch64-apple-darwin.tar.gz",
+              "macIntel": "https://github.com/topheman/webassembly-component-model-experiments/releases/download/${{ github.ref_name }}/pluginlab-x86_64-apple-darwin.tar.gz"
+            }
+          metadata: |
+            {
+              "version": "${{ github.ref_name }}",
+              "binaryName": "pluginlab",
+              "description": "Terminal REPL with sandboxed multi-language plugin system - unified codebase runs in CLI (Rust) and web (TypeScript)",
+              "homepage": "https://github.com/topheman/webassembly-component-model-experiments",
+              "license": "MIT"
+            }
+          github-token: ${{ secrets.HOMEBREW_TAP_TOKEN }}

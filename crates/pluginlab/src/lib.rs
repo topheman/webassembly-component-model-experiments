@@ -12,7 +12,7 @@ pub(crate) use wasm_host::WasmHost;
 use anyhow::Result;
 use api::host_api::repl::api::transport;
 use clap::Parser;
-use cli::Cli;
+use cli::{Cli, Commands};
 use helpers::{StatusHandler, StdoutHandler};
 use std::io::Write;
 
@@ -20,25 +20,60 @@ use std::io::Write;
 pub async fn run_async() -> Result<()> {
     // Parse command line arguments
     let cli = Cli::parse();
+
+    // Handle subcommands first
+    if let Some(command) = &cli.command {
+        match command {
+            Commands::GenerateCompletions { shell } => {
+                return handle_generate_completions(*shell);
+            }
+        }
+    }
+
+    // For REPL mode, repl_logic is required
+    let repl_logic = cli
+        .repl_logic
+        .ok_or_else(|| anyhow::anyhow!("--repl-logic is required when running in REPL mode"))?;
+
     let debug = cli.debug;
+    let plugins = cli.plugins;
+    let dir = cli.dir;
+    let allow_net = cli.allow_net;
+    let allow_read = cli.allow_read;
+    let allow_write = cli.allow_write;
+    let allow_all = cli.allow_all;
+
+    // Create a new CLI struct for the remaining operations
+    let repl_cli = Cli {
+        command: None,
+        plugins,
+        repl_logic: Some(repl_logic.clone()),
+        debug,
+        dir,
+        allow_net,
+        allow_read,
+        allow_write,
+        allow_all,
+    };
+
     println!("[Host] Starting REPL host...");
 
     // Create a WASI context for the host
     // Binding stdio, args, env, preopened dir ...
-    let wasi_ctx = WasmEngine::build_wasi_ctx(&cli)?;
+    let wasi_ctx = WasmEngine::build_wasi_ctx(&repl_cli)?;
 
     // Create the WebAssembly engine
     let engine = WasmEngine::new()?;
 
     // Create the host
-    let mut host = WasmHost::new(&engine, wasi_ctx, &cli);
+    let mut host = WasmHost::new(&engine, wasi_ctx, &repl_cli);
 
-    println!("[Host] Loading REPL logic from: {}", cli.repl_logic);
+    println!("[Host] Loading REPL logic from: {}", repl_logic);
     // Override the REPL logic in the binary with the one passed by params
-    host.load_repl_logic(&engine, &cli.repl_logic).await?;
+    host.load_repl_logic(&engine, &repl_logic).await?;
 
     // Load plugins
-    for plugin_source in &cli.plugins {
+    for plugin_source in &repl_cli.plugins {
         println!("[Host] Loading plugin: {}", plugin_source);
         host.load_plugin(&engine, plugin_source).await?;
     }
@@ -215,4 +250,22 @@ pub async fn run_async() -> Result<()> {
             }
         }
     }
+}
+
+/// Handle the generate-completions subcommand
+fn handle_generate_completions(shell: cli::AvailableShells) -> Result<()> {
+    use clap::CommandFactory;
+    use clap_complete::{generate, Shell};
+    use cli::Cli;
+
+    let mut cmd = Cli::command();
+    let shell_type = match shell {
+        cli::AvailableShells::Bash => Shell::Bash,
+        cli::AvailableShells::Fish => Shell::Fish,
+        cli::AvailableShells::Zsh => Shell::Zsh,
+    };
+
+    generate(shell_type, &mut cmd, "pluginlab", &mut std::io::stdout());
+
+    Ok(())
 }

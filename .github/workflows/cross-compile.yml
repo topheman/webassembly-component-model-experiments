@@ -1,0 +1,119 @@
+# inspired by https://github.com/topheman/update-homebrew-tap-playground/blob/master/.github/workflows/cross-compile.yml
+name: Cross-Compile
+
+on: [push]
+
+env:
+  CARGO_TERM_COLOR: always
+  BINARY_NAME: pluginlab
+
+jobs:
+  build:
+    if: github.ref_type == 'tag'
+    name: Cross-Compile ${{ matrix.platform.target }}
+    strategy:
+      matrix:
+        platform:
+
+          - runs-on: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - runs-on: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - runs-on: macos-14
+            target: x86_64-apple-darwin
+          - runs-on: macos-14
+            target: aarch64-apple-darwin
+    runs-on: ${{ matrix.platform.runs-on }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v1
+        with:
+          command: build
+          target: ${{ matrix.platform.target }}
+          args: "--locked --release -p pluginlab"
+          strip: true
+      - name: Generate completions
+        run: |
+          mkdir -p ./tmp/${{ matrix.platform.target }}
+          cp target/${{ matrix.platform.target }}/release/${{ env.BINARY_NAME }} ./tmp/${{ matrix.platform.target }}/${{ env.BINARY_NAME }}
+          mkdir -p ./tmp/${{ matrix.platform.target }}/completions/{zsh,bash,fish}
+          ./tmp/${{ matrix.platform.target }}/${{ env.BINARY_NAME }} generate-completions --shell zsh > ./tmp/${{ matrix.platform.target }}/completions/zsh/_${{ env.BINARY_NAME }}
+          ./tmp/${{ matrix.platform.target }}/${{ env.BINARY_NAME }} generate-completions --shell bash > ./tmp/${{ matrix.platform.target }}/completions/bash/${{ env.BINARY_NAME }}
+          ./tmp/${{ matrix.platform.target }}/${{ env.BINARY_NAME }} generate-completions --shell fish > ./tmp/${{ matrix.platform.target }}/completions/fish/${{ env.BINARY_NAME }}.fish
+      - name: Compress
+        run: |
+          mkdir -p ./compressed
+          cd ./tmp/${{ matrix.platform.target }}
+          tar -cvf ${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz ${{ env.BINARY_NAME }} completions
+          mv ${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz ../../compressed
+      - name: Cache compressed binaries
+        uses: actions/cache@v4
+        with:
+          path: ./compressed
+          key: ${{ matrix.platform.target }}-compressed-binaries-${{ github.sha }}
+  upload-archives:
+    if: false # This step is totally skipped, activate the workflow outside of a tag (for debug purposes)
+    needs: build
+    name: Upload archive for build ${{ matrix.platform.target }}
+    strategy:
+      matrix:
+        platform:
+          - target: x86_64-unknown-linux-gnu
+          - target: aarch64-unknown-linux-gnu
+          - target: x86_64-apple-darwin
+          - target: aarch64-apple-darwin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore cached compressed binaries
+        uses: actions/cache/restore@v4
+        with:
+          path: ./compressed
+          key: ${{ matrix.platform.target }}-compressed-binaries-${{ github.sha }}
+      - name: Upload archive
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./compressed/
+          name: ${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz
+          retention-days: 10
+  create-release-draft-if-not-exist:
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create release draft
+        uses: topheman/create-release-if-not-exist@v1
+        with:
+          args: ${{ github.ref_name }} --draft --generate-notes
+  upload-artifacts-to-release-draft:
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    needs: create-release-draft-if-not-exist
+    env:
+      RELEASE_NAME: ${{ github.ref_name }}
+    name: Upload artifacts to release draft ${{ matrix.platform.target }}
+    strategy:
+      matrix:
+        platform:
+          - target: x86_64-unknown-linux-gnu
+          - target: aarch64-unknown-linux-gnu
+          - target: x86_64-apple-darwin
+          - target: aarch64-apple-darwin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore cached compressed binaries
+        uses: actions/cache/restore@v4
+        with:
+          path: ./compressed
+          key: ${{ matrix.platform.target }}-compressed-binaries-${{ github.sha }}
+      - name: Upload artifacts to release draft
+        run: |
+          gh release upload ${{ env.RELEASE_NAME }} ./compressed/${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
