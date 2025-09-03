@@ -9,6 +9,7 @@ env:
 
 jobs:
   build:
+    if: github.ref_type == 'tag'
     name: Cross-Compile ${{ matrix.platform.target }}
     strategy:
       matrix:
