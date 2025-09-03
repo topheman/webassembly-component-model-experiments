@@ -1,4 +1,4 @@
-# inspired by https://github.com/topheman/update-homebrew-tap-playground/blob/master/.github/workflows/cross-compile.yml# inspired by https://github.com/topheman/update-homebrew-tap-playground/blob/master/.github/workflows/cross-compile.yml
+# inspired by https://github.com/topheman/update-homebrew-tap-playground/blob/master/.github/workflows/cross-compile.yml
 name: Cross-Compile
 
 on: [push]
@@ -52,7 +52,8 @@ jobs:
         with:
           path: ./compressed
           key: ${{ matrix.platform.target }}-compressed-binaries-${{ github.sha }}
-  upload-archives: # will be changed for release-draft
+  upload-archives:
+    if: false # This step is totally skipped, activate the workflow outside of a tag (for debug purposes)
     needs: build
     name: Upload archive for build ${{ matrix.platform.target }}
     strategy:
@@ -75,4 +76,43 @@ jobs:
           path: ./compressed/
           name: ${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz
           retention-days: 10
-
+  create-release-draft-if-not-exist:
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create release draft
+        uses: topheman/create-release-if-not-exist@v1
+        with:
+          args: ${{ github.ref_name }} --draft --generate-notes
+  upload-artifacts-to-release-draft:
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    needs: create-release-draft-if-not-exist
+    env:
+      RELEASE_NAME: ${{ github.ref_name }}
+    name: Upload artifacts to release draft ${{ matrix.platform.target }}
+    strategy:
+      matrix:
+        platform:
+          - target: x86_64-unknown-linux-gnu
+          - target: aarch64-unknown-linux-gnu
+          - target: x86_64-apple-darwin
+          - target: aarch64-apple-darwin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore cached compressed binaries
+        uses: actions/cache/restore@v4
+        with:
+          path: ./compressed
+          key: ${{ matrix.platform.target }}-compressed-binaries-${{ github.sha }}
+      - name: Upload artifacts to release draft
+        run: |
+          gh release upload ${{ env.RELEASE_NAME }} ./compressed/${{ env.BINARY_NAME }}-${{ matrix.platform.target }}.tar.gz
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
