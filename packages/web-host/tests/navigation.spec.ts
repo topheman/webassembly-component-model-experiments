@@ -3,9 +3,7 @@ import { clickWandButton } from "./utils";
 
 test("start REPL link", async ({ page }) => {
   await page.goto("/");
-  await page
-    .getByRole("button", { name: "✨ Start REPL ✨" })
-    .click({ force: true });
+  await page.getByTestId("start-repl-button-top").click({ force: true });
   await expect(page).toHaveURL(
     "/webassembly-component-model-experiments/#repl",
   );
@@ -36,9 +34,7 @@ test("back to home button", async ({ page }) => {
 
 test("back button", async ({ page }) => {
   await page.goto("/");
-  await page
-    .getByRole("button", { name: "✨ Start REPL ✨" })
-    .click({ force: true });
+  await page.getByTestId("start-repl-button-top").click({ force: true });
   await expect(page).toHaveURL(
     "/webassembly-component-model-experiments/#repl",
   );
@@ -55,9 +51,7 @@ test("back button", async ({ page }) => {
 
 test("history should be preserved + wand button", async ({ page }) => {
   await page.goto("/");
-  await page
-    .getByRole("button", { name: "✨ Start REPL ✨" })
-    .click({ force: true });
+  await page.getByTestId("start-repl-button-top").click({ force: true });
   await expect(page).toHaveURL(
     "/webassembly-component-model-experiments/#repl",
   );
@@ -70,9 +64,7 @@ test("history should be preserved + wand button", async ({ page }) => {
       name: "WebAssembly Component Model Experiments",
     }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "✨ Start REPL ✨" })
-    .click({ force: true });
+  await page.getByTestId("start-repl-button-top").click({ force: true });
   await expect(page).toHaveURL(
     "/webassembly-component-model-experiments/#repl",
   );

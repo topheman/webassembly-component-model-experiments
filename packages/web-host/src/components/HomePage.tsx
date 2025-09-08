@@ -6,6 +6,27 @@ interface HomePageProps {
   onStartRepl: () => void;
 }
 
+function StartReplButton({
+  onStartRepl,
+  "data-testid-button": testId,
+}: {
+  onStartRepl: () => void;
+  "data-testid-button": string;
+}) {
+  return (
+    <div className="text-center mb-14">
+      <button
+        type="button"
+        onClick={onStartRepl}
+        className="cursor-pointer bg-gradient-to-r from-[var(--color-wasi-violet)] to-[var(--color-wasi-purple)] shadow-lg hover:from-[var(--color-wasi-purple)] hover:to-[var(--color-wasi-violet)] text-white font-bold py-4 px-12 rounded-full text-xl transition-transform duration-300 ease-out transform hover:scale-[1.3] focus:outline-none focus:ring-4 focus:ring-[var(--color-wasi-violet)]/40 animate-[pulse110_2s_ease-in-out_infinite]"
+        data-testid={testId}
+      >
+        ✨ Start REPL ✨
+      </button>
+    </div>
+  );
+}
+
 export const HomePage = ({ onStartRepl }: HomePageProps) => {
   const [targetUrl, setTargetUrl] = useState<string | null>(null);
 
@@ -14,21 +35,12 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
     setTargetUrl(url);
   }, []);
 
-  const startReplButton = (
-    <div className="text-center mb-14">
-      <button
-        type="button"
-        onClick={onStartRepl}
-        className="cursor-pointer bg-gradient-to-r from-[var(--color-wasi-violet)] to-[var(--color-wasi-purple)] shadow-lg hover:from-[var(--color-wasi-purple)] hover:to-[var(--color-wasi-violet)] text-white font-bold py-4 px-12 rounded-full text-xl transition-transform duration-300 ease-out transform hover:scale-[1.3] focus:outline-none focus:ring-4 focus:ring-[var(--color-wasi-violet)]/40 animate-[pulse110_2s_ease-in-out_infinite]"
-      >
-        ✨ Start REPL ✨
-      </button>
-    </div>
-  );
-
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
-      {startReplButton}
+      <StartReplButton
+        onStartRepl={onStartRepl}
+        data-testid-button="start-repl-button-top"
+      />
 
       <div className="bg-white rounded-2xl p-8 border border-[var(--color-wasi-purple)]/20 shadow-lg mb-12">
         <h3 className="text-2xl font-bold mb-4">What is it?</h3>
@@ -95,7 +107,10 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
         </div>
       </div>
 
-      {startReplButton}
+      <StartReplButton
+        onStartRepl={onStartRepl}
+        data-testid-button="start-repl-button-bottom"
+      />
 
       {targetUrl && (
         <div className="flex flex-col items-center justify-center">
