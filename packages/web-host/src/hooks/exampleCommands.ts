@@ -51,7 +51,7 @@ const commands = [
   "echo Even more text",
   "tee -a output.txt",
   "cat output.txt",
-  "weather Paris",
+  "weather Paris, France",
   "man weather",
   "help",
   "echoc This is the same as `echo`, implemented in C",
