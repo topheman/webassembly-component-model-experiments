@@ -14,17 +14,21 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
     setTargetUrl(url);
   }, []);
 
+  const startReplButton = (
+    <div className="text-center mb-14">
+      <button
+        type="button"
+        onClick={onStartRepl}
+        className="cursor-pointer bg-gradient-to-r from-[var(--color-wasi-violet)] to-[var(--color-wasi-purple)] shadow-lg hover:from-[var(--color-wasi-purple)] hover:to-[var(--color-wasi-violet)] text-white font-bold py-4 px-12 rounded-full text-xl transition-transform duration-300 ease-out transform hover:scale-[1.3] focus:outline-none focus:ring-4 focus:ring-[var(--color-wasi-violet)]/40 animate-[pulse110_2s_ease-in-out_infinite]"
+      >
+        ✨ Start REPL ✨
+      </button>
+    </div>
+  );
+
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <div className="text-center mb-14">
-        <button
-          type="button"
-          onClick={onStartRepl}
-          className="cursor-pointer bg-gradient-to-r from-[var(--color-wasi-violet)] to-[var(--color-wasi-purple)] shadow-lg hover:from-[var(--color-wasi-purple)] hover:to-[var(--color-wasi-violet)] text-white font-bold py-4 px-12 rounded-full text-xl transition-transform duration-300 ease-out transform hover:scale-[1.3] focus:outline-none focus:ring-4 focus:ring-[var(--color-wasi-violet)]/40 animate-[pulse110_2s_ease-in-out_infinite]"
-        >
-          ✨ Start REPL ✨
-        </button>
-      </div>
+      {startReplButton}
 
       <div className="bg-white rounded-2xl p-8 border border-[var(--color-wasi-purple)]/20 shadow-lg mb-12">
         <h3 className="text-2xl font-bold mb-4">What is it?</h3>
@@ -90,6 +94,8 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
           </a>
         </div>
       </div>
+
+      {startReplButton}
 
       {targetUrl && (
         <div className="flex flex-col items-center justify-center">
