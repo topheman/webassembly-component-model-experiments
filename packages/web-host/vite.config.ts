@@ -27,4 +27,12 @@ export default defineConfig({
     },
   },
   base: "/webassembly-component-model-experiments/",
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+        article: path.resolve(__dirname, "article.html"),
+      },
+    },
+  },
 });
