@@ -1,4 +1,4 @@
-import { Github, User } from "lucide-react";
+import { Book, Github } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 
@@ -92,17 +92,19 @@ export const HomePage = ({ onStartRepl }: HomePageProps) => {
             href="https://github.com/topheman/webassembly-component-model-experiments"
             rel="noopener noreferrer"
             className="text-[var(--color-wasi-purple)] font-medium transition-colors bg-primary-50 p-2 rounded-md flex items-center gap-2"
+            title="GitHub Repository"
           >
             <Github className="w-4 h-4" />
             <span>GitHub Repository</span>
           </a>
           <a
-            href="https://topheman.github.io/me/"
+            href="https://dev.to/topheman/webassembly-component-model-building-a-plugin-system-58o0"
             rel="noopener noreferrer"
             className="text-[var(--color-wasi-purple)] font-medium transition-colors bg-primary-50 p-2 rounded-md flex items-center gap-2"
+            title="Blog Post"
           >
-            <User className="w-4 h-4" />
-            <span>My Portfolio</span>
+            <Book className="w-4 h-4" />
+            <span>Blog Post</span>
           </a>
         </div>
       </div>

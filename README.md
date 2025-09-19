@@ -2,6 +2,9 @@
 
 [![Crates.io](https://img.shields.io/crates/v/pluginlab.svg)](https://crates.io/crates/pluginlab)
 [![Demo](https://img.shields.io/badge/demo-online-blue.svg)](https://topheman.github.io/webassembly-component-model-experiments/)
+[![Demo](https://img.shields.io/badge/blog-post-violet.svg)](https://dev.to/topheman/webassembly-component-model-building-a-plugin-system-58o0)
+
+I wrote a blog post that goes in much more details and is accessible to a wider audience: [Building a plugin system with WebAssembly Component Model](https://dev.to/topheman/webassembly-component-model-building-a-plugin-system-58o0).
 
 > The WebAssembly Component Model is a broad-reaching architecture for building interoperable WebAssembly libraries, applications, and environments.
 
