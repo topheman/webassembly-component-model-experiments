@@ -189,6 +189,11 @@ npm install
 npx playwright install
 ```
 
+```bash
+# Install cargo component subcommand
+cargo binstall cargo-component
+```
+
 #### C tooling
 
 [From the WebAssembly Component Model section for C tooling](https://component-model.bytecodealliance.org/language-support/c.html)
@@ -251,7 +256,7 @@ This will (see [justfile](./justfile)):
   --plugins ./target/wasm32-wasip1/debug/plugin_cat.wasm\
   --plugins ./target/wasm32-wasip1/debug/plugin_tee.wasm\
   --plugins ./c_modules/plugin-echo/plugin-echo-c.wasm\
-  --plugins ./go_modules/plugin-echo-go/plugin-echo-go.wasm\
+  --plugins ./go_modules/plugin-echo/plugin-echo-go.wasm\
   --allow-all
 ```
 
